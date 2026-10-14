@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS SAA-C03 Study Hub | Lộ Trình 1 Tiếng/Ngày Cho Java Dev</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Sticky Top Navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">AWS</div>
+        <div class="brand-title">
+          <h1>SAA-C03 Study Hub</h1>
+          <span>Lộ trình 1h/ngày • Thiết kế riêng cho Java Developer</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs">
+        <button class="nav-tab active" data-tab="today">🎯 Học Hôm Nay (Bắt đầu ngay)</button>
+        <button class="nav-tab" data-tab="curriculum">🗺️ Toàn Bộ 80 Buổi</button>
+        <button class="nav-tab" data-tab="srs">🗂️ Luyện Thẻ Anki (SRS)</button>
+        <button class="nav-tab" data-tab="compare">📊 Bảng So Sánh Dịch Vụ</button>
+        <button class="nav-tab" data-tab="resources">🎁 Kho Đề & Tài Liệu Free</button>
+      </nav>
+
+      <div class="sync-actions">
+        <button class="btn btn-outline btn-sm" id="btn-open-sync" title="Đồng bộ tiến độ giữa 2 máy tính">
+          🔄 Đồng bộ 2 máy
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Progress Summary Banner -->
+    <section class="progress-banner">
+      <div class="progress-stats">
+        <div class="progress-header">
+          <span style="font-weight:700; font-size:0.95rem;">📈 Tiến độ chinh phục AWS SAA-C03 của bạn</span>
+          <span id="progress-pct-text" style="font-weight:800; color:var(--accent-aws);">0% (0/80 Buổi)</span>
+        </div>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <span style="font-size:0.78rem; color:var(--text-secondary);">
+          💡 <strong>Không áp lực tiến độ</strong>: Mở web lên là tự động nhảy tới đúng buổi bạn đang học dở. Đường link trên thanh địa chỉ tự động lưu trạng thái để bạn mở trên máy thứ 2 bất cứ lúc nào!
+        </span>
+      </div>
+
+      <div class="stat-pills">
+        <div class="stat-pill">
+          <span class="label">Đang học tại</span>
+          <span class="value" id="stat-current-session">Buổi #1</span>
+        </div>
+        <div class="stat-pill">
+          <span class="label">Đã hoàn thành</span>
+          <span class="value" id="stat-completed-count">0 / 80</span>
+        </div>
+        <div class="stat-pill">
+          <span class="label">Thẻ Anki cần ôn</span>
+          <span class="value" id="stat-due-cards">0 thẻ</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: TODAY'S FOCUS -->
+    <section id="tab-today" class="tab-pane" style="display: block;">
+      <div class="today-grid">
+        <!-- Left Sidebar: 60-Minute Flow Timer -->
+        <aside class="flow-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-size:1rem; font-weight:700;">⏱️ Đồng Hồ Flow 60 Phút</h3>
+            <span class="badge badge-aws">Không áp lực</span>
+          </div>
+          <p style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.2rem;">
+            Bấm vào từng bước bên dưới để chạy đồng hồ đếm ngược cho đúng quy trình 60 phút mỗi ngày.
+          </p>
+
+          <div class="timer-display">
+            <div class="timer-clock" id="timer-clock">10:00</div>
+            <div class="timer-step-label" id="timer-step-label">Bước 1: Quẹt thẻ Anki (10p)</div>
+            <div class="timer-controls">
+              <button class="btn btn-primary btn-sm" id="btn-timer-toggle">▶️ Bắt đầu đếm</button>
+              <button class="btn btn-outline btn-sm" id="btn-timer-reset">↺ Đặt lại</button>
+            </div>
+          </div>
+
+          <div class="flow-steps" id="flow-steps-list"></div>
+        </aside>
+
+        <!-- Right Content: Active Session Card -->
+        <div class="lesson-card" id="today-lesson-container"></div>
+      </div>
+    </section>
+
+    <!-- TAB 2: FULL 80-SESSION CURRICULUM -->
+    <section id="tab-curriculum" class="tab-pane" style="display: none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem;">
+        <div>
+          <h2 style="font-size:1.35rem; font-weight:800;">🗺️ Bản Đồ Toàn Bộ 80 Buổi Học (Bấm vào buổi bất kỳ để học ngay)</h2>
+          <p style="font-size:0.88rem; color:var(--text-secondary);">
+            51 Buổi Lý thuyết chuyên sâu + 5 Buổi Hệ thống hóa + 24 Buổi Thực chiến 6 Đề thi (16 câu/buổi).
+          </p>
+        </div>
+        <input
+          type="search"
+          id="curriculum-search"
+          placeholder="🔍 Tìm nhanh dịch vụ (vd: VPC, S3, Lambda, KMS)..."
+          style="min-width:280px; background:var(--bg-card); color:var(--text-primary); border:1px solid var(--border-color); padding:0.6rem 1rem; border-radius:10px; font-size:0.9rem;"
+        />
+      </div>
+      <div id="curriculum-phases-container"></div>
+    </section>
+
+    <!-- TAB 3: SPACED REPETITION FLASHCARDS (ANKI ENGINE) -->
+    <section id="tab-srs" class="tab-pane" style="display: none;">
+      <div style="text-align:center; margin-bottom:1.25rem;">
+        <h2 style="font-size:1.35rem; font-weight:800;">🧠 Luyện Trí Nhớ Ngắt Quãng (Spaced Repetition Ngay Trên Web)</h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary);">
+          Khắc phục triệt để việc hay quên: Lật thẻ, tự đánh giá mức độ nhớ hoặc xuất file <code>.tsv</code> nạp thẳng vào phần mềm Anki.
+        </p>
+      </div>
+      <div id="srs-arena-container"></div>
+    </section>
+
+    <!-- TAB 4: COMPARISON MATRICES -->
+    <section id="tab-compare" class="tab-pane" style="display: none;">
+      <div style="margin-bottom:1.25rem;">
+        <h2 style="font-size:1.35rem; font-weight:800;">📊 Bảng So Sánh Các Dịch Vụ "Song Sinh" Dễ Nhầm Nhất Đề Thi</h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary);">
+          Tổng hợp sẵn từ Tutorials Dojo & kinh nghiệm thi thật giúp bạn loại nhanh 2 đáp án nhiễu trong 5 giây.
+        </p>
+      </div>
+      <div id="comparison-tables-container"></div>
+    </section>
+
+    <!-- TAB 5: FREE RESOURCES & ESL +30M GUIDE -->
+    <section id="tab-resources" class="tab-pane" style="display: none;">
+      <div style="margin-bottom:1.25rem;">
+        <h2 style="font-size:1.35rem; font-weight:800;">🎁 Kho Đề Thi & Tài Liệu Miễn Phí Đã Tổng Hợp Sẵn</h2>
+        <p style="font-size:0.88rem; color:var(--text-secondary);">
+          Toàn bộ các đường link luyện đề miễn phí (DevCloudly J2TEAM), Cheat Sheets (Tutorials Dojo) và hướng dẫn thủ tục thi.
+        </p>
+      </div>
+
+      <div class="resource-grid" id="free-resources-container"></div>
+
+      <!-- ESL +30 Minutes Step-by-Step Guide -->
+      <div class="lesson-card" style="margin-top:1.5rem; border-left:4px solid var(--accent-aws);">
+        <h3 style="font-size:1.15rem; color:var(--accent-aws); margin-bottom:0.65rem;">
+          ⏱️ Hướng dẫn chi tiết cách xin thêm 30 phút làm bài (ESL +30 Minutes → Tổng 160 phút)
+        </h3>
+        <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+          Như bài chia sẻ tại Nhật Bản đã nhấn mạnh: Đây là đặc quyền hoàn toàn hợp lệ và miễn phí cho người không nói tiếng Anh bản xứ, giúp bạn giảm 50% áp lực phòng thi.
+        </p>
+        <ul class="bullet-list">
+          <li><strong>Bước 1 (Làm TRƯỚC khi đặt lịch thi)</strong>: Đăng nhập vào trang chủ chứng chỉ AWS tại <a href="https://www.aws.training/Certification" target="_blank" style="color:var(--accent-blue);">aws.training/Certification</a> (chuyển hướng sang CertMetrics).</li>
+          <li><strong>Bước 2</strong>: Ở menu bên trái, chọn mục <strong>Exam Accommodations</strong> (Hoặc <em>Request Exam Accommodations</em>).</li>
+          <li><strong>Bước 3</strong>: Tại ô <em>Accommodation Type</em>, chọn <strong>ESL +30 MINUTES (English as a Second Language)</strong> rồi bấm <strong>Create / Submit</strong>.</li>
+          <li><strong>Bước 4</strong>: Hệ thống sẽ duyệt tự động ngay lập tức! Sau khi thấy trạng thái <code>Approved</code>, mọi kỳ thi AWS bạn đăng ký về sau đều tự động được cộng thêm 30 phút (SAA-C03 tăng từ 130 phút lên <strong>160 phút</strong>).</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- 2-Machine Sync Modal -->
+  <div class="modal-backdrop" id="sync-modal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.15rem; color:var(--accent-aws);">🔄 Đồng Bộ Tiến Độ Giữa 2 Máy Tính</h3>
+        <button class="btn btn-outline btn-sm" id="btn-close-sync">✕ Đóng</button>
+      </div>
+
+      <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.75rem;">
+        Vì bạn sử dụng 2 máy tính khác nhau mà không cần đăng nhập tài khoản phức tạp, toàn bộ tiến độ Buổi học đang dở và Thẻ Anki của bạn được gói gọn ngay trong <strong>Đường Link Đồng Bộ</strong> bên dưới:
+      </p>
+
+      <div style="margin-bottom:1.25rem;">
+        <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.35rem;">
+          1. Copy đường link này gửi sang máy thứ 2 (qua Zalo / Telegram / Bookmark):
+        </label>
+        <div style="display:flex; gap:0.5rem;">
+          <input type="text" id="sync-url-output" readonly style="flex:1; background:var(--bg-primary); color:var(--accent-blue); border:1px solid var(--border-color); padding:0.55rem 0.75rem; border-radius:8px; font-size:0.82rem;" />
+          <button class="btn btn-primary btn-sm" id="btn-copy-sync-url">📋 Copy Link</button>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--border-color); padding-top:1rem;">
+        <label style="font-size:0.8rem; font-weight:700; color:var(--text-primary); display:block; margin-bottom:0.35rem;">
+          2. Hoặc dán Link / Mã đồng bộ từ máy kia vào đây để nạp tiến độ:
+        </label>
+        <div style="display:flex; gap:0.5rem;">
+          <input type="text" id="sync-code-input" placeholder="Dán link hoặc mã #sync=... vào đây" style="flex:1; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); padding:0.55rem 0.75rem; border-radius:8px; font-size:0.82rem;" />
+          <button class="btn btn-success btn-sm" id="btn-apply-sync-code">📥 Nạp tiến độ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
