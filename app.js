@@ -1,11 +1,15 @@
 (function () {
   const STORAGE_KEY = "aws_saa_c03_progress_v1";
 
+  const CLOUD_SYNC_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a1399871fe5c18";
+  let cloudPushTimer = null;
+
   const state = {
     currentSessionId: 1,
     completedIds: [],
     srsData: {}, // cardKey -> { interval, ease, due, reps }
     notes: {},   // sessionId -> string
+    updatedAt: 0,
     activeTab: "today",
     timer: {
       stepIndex: 0,
@@ -26,7 +30,14 @@
     { num: 4, title: "Bước 4: Đóng gói thẻ mới (10p)", desc: "Lật thẻ Flashcard bên dưới & đánh dấu hoàn thành", seconds: 10 * 60 }
   ];
 
-  // ================= PERSISTENCE & 2-MACHINE SYNC =================
+  function setSyncBadgeStatus(text, isWarning = false) {
+    const badge = document.getElementById("cloud-sync-badge");
+    if (!badge) return;
+    badge.textContent = text;
+    badge.className = isWarning ? "badge badge-aws" : "badge badge-green";
+  }
+
+  // ================= PERSISTENCE & AUTOMATIC 2-MACHINE CLOUD SYNC =================
   function loadState() {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -36,19 +47,17 @@
         state.completedIds = Array.isArray(parsed.completedIds) ? parsed.completedIds : [];
         state.srsData = parsed.srsData || {};
         state.notes = parsed.notes || {};
+        state.updatedAt = parsed.updatedAt || 0;
       }
     } catch (e) {
       console.error("Failed to load state", e);
     }
 
-    // Check URL hash for instant 2-machine sync (#sync=...)
-    if (window.location.hash && window.location.hash.startsWith("#sync=")) {
-      const code = decodeURIComponent(window.location.hash.replace("#sync=", ""));
-      applySyncCode(code, true);
-    }
+    // Pull latest progress from Cloud automatically on startup
+    pullFromCloud(true);
   }
 
-  function saveState() {
+  function saveLocalOnly() {
     try {
       localStorage.setItem(
         STORAGE_KEY,
@@ -56,12 +65,90 @@
           currentSessionId: state.currentSessionId,
           completedIds: state.completedIds,
           srsData: state.srsData,
-          notes: state.notes
+          notes: state.notes,
+          updatedAt: state.updatedAt
         })
       );
-      updateUrlSyncHash();
     } catch (e) {
-      console.error("Failed to save state", e);
+      console.error("Failed to save local state", e);
+    }
+  }
+
+  function saveState() {
+    state.updatedAt = Date.now();
+    saveLocalOnly();
+    schedulePushToCloud();
+  }
+
+  function schedulePushToCloud() {
+    setSyncBadgeStatus("🔄 Đang đồng bộ Cloud...", true);
+    if (cloudPushTimer) clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(() => {
+      pushToCloud();
+    }, 350);
+  }
+
+  async function pushToCloud() {
+    try {
+      const payload = {
+        name: "aws_saa_sync",
+        data: {
+          currentSessionId: state.currentSessionId,
+          completedIds: state.completedIds,
+          srsData: state.srsData,
+          notes: state.notes,
+          updatedAt: state.updatedAt
+        }
+      };
+      const res = await fetch(CLOUD_SYNC_URL, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const nowStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+        setSyncBadgeStatus(`☁️ Auto-Sync: Đã lưu (${nowStr})`);
+      } else {
+        setSyncBadgeStatus("⚠️ Cloud Sync tạm gián đoạn", true);
+      }
+    } catch (e) {
+      setSyncBadgeStatus("⚠️ Offline (Đã lưu trên máy)", true);
+    }
+  }
+
+  async function pullFromCloud(silent = true) {
+    try {
+      if (!silent) setSyncBadgeStatus("🔄 Đang kiểm tra Cloud...", true);
+      const res = await fetch(CLOUD_SYNC_URL, { cache: "no-store" });
+      if (!res.ok) return;
+      const json = await res.json();
+      const cloud = json && json.data;
+      if (!cloud) return;
+
+      const cloudTime = Number(cloud.updatedAt || 0);
+      if (cloudTime > state.updatedAt) {
+        state.currentSessionId = Number(cloud.currentSessionId || 1);
+        // Merge completedIds so no completed session is ever lost
+        const mergedCompleted = new Set([
+          ...(Array.isArray(state.completedIds) ? state.completedIds : []),
+          ...(Array.isArray(cloud.completedIds) ? cloud.completedIds : [])
+        ]);
+        state.completedIds = Array.from(mergedCompleted).sort((a, b) => a - b);
+        state.srsData = { ...state.srsData, ...(cloud.srsData || {}) };
+        state.notes = { ...state.notes, ...(cloud.notes || {}) };
+        state.updatedAt = cloudTime;
+
+        saveLocalOnly();
+        renderAll();
+        if (!silent) showToast("☁️ Đã cập nhật tiến độ mới nhất từ Cloud!");
+      } else if (state.updatedAt > cloudTime && state.updatedAt > 0) {
+        // Local is newer than cloud -> push local to cloud
+        await pushToCloud();
+      }
+      const nowStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+      setSyncBadgeStatus(`☁️ Auto-Sync: Trực tuyến (${nowStr})`);
+    } catch (e) {
+      console.warn("Cloud pull skipped:", e);
     }
   }
 
@@ -69,18 +156,10 @@
     const payload = {
       c: state.currentSessionId,
       d: state.completedIds,
-      s: state.srsData
+      s: state.srsData,
+      n: state.notes
     };
     return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  }
-
-  function updateUrlSyncHash() {
-    const shortPayload = {
-      c: state.currentSessionId,
-      d: state.completedIds
-    };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(shortPayload))));
-    history.replaceState(null, "", "#sync=" + encoded);
   }
 
   function applySyncCode(code, silent) {
@@ -92,6 +171,7 @@
         state.currentSessionId = parsed.c;
         state.completedIds = Array.isArray(parsed.d) ? parsed.d : [];
         if (parsed.s) state.srsData = parsed.s;
+        if (parsed.n) state.notes = parsed.n;
         saveState();
         renderAll();
         if (!silent) showToast("✅ Đã đồng bộ tiến độ học thành công!");
@@ -718,6 +798,23 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       });
     }
 
+    // Automatic sync when switching between computers / browser tabs
+    window.addEventListener("focus", () => {
+      pullFromCloud(true);
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        pullFromCloud(true);
+      }
+    });
+
+    const cloudBadge = document.getElementById("cloud-sync-badge");
+    if (cloudBadge) {
+      cloudBadge.addEventListener("click", () => {
+        pullFromCloud(false);
+      });
+    }
+
     // Sync Modal
     const syncModal = document.getElementById("sync-modal");
     document.getElementById("btn-open-sync").addEventListener("click", () => {
@@ -735,7 +832,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
     document.getElementById("btn-copy-sync-url").addEventListener("click", () => {
       const val = document.getElementById("sync-url-output").value;
       navigator.clipboard.writeText(val).then(() => {
-        showToast("📋 Đã copy Link Đồng Bộ! Gửi link này sang máy thứ 2 để học tiếp ngay.");
+        showToast("📋 Đã copy Link Sao Lưu Dự Phòng!");
       });
     });
 
