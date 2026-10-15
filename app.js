@@ -380,18 +380,45 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         <p style="font-size:0.95rem; color:#e2e8f0;">${session.javaAnalogy}</p>
       </div>
 
-      <!-- Kiến thức cốt lõi -->
+      ${session.jargon && session.jargon.length ? `
+        <!-- Giải ngố thuật ngữ hàn lâm -->
+        <div class="lesson-section-block" style="border-left:4px solid var(--accent-green);">
+          <h3>💡 Từ Điển "Giải Ngố" Thuật Ngữ Hàn Lâm (Đọc hiểu ngay không sợ chữ chuyên ngành)</h3>
+          <div class="jargon-grid">
+            ${session.jargon.map((j) => `
+              <div class="jargon-item">
+                <div class="jargon-term">${j.term}</div>
+                <div class="jargon-plain">${j.plain}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      ` : ""}
+
+      <!-- Bài giảng chi tiết toàn diện -->
       <div class="lesson-section-block core-box">
-        <h3>📌 Kiến thức cốt lõi cần nắm trong 20 phút đầu</h3>
-        <ul class="bullet-list">
+        <h3>📚 Bài Giảng Chi Tiết Từ A-Z (Đủ 100% kiến thức đi thi - Không cần đọc Cheat Sheet tiếng Anh!)</h3>
+        <ul class="bullet-list" style="margin-bottom:0.85rem;">
           ${session.corePoints.map((pt) => `<li>${pt}</li>`).join("")}
         </ul>
-        <div style="margin-top:0.9rem; padding-top:0.75rem; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-          <span style="font-size:0.84rem; color:var(--text-secondary);">📖 Tài liệu đọc thêm miễn phí chuẩn SAA-C03 cho buổi này:</span>
-          <a href="${session.freeDocUrl}" target="_blank" rel="noopener" class="btn btn-outline btn-sm">
-            🔗 Mở ${session.freeDocTitle} ↗
-          </a>
-        </div>
+
+        ${session.diagram ? `
+          <div style="margin:0.85rem 0;">
+            <div style="font-size:0.82rem; font-weight:700; color:var(--accent-blue);">📐 SƠ ĐỒ KIẾN TRÚC & LUỒNG HOẠT ĐỘNG TRỰC QUAN:</div>
+            <div class="diagram-box">${session.diagram}</div>
+          </div>
+        ` : ""}
+
+        ${session.deepSections && session.deepSections.length ? `
+          <div class="deep-dive-list">
+            ${session.deepSections.map((ds) => `
+              <div class="deep-dive-item">
+                <h4>${ds.title}</h4>
+                <div>${ds.content}</div>
+              </div>
+            `).join("")}
+          </div>
+        ` : ""}
       </div>
 
       <!-- Bẫy đề thi -->
@@ -402,10 +429,31 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         </ul>
       </div>
 
+      ${session.quizzes && session.quizzes.length ? `
+        <!-- Câu hỏi thi thử tương tác ngay trên web -->
+        <div class="lesson-section-block" style="border-left:4px solid var(--accent-aws);">
+          <h3>✍️ Thực Chiến Câu Hỏi Thi Thật Ngay Tại Chỗ (Bấm chọn đáp án để kiểm tra xem bạn đã đủ kiến thức chưa!)</h3>
+          ${session.quizzes.map((qz, qIdx) => `
+            <div class="quiz-card" data-quiz-idx="${qIdx}" data-correct-idx="${qz.correctIdx}">
+              <div class="quiz-question-en">🇬🇧 ${qz.qEn}</div>
+              <div class="quiz-question-vi">🇻🇳 Dịch: ${qz.qVi}</div>
+              <div class="quiz-options">
+                ${qz.options.map((opt, oIdx) => `
+                  <button class="quiz-option" data-opt-idx="${oIdx}">${opt}</button>
+                `).join("")}
+              </div>
+              <div class="quiz-explanation" id="quiz-exp-${qIdx}">
+                <strong>✅ Giải thích chi tiết:</strong> ${qz.explanation}
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
+
       <!-- Bước 3: Prompt AI -->
       <div class="lesson-section-block prompt-box">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
-          <h3 style="margin-bottom:0;">🤖 Bước 3 (20 phút): Prompt Hỏi AI & Làm 2 Câu Tình Huống</h3>
+          <h3 style="margin-bottom:0;">🤖 Bước 3 (Tùy chọn): Prompt Hỏi Sâu Thêm Với AI</h3>
           <button class="btn btn-primary btn-sm" id="btn-copy-prompt">📋 Copy Prompt Hỏi AI Ngay</button>
         </div>
         <pre id="session-prompt-text" style="background:var(--bg-primary); border:1px solid var(--border-color); padding:0.85rem; border-radius:8px; font-size:0.84rem; color:#cbd5e1; white-space:pre-wrap; font-family:inherit;">${promptText}</pre>
@@ -447,6 +495,31 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         <textarea id="session-note-input" rows="3" placeholder="Ghi lại từ vựng tiếng Anh hoặc điểm bạn hay quên ở buổi này (tự động lưu Cloud)..." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; font-family:inherit; font-size:0.9rem;">${state.notes[session.id] || ""}</textarea>
       </div>
     `;
+
+    // Interactive Quiz Click Listeners
+    container.querySelectorAll(".quiz-card").forEach((qCard) => {
+      const correctIdx = Number(qCard.getAttribute("data-correct-idx"));
+      const qIdx = qCard.getAttribute("data-quiz-idx");
+      const expEl = document.getElementById(`quiz-exp-${qIdx}`);
+      const optBtns = qCard.querySelectorAll(".quiz-option");
+
+      optBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const chosenIdx = Number(btn.getAttribute("data-opt-idx"));
+          optBtns.forEach((b, i) => {
+            b.classList.remove("correct", "wrong");
+            if (i === correctIdx) b.classList.add("correct");
+          });
+          if (chosenIdx !== correctIdx) {
+            btn.classList.add("wrong");
+            showToast("❌ Chưa chính xác! Hãy đọc giải thích bên dưới nhé.");
+          } else {
+            showToast("🎯 Chính xác 100%! Bạn đã nắm vững ý này.");
+          }
+          if (expEl) expEl.classList.add("visible");
+        });
+      });
+    });
 
     // Attach listeners
     document.getElementById("btn-prev-session").addEventListener("click", () => {
