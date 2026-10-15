@@ -206,6 +206,47 @@
     </div>
   </div>
 
+  <!-- Add Spaced Repetition Card Modal -->
+  <div class="modal-backdrop" id="add-card-modal">
+    <div class="modal-content" style="max-width:640px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="font-size:1.15rem; color:var(--accent-aws);">➕ Thêm Thẻ Spaced Repetition Vào Web</h3>
+        <button class="btn btn-outline btn-sm" id="btn-close-add-card">✕ Đóng</button>
+      </div>
+
+      <div style="margin-bottom:0.9rem;">
+        <label style="font-size:0.82rem; font-weight:700; color:var(--text-secondary); display:block; margin-bottom:0.3rem;">
+          Gắn thẻ này vào Buổi học:
+        </label>
+        <select id="new-card-session-select" style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); padding:0.55rem 0.75rem; border-radius:8px; font-weight:600;"></select>
+      </div>
+
+      <!-- Cách 1: Thêm 1 thẻ -->
+      <div style="background:rgba(15,23,42,0.6); border:1px solid var(--border-color); border-radius:10px; padding:1rem; margin-bottom:1rem;">
+        <h4 style="font-size:0.9rem; color:var(--accent-blue); margin-bottom:0.65rem;">📝 Cách 1: Nhập 1 thẻ mới</h4>
+        <div style="margin-bottom:0.65rem;">
+          <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem;">Mặt trước (Câu hỏi tình huống / So sánh):</label>
+          <textarea id="new-card-q" rows="2" placeholder="Ví dụ: Khi nào dùng Gateway VPC Endpoint thay vì NAT Gateway?" style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.6rem; font-family:inherit; font-size:0.88rem;"></textarea>
+        </div>
+        <div style="margin-bottom:0.75rem;">
+          <label style="font-size:0.8rem; font-weight:600; display:block; margin-bottom:0.25rem;">Mặt sau (Đáp án ngắn gọn):</label>
+          <textarea id="new-card-a" rows="2" placeholder="Ví dụ: Khi kết nối từ Private Subnet tới S3 hoặc DynamoDB (Hoàn toàn miễn phí!)." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.6rem; font-family:inherit; font-size:0.88rem;"></textarea>
+        </div>
+        <button class="btn btn-primary" id="btn-save-single-card" style="width:100%;">💾 Lưu Thẻ Này Vào Web (Tự động Sync Cloud)</button>
+      </div>
+
+      <!-- Cách 2: Dán hàng loạt từ AI -->
+      <div style="background:rgba(15,23,42,0.6); border:1px solid var(--border-color); border-radius:10px; padding:1rem;">
+        <h4 style="font-size:0.9rem; color:var(--accent-green); margin-bottom:0.35rem;">⚡ Cách 2: Dán nhanh nhiều thẻ từ AI (1 dòng = 1 thẻ)</h4>
+        <p style="font-size:0.78rem; color:var(--text-secondary); margin-bottom:0.5rem;">
+          Mỗi dòng viết theo định dạng: <code>Câu hỏi | Đáp án</code> (ngăn cách bởi dấu gạch đứng <code>|</code> hoặc phím Tab).
+        </p>
+        <textarea id="new-card-bulk" rows="3" placeholder="Câu hỏi 1 | Đáp án 1&#10;Câu hỏi 2 | Đáp án 2" style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.6rem; font-family:inherit; font-size:0.85rem; margin-bottom:0.65rem;"></textarea>
+        <button class="btn btn-success" id="btn-save-bulk-cards" style="width:100%;">⚡ Nạp Tất Cả Các Dòng Trên Vào Web</button>
+      </div>
+    </div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script src="data.js"></script>

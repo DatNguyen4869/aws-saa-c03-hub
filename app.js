@@ -7,8 +7,9 @@
   const state = {
     currentSessionId: 1,
     completedIds: [],
-    srsData: {}, // cardKey -> { interval, ease, due, reps }
-    notes: {},   // sessionId -> string
+    srsData: {},      // cardKey -> { interval, ease, due, reps }
+    customCards: [],  // Array of { id, sessionId, q, a }
+    notes: {},        // sessionId -> string
     updatedAt: 0,
     activeTab: "today",
     timer: {
@@ -17,7 +18,7 @@
       running: false,
       intervalId: null
     },
-    srsFilter: "unlocked", // "unlocked" | "all" | "current"
+    srsFilter: "unlocked", // "unlocked" | "all" | "current" | "custom"
     srsQueue: [],
     srsCurrentIndex: 0,
     srsRevealed: false
@@ -46,6 +47,7 @@
         state.currentSessionId = parsed.currentSessionId || 1;
         state.completedIds = Array.isArray(parsed.completedIds) ? parsed.completedIds : [];
         state.srsData = parsed.srsData || {};
+        state.customCards = Array.isArray(parsed.customCards) ? parsed.customCards : [];
         state.notes = parsed.notes || {};
         state.updatedAt = parsed.updatedAt || 0;
       }
@@ -65,6 +67,7 @@
           currentSessionId: state.currentSessionId,
           completedIds: state.completedIds,
           srsData: state.srsData,
+          customCards: state.customCards,
           notes: state.notes,
           updatedAt: state.updatedAt
         })
@@ -96,6 +99,7 @@
           currentSessionId: state.currentSessionId,
           completedIds: state.completedIds,
           srsData: state.srsData,
+          customCards: state.customCards,
           notes: state.notes,
           updatedAt: state.updatedAt
         }
@@ -116,6 +120,17 @@
     }
   }
 
+  function mergeCustomCards(localArr, cloudArr) {
+    const map = new Map();
+    (Array.isArray(localArr) ? localArr : []).forEach((c) => {
+      if (c && c.id) map.set(c.id, c);
+    });
+    (Array.isArray(cloudArr) ? cloudArr : []).forEach((c) => {
+      if (c && c.id) map.set(c.id, c);
+    });
+    return Array.from(map.values());
+  }
+
   async function pullFromCloud(silent = true) {
     try {
       if (!silent) setSyncBadgeStatus("🔄 Đang kiểm tra Cloud...", true);
@@ -128,21 +143,20 @@
       const cloudTime = Number(cloud.updatedAt || 0);
       if (cloudTime > state.updatedAt) {
         state.currentSessionId = Number(cloud.currentSessionId || 1);
-        // Merge completedIds so no completed session is ever lost
         const mergedCompleted = new Set([
           ...(Array.isArray(state.completedIds) ? state.completedIds : []),
           ...(Array.isArray(cloud.completedIds) ? cloud.completedIds : [])
         ]);
         state.completedIds = Array.from(mergedCompleted).sort((a, b) => a - b);
         state.srsData = { ...state.srsData, ...(cloud.srsData || {}) };
+        state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
         state.notes = { ...state.notes, ...(cloud.notes || {}) };
         state.updatedAt = cloudTime;
 
         saveLocalOnly();
         renderAll();
-        if (!silent) showToast("☁️ Đã cập nhật tiến độ mới nhất từ Cloud!");
+        if (!silent) showToast("☁️ Đã cập nhật tiến độ & thẻ mới nhất từ Cloud!");
       } else if (state.updatedAt > cloudTime && state.updatedAt > 0) {
-        // Local is newer than cloud -> push local to cloud
         await pushToCloud();
       }
       const nowStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
@@ -157,6 +171,7 @@
       c: state.currentSessionId,
       d: state.completedIds,
       s: state.srsData,
+      cc: state.customCards,
       n: state.notes
     };
     return btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
@@ -171,6 +186,7 @@
         state.currentSessionId = parsed.c;
         state.completedIds = Array.isArray(parsed.d) ? parsed.d : [];
         if (parsed.s) state.srsData = parsed.s;
+        if (Array.isArray(parsed.cc)) state.customCards = parsed.cc;
         if (parsed.n) state.notes = parsed.n;
         saveState();
         renderAll();
@@ -299,7 +315,24 @@ Các ý chính trong bài hôm nay:
 
 Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
 1. Giải thích sâu hơn cách dịch vụ/tính năng này ứng dụng trong kiến trúc hệ thống Java thực tế.
-2. Đưa ra 2 câu hỏi trắc nghiệm tình huống (Scenario-based giống đề thi SAA-C03 thật, bằng tiếng Anh kèm dịch tiếng Việt) về đúng chủ đề này để tôi làm thử. (Khoan hiện đáp án, hãy đợi tôi chọn đáp án trước rồi mới giải thích tại sao đúng và tại sao các câu còn lại sai).`;
+2. Đưa ra 2 câu hỏi trắc nghiệm tình huống (Scenario-based giống đề thi SAA-C03 thật, bằng tiếng Anh kèm dịch tiếng Việt) về đúng chủ đề này để tôi làm thử. (Khoan hiện đáp án, hãy đợi tôi chọn đáp án trước rồi mới giải thích tại sao đúng và tại sao các câu còn lại sai).
+3. Sau khi giải thích xong, hãy tóm tắt cho tôi 3 thẻ Flashcard theo đúng định dạng "Câu hỏi | Đáp án" (mỗi thẻ 1 dòng, ngăn cách bởi dấu |) để tôi copy dán thẳng vào Web Spaced Repetition của tôi.`;
+  }
+
+  function openAddCardModal(defaultSessionId) {
+    const modal = document.getElementById("add-card-modal");
+    const select = document.getElementById("new-card-session-select");
+    const targetId = defaultSessionId || state.currentSessionId;
+    select.innerHTML = window.STUDY_DATA.sessions.map((s) => `
+      <option value="${s.id}" ${s.id === Number(targetId) ? "selected" : ""}>
+        Buổi #${s.id}: ${s.title}
+      </option>
+    `).join("");
+    document.getElementById("new-card-q").value = "";
+    document.getElementById("new-card-a").value = "";
+    document.getElementById("new-card-bulk").value = "";
+    modal.classList.add("open");
+    setTimeout(() => document.getElementById("new-card-q").focus(), 100);
   }
 
   function renderTodayLesson() {
@@ -309,6 +342,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
 
     const container = document.getElementById("today-lesson-container");
     const promptText = buildAiPromptForSession(session);
+    const sessionCustomCards = state.customCards.filter((c) => Number(c.sessionId) === session.id);
 
     container.innerHTML = `
       <div class="lesson-nav-bar">
@@ -380,13 +414,26 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       <!-- Bước 4: Thẻ Flashcards của buổi này -->
       <div class="lesson-section-block">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-          <h3 style="margin-bottom:0;">🗂️ Bước 4 (10 phút): Thẻ Anki Trọng Tâm Của Buổi #${session.id} (Bấm vào thẻ để lật đáp án)</h3>
-          <button class="btn btn-outline btn-sm" id="btn-export-session-anki">⬇️ Tải thẻ buổi này (.tsv cho Anki)</button>
+          <h3 style="margin-bottom:0;">🗂️ Bước 4 (10 phút): Thẻ Spaced Repetition Của Buổi #${session.id} (Bấm vào thẻ để lật đáp án)</h3>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" id="btn-add-card-lesson">➕ Thêm Thẻ Mới Vào Web</button>
+            <button class="btn btn-outline btn-sm" id="btn-export-session-anki">⬇️ Xuất .tsv Anki</button>
+          </div>
         </div>
         <div class="mini-cards-grid">
           ${session.cards.map((c, idx) => `
             <div class="flip-card" data-card-idx="${idx}">
-              <div class="q-label">Câu hỏi Flashcard #${idx + 1} (Bấm để xem đáp án)</div>
+              <div class="q-label">Thẻ chuẩn #${idx + 1} (Bấm để xem đáp án)</div>
+              <div class="q-text">${c.q}</div>
+              <div class="a-text"><strong>Đáp án:</strong> ${c.a}</div>
+            </div>
+          `).join("")}
+          ${sessionCustomCards.map((c, idx) => `
+            <div class="flip-card" style="border-color:rgba(56,189,248,0.45);" data-custom-id="${c.id}">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                <span class="q-label" style="color:var(--accent-blue); margin-bottom:0;">✨ Thẻ bạn tạo #${idx + 1}</span>
+                <button class="btn btn-outline btn-sm" data-delete-card="${c.id}" style="padding:0.1rem 0.45rem; font-size:0.72rem; color:#fca5a5; border-color:rgba(239,68,68,0.4);" title="Xóa thẻ này">🗑️</button>
+              </div>
               <div class="q-text">${c.q}</div>
               <div class="a-text"><strong>Đáp án:</strong> ${c.a}</div>
             </div>
@@ -397,7 +444,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       <!-- Ghi chú cá nhân -->
       <div class="lesson-section-block">
         <h3>📝 Ghi chú nhanh của bạn cho Buổi #${session.id}</h3>
-        <textarea id="session-note-input" rows="3" placeholder="Ghi lại từ vựng tiếng Anh hoặc điểm bạn hay quên ở buổi này (tự động lưu)..." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; font-family:inherit; font-size:0.9rem;">${state.notes[session.id] || ""}</textarea>
+        <textarea id="session-note-input" rows="3" placeholder="Ghi lại từ vựng tiếng Anh hoặc điểm bạn hay quên ở buổi này (tự động lưu Cloud)..." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; font-family:inherit; font-size:0.9rem;">${state.notes[session.id] || ""}</textarea>
       </div>
     `;
 
@@ -433,7 +480,6 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         showToast(`Đã bỏ đánh dấu hoàn thành Buổi #${id}`);
       } else {
         state.completedIds.push(id);
-        // Move automatically to next uncompleted session
         const nextUncompleted = window.STUDY_DATA.sessions.find((s) => s.id > id && !state.completedIds.includes(s.id));
         if (nextUncompleted) {
           state.currentSessionId = nextUncompleted.id;
@@ -451,13 +497,31 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       });
     });
 
+    document.getElementById("btn-add-card-lesson").addEventListener("click", () => {
+      openAddCardModal(session.id);
+    });
+
     document.getElementById("btn-export-session-anki").addEventListener("click", () => {
-      exportAnkiTsv(session.cards, `AWS_SAA_C03_Buoi_${session.id}.tsv`);
+      exportAnkiTsv([...session.cards, ...sessionCustomCards], `AWS_SAA_C03_Buoi_${session.id}.tsv`);
     });
 
     container.querySelectorAll(".flip-card").forEach((cardEl) => {
-      cardEl.addEventListener("click", () => {
+      cardEl.addEventListener("click", (e) => {
+        if (e.target.closest("[data-delete-card]")) return;
         cardEl.classList.toggle("revealed");
+      });
+    });
+
+    container.querySelectorAll("[data-delete-card]").forEach((delBtn) => {
+      delBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const cardId = delBtn.getAttribute("data-delete-card");
+        state.customCards = state.customCards.filter((c) => c.id !== cardId);
+        delete state.srsData[cardId];
+        saveState();
+        buildSrsQueue();
+        renderAll();
+        showToast("🗑️ Đã xóa thẻ tự tạo!");
       });
     });
 
@@ -539,13 +603,29 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       if (filterMode === "unlocked" && !isUnlocked) return;
       if (filterMode === "current" && s.id !== state.currentSessionId) return;
 
-      s.cards.forEach((c, idx) => {
+      if (filterMode !== "custom") {
+        s.cards.forEach((c, idx) => {
+          list.push({
+            key: `s${s.id}_c${idx}`,
+            sessionId: s.id,
+            sessionTitle: s.title,
+            q: c.q,
+            a: c.a,
+            isCustom: false
+          });
+        });
+      }
+
+      // Include user's custom cards for this session
+      const customForSession = state.customCards.filter((cc) => Number(cc.sessionId) === s.id);
+      customForSession.forEach((cc) => {
         list.push({
-          key: `s${s.id}_c${idx}`,
+          key: cc.id,
           sessionId: s.id,
           sessionTitle: s.title,
-          q: c.q,
-          a: c.a
+          q: cc.q,
+          a: cc.a,
+          isCustom: true
         });
       });
     });
@@ -554,8 +634,6 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
 
   function buildSrsQueue() {
     const cards = getAllFlashcards(state.srsFilter);
-    const now = Date.now();
-    // Sort due cards first
     cards.sort((a, b) => {
       const dueA = state.srsData[a.key]?.due || 0;
       const dueB = state.srsData[b.key]?.due || 0;
@@ -573,30 +651,53 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
     const card = state.srsQueue[state.srsCurrentIndex];
     const container = document.getElementById("srs-arena-container");
 
+    const filterBarHtml = `
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+          <button class="btn btn-sm ${state.srsFilter === "unlocked" ? "btn-primary" : "btn-outline"}" data-srs-filter="unlocked">
+            Thẻ từ các buổi đã học (${getAllFlashcards("unlocked").length})
+          </button>
+          <button class="btn btn-sm ${state.srsFilter === "current" ? "btn-primary" : "btn-outline"}" data-srs-filter="current">
+            Chỉ Buổi #${state.currentSessionId} (${getAllFlashcards("current").length})
+          </button>
+          <button class="btn btn-sm ${state.srsFilter === "custom" ? "btn-primary" : "btn-outline"}" data-srs-filter="custom">
+            ✨ Thẻ tự tạo (${state.customCards.length})
+          </button>
+          <button class="btn btn-sm ${state.srsFilter === "all" ? "btn-primary" : "btn-outline"}" data-srs-filter="all">
+            Toàn bộ (${getAllFlashcards("all").length})
+          </button>
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+          <button class="btn btn-success btn-sm" id="btn-srs-add-card">➕ Thêm Thẻ Mới Vào Web</button>
+          <button class="btn btn-outline btn-sm" id="btn-export-all-anki">⬇️ Xuất .tsv Anki</button>
+        </div>
+      </div>
+    `;
+
     if (!card) {
-      container.innerHTML = `<div class="srs-box"><p>Không có thẻ nào trong bộ lọc này.</p></div>`;
+      container.innerHTML = `
+        <div class="srs-box">
+          ${filterBarHtml}
+          <div style="padding:2rem; color:var(--text-secondary);">
+            <p style="margin-bottom:1rem;">Chưa có thẻ nào trong bộ lọc này.</p>
+            <button class="btn btn-primary" id="btn-empty-add-card">➕ Tạo thẻ Spaced Repetition đầu tiên của bạn</button>
+          </div>
+        </div>
+      `;
+      attachSrsCommonListeners(container);
+      const emptyBtn = document.getElementById("btn-empty-add-card");
+      if (emptyBtn) emptyBtn.addEventListener("click", () => openAddCardModal(state.currentSessionId));
       return;
     }
 
     container.innerHTML = `
       <div class="srs-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
-          <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-            <button class="btn btn-sm ${state.srsFilter === "unlocked" ? "btn-primary" : "btn-outline"}" data-srs-filter="unlocked">
-              Thẻ từ các buổi đã học
-            </button>
-            <button class="btn btn-sm ${state.srsFilter === "current" ? "btn-primary" : "btn-outline"}" data-srs-filter="current">
-              Chỉ thẻ Buổi #${state.currentSessionId}
-            </button>
-            <button class="btn btn-sm ${state.srsFilter === "all" ? "btn-primary" : "btn-outline"}" data-srs-filter="all">
-              Toàn bộ khóa (${getAllFlashcards("all").length} thẻ)
-            </button>
-          </div>
-          <button class="btn btn-outline btn-sm" id="btn-export-all-anki">⬇️ Xuất toàn bộ thẻ ra file Anki (.tsv)</button>
-        </div>
+        ${filterBarHtml}
 
-        <div style="font-size:0.84rem; color:var(--text-secondary);">
-          Thẻ ${state.srsCurrentIndex + 1} / ${state.srsQueue.length} • Thuộc <strong>Buổi #${card.sessionId}: ${card.sessionTitle}</strong>
+        <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; font-size:0.84rem; color:var(--text-secondary);">
+          <span>Thẻ ${state.srsCurrentIndex + 1} / ${state.srsQueue.length} • Thuộc <strong>Buổi #${card.sessionId}: ${card.sessionTitle}</strong></span>
+          ${card.isCustom ? `<span class="badge badge-blue">✨ Thẻ của bạn</span>` : ""}
+          ${card.isCustom ? `<button class="btn btn-outline btn-sm" id="btn-srs-delete-custom" style="padding:0.15rem 0.5rem; font-size:0.75rem; color:#fca5a5;">🗑️ Xóa</button>` : ""}
         </div>
 
         <div class="srs-card-surface" id="srs-card-surface">
@@ -638,13 +739,20 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       </div>
     `;
 
-    container.querySelectorAll("[data-srs-filter]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        state.srsFilter = btn.getAttribute("data-srs-filter");
+    attachSrsCommonListeners(container);
+
+    const delCustomBtn = document.getElementById("btn-srs-delete-custom");
+    if (delCustomBtn) {
+      delCustomBtn.addEventListener("click", () => {
+        state.customCards = state.customCards.filter((c) => c.id !== card.key);
+        delete state.srsData[card.key];
+        saveState();
         buildSrsQueue();
+        renderAll();
         renderSrsTab();
+        showToast("🗑️ Đã xóa thẻ tự tạo!");
       });
-    });
+    }
 
     document.getElementById("srs-card-surface").addEventListener("click", () => {
       state.srsRevealed = !state.srsRevealed;
@@ -680,11 +788,31 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         renderSrsTab();
       });
     });
+  }
 
-    document.getElementById("btn-export-all-anki").addEventListener("click", () => {
-      const all = getAllFlashcards("all");
-      exportAnkiTsv(all, "AWS_SAA_C03_Full_Deck.tsv");
+  function attachSrsCommonListeners(container) {
+    container.querySelectorAll("[data-srs-filter]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.srsFilter = btn.getAttribute("data-srs-filter");
+        buildSrsQueue();
+        renderSrsTab();
+      });
     });
+
+    const addBtn = document.getElementById("btn-srs-add-card");
+    if (addBtn) {
+      addBtn.addEventListener("click", () => {
+        openAddCardModal(state.currentSessionId);
+      });
+    }
+
+    const expBtn = document.getElementById("btn-export-all-anki");
+    if (expBtn) {
+      expBtn.addEventListener("click", () => {
+        const all = getAllFlashcards("all");
+        exportAnkiTsv(all, "AWS_SAA_C03_Full_Deck.tsv");
+      });
+    }
   }
 
   function exportAnkiTsv(cardsArray, filename) {
@@ -814,6 +942,73 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         pullFromCloud(false);
       });
     }
+
+    // Add Card Modal Listeners
+    const addCardModal = document.getElementById("add-card-modal");
+    document.getElementById("btn-close-add-card").addEventListener("click", () => {
+      addCardModal.classList.remove("open");
+    });
+
+    document.getElementById("btn-save-single-card").addEventListener("click", () => {
+      const sId = Number(document.getElementById("new-card-session-select").value || state.currentSessionId);
+      const q = document.getElementById("new-card-q").value.trim();
+      const a = document.getElementById("new-card-a").value.trim();
+      if (!q || !a) {
+        showToast("⚠️ Vui lòng nhập cả Mặt trước (Câu hỏi) và Mặt sau (Đáp án)!");
+        return;
+      }
+      state.customCards.push({
+        id: "cust_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+        sessionId: sId,
+        q,
+        a
+      });
+      saveState();
+      buildSrsQueue();
+      renderAll();
+      if (state.activeTab === "srs") renderSrsTab();
+      addCardModal.classList.remove("open");
+      showToast("✅ Đã thêm thẻ mới vào Web & đồng bộ lên Cloud!");
+    });
+
+    document.getElementById("btn-save-bulk-cards").addEventListener("click", () => {
+      const sId = Number(document.getElementById("new-card-session-select").value || state.currentSessionId);
+      const raw = document.getElementById("new-card-bulk").value.trim();
+      if (!raw) {
+        showToast("⚠️ Vui lòng dán danh sách thẻ theo định dạng: Câu hỏi | Đáp án");
+        return;
+      }
+      const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      let added = 0;
+      lines.forEach((line, idx) => {
+        const parts = line.includes("|") ? line.split("|") : line.split("\t");
+        if (parts.length >= 2) {
+          const q = parts[0].replace(/^[-*•\d.)\s]+/, "").trim();
+          const a = parts.slice(1).join(" | ").trim();
+          if (q && a) {
+            state.customCards.push({
+              id: "cust_" + Date.now() + "_" + idx + "_" + Math.floor(Math.random() * 1000),
+              sessionId: sId,
+              q,
+              a
+            });
+            added++;
+          }
+        }
+      });
+
+      if (added === 0) {
+        showToast("⚠️ Không tìm thấy dòng hợp lệ! Hãy ngăn cách Câu hỏi và Đáp án bằng dấu |");
+        return;
+      }
+
+      saveState();
+      buildSrsQueue();
+      renderAll();
+      if (state.activeTab === "srs") renderSrsTab();
+      addCardModal.classList.remove("open");
+      showToast(`⚡ Đã nạp thành công ${added} thẻ mới vào Web & đồng bộ Cloud!`);
+    });
 
     // Sync Modal
     const syncModal = document.getElementById("sync-modal");
