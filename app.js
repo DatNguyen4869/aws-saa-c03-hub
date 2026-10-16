@@ -18,10 +18,11 @@
       running: false,
       intervalId: null
     },
-    srsFilter: "unlocked", // "unlocked" | "all" | "current" | "custom"
+    srsFilter: "due", // "due" | "completed" | "current" | "custom" | "all"
     srsQueue: [],
     srsCurrentIndex: 0,
-    srsRevealed: false
+    srsRevealed: false,
+    showSrsTable: false
   };
 
   const FLOW_STEPS = [
@@ -131,6 +132,25 @@
     return Array.from(map.values());
   }
 
+  function mergeSrsData(localSrs, cloudSrs) {
+    const merged = { ...(localSrs || {}) };
+    const incoming = cloudSrs || {};
+    Object.keys(incoming).forEach((key) => {
+      const loc = merged[key];
+      const rem = incoming[key];
+      if (!loc) {
+        merged[key] = rem;
+      } else {
+        const locTime = Number(loc.updatedAt || loc.due || 0);
+        const remTime = Number(rem.updatedAt || rem.due || 0);
+        if (remTime >= locTime) {
+          merged[key] = rem;
+        }
+      }
+    });
+    return merged;
+  }
+
   async function pullFromCloud(silent = true) {
     try {
       if (!silent) setSyncBadgeStatus("🔄 Đang kiểm tra Cloud...", true);
@@ -148,14 +168,16 @@
           ...(Array.isArray(cloud.completedIds) ? cloud.completedIds : [])
         ]);
         state.completedIds = Array.from(mergedCompleted).sort((a, b) => a - b);
-        state.srsData = { ...state.srsData, ...(cloud.srsData || {}) };
+        state.srsData = mergeSrsData(state.srsData, cloud.srsData);
         state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
         state.notes = { ...state.notes, ...(cloud.notes || {}) };
         state.updatedAt = cloudTime;
 
         saveLocalOnly();
+        buildSrsQueue();
         renderAll();
-        if (!silent) showToast("☁️ Đã cập nhật tiến độ & thẻ mới nhất từ Cloud!");
+        if (state.activeTab === "srs") renderSrsTab();
+        if (!silent) showToast("☁️ Đã cập nhật tiến độ & lịch ôn SRS mới nhất từ Cloud!");
       } else if (state.updatedAt > cloudTime && state.updatedAt > 0) {
         await pushToCloud();
       }
@@ -189,7 +211,9 @@
         if (Array.isArray(parsed.cc)) state.customCards = parsed.cc;
         if (parsed.n) state.notes = parsed.n;
         saveState();
+        buildSrsQueue();
         renderAll();
+        if (state.activeTab === "srs") renderSrsTab();
         if (!silent) showToast("✅ Đã đồng bộ tiến độ học thành công!");
         return true;
       }
@@ -223,14 +247,9 @@
     document.getElementById("stat-current-session").textContent = `Buổi #${state.currentSessionId}`;
     document.getElementById("stat-completed-count").textContent = `${done} / ${total}`;
 
-    // Count due flashcards
-    const allCards = getAllFlashcards("unlocked");
-    const now = Date.now();
-    const dueCount = allCards.filter((c) => {
-      const info = state.srsData[c.key];
-      return !info || info.due <= now;
-    }).length;
-    document.getElementById("stat-due-cards").textContent = `${dueCount} thẻ`;
+    // Count due flashcards strictly from completed sessions
+    const dueCards = getAllFlashcards("due");
+    document.getElementById("stat-due-cards").textContent = `${dueCards.length} thẻ`;
   }
 
   // ================= 60-MIN FLOW TIMER =================
@@ -432,17 +451,26 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       ${session.quizzes && session.quizzes.length ? `
         <!-- Câu hỏi thi thử tương tác ngay trên web -->
         <div class="lesson-section-block" style="border-left:4px solid var(--accent-aws);">
-          <h3>✍️ Thực Chiến Câu Hỏi Thi Thật Ngay Tại Chỗ (Bấm chọn đáp án để kiểm tra xem bạn đã đủ kiến thức chưa!)</h3>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+            <h3 style="margin-bottom:0;">✍️ Thực Chiến Câu Hỏi Thi Thật (100% Tiếng Anh Chuẩn Pearson VUE SAA-C03)</h3>
+            <span class="badge badge-aws">Bấm chọn A/B/C/D để chấm điểm & xem giải thích</span>
+          </div>
           ${session.quizzes.map((qz, qIdx) => `
             <div class="quiz-card" data-quiz-idx="${qIdx}" data-correct-idx="${qz.correctIdx}">
-              <div class="quiz-question-en">🇬🇧 ${qz.qEn}</div>
-              <div class="quiz-question-vi">🇻🇳 Dịch: ${qz.qVi}</div>
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.45rem;">
+                <div class="quiz-question-en" style="margin-bottom:0; flex:1;">🇬🇧 <strong>Question ${qIdx + 1}:</strong> ${qz.qEn}</div>
+                <button type="button" class="btn btn-outline btn-sm" data-toggle-vi="${qIdx}" style="padding:0.2rem 0.55rem; font-size:0.75rem; white-space:nowrap;">🇻🇳 Dịch câu hỏi</button>
+              </div>
+              <div class="quiz-question-vi" id="quiz-vi-${qIdx}" style="display:none; background:rgba(15,23,42,0.6); padding:0.5rem 0.75rem; border-radius:6px; margin-bottom:0.65rem; border-left:3px solid var(--accent-blue);">
+                🇻🇳 <strong>Tạm dịch đề bài:</strong> ${qz.qVi}
+              </div>
               <div class="quiz-options">
                 ${qz.options.map((opt, oIdx) => `
                   <button class="quiz-option" data-opt-idx="${oIdx}">${opt}</button>
                 `).join("")}
               </div>
               <div class="quiz-explanation" id="quiz-exp-${qIdx}">
+                <div style="margin-bottom:0.35rem; color:var(--text-secondary); font-size:0.84rem;">🇻🇳 <em>Dịch đề: ${qz.qVi}</em></div>
                 <strong>✅ Giải thích chi tiết:</strong> ${qz.explanation}
               </div>
             </div>
@@ -495,6 +523,18 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         <textarea id="session-note-input" rows="3" placeholder="Ghi lại từ vựng tiếng Anh hoặc điểm bạn hay quên ở buổi này (tự động lưu Cloud)..." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; font-family:inherit; font-size:0.9rem;">${state.notes[session.id] || ""}</textarea>
       </div>
     `;
+
+    // Toggle Vietnamese question translation
+    container.querySelectorAll("[data-toggle-vi]").forEach((tBtn) => {
+      tBtn.addEventListener("click", () => {
+        const qIdx = tBtn.getAttribute("data-toggle-vi");
+        const viBox = document.getElementById(`quiz-vi-${qIdx}`);
+        if (!viBox) return;
+        const isHidden = viBox.style.display === "none";
+        viBox.style.display = isHidden ? "block" : "none";
+        tBtn.textContent = isHidden ? "🙈 Ẩn dịch câu hỏi" : "🇻🇳 Dịch câu hỏi";
+      });
+    });
 
     // Interactive Quiz Click Listeners
     container.querySelectorAll(".quiz-card").forEach((qCard) => {
@@ -557,9 +597,10 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         if (nextUncompleted) {
           state.currentSessionId = nextUncompleted.id;
         }
-        showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã chuyển sẵn sang Buổi #${state.currentSessionId}!`);
+        showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Thẻ của Buổi #${id} đã được đưa vào lịch Anki!`);
       }
       saveState();
+      buildSrsQueue();
       renderAll();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
@@ -669,17 +710,30 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
   }
 
   // ================= SPACED REPETITION (ANKI WEB ENGINE) =================
+  // Strictly distinguishes COMPLETED sessions from the uncompleted current session!
   function getAllFlashcards(filterMode) {
     const list = [];
+    const now = Date.now();
+
     window.STUDY_DATA.sessions.forEach((s) => {
-      const isUnlocked = s.id <= state.currentSessionId || state.completedIds.includes(s.id);
-      if (filterMode === "unlocked" && !isUnlocked) return;
-      if (filterMode === "current" && s.id !== state.currentSessionId) return;
+      const isCompletedSession = state.completedIds.includes(s.id);
+
+      if ((filterMode === "due" || filterMode === "completed" || filterMode === "unlocked") && !isCompletedSession) {
+        return;
+      }
+      if (filterMode === "current" && s.id !== state.currentSessionId) {
+        return;
+      }
 
       if (filterMode !== "custom") {
         s.cards.forEach((c, idx) => {
+          const key = `s${s.id}_c${idx}`;
+          const info = state.srsData[key];
+          if (filterMode === "due" && info && info.due > now) {
+            return;
+          }
           list.push({
-            key: `s${s.id}_c${idx}`,
+            key,
             sessionId: s.id,
             sessionTitle: s.title,
             q: c.q,
@@ -689,9 +743,13 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         });
       }
 
-      // Include user's custom cards for this session
+      // Include user's custom cards
       const customForSession = state.customCards.filter((cc) => Number(cc.sessionId) === s.id);
       customForSession.forEach((cc) => {
+        const info = state.srsData[cc.id];
+        if (filterMode === "due" && info && info.due > now) {
+          return;
+        }
         list.push({
           key: cc.id,
           sessionId: s.id,
@@ -702,7 +760,82 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         });
       });
     });
+
     return list;
+  }
+
+  function formatSrsStatusBadge(key) {
+    const info = state.srsData[key];
+    if (!info || !info.due) {
+      return {
+        label: "🆕 Thẻ mới (Chưa ôn lần nào)",
+        badgeClass: "badge-blue",
+        dueText: "Hôm nay",
+        intervalText: "Mới"
+      };
+    }
+    const now = Date.now();
+    const diffMs = info.due - now;
+    const dueDateStr = new Date(info.due).toLocaleDateString("vi-VN", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    });
+    const rateMap = {
+      again: "🔄 Quên (Ôn lại ngay)",
+      hard: "⏳ 1 ngày (Hard)",
+      good: "📅 3 ngày (Good)",
+      easy: "🚀 7 ngày (Easy)"
+    };
+    const intervalLabel = rateMap[info.lastRate] || `${info.intervalDays || 1} ngày`;
+
+    if (diffMs <= 0) {
+      return {
+        label: `🔥 Đến hạn ôn hôm nay (Lần trước: ${intervalLabel})`,
+        badgeClass: "badge-aws",
+        dueText: `Đến hạn (${dueDateStr})`,
+        intervalText: intervalLabel
+      };
+    }
+    const daysLeft = Math.max(1, Math.ceil(diffMs / (86400 * 1000)));
+    return {
+      label: `✅ Đã hẹn ${intervalLabel} • Ôn lại ngày ${dueDateStr} (còn ~${daysLeft} ngày)`,
+      badgeClass: "badge-green",
+      dueText: `${dueDateStr} (còn ${daysLeft} ngày)`,
+      intervalText: intervalLabel
+    };
+  }
+
+  function getSrsBreakdownStats() {
+    const completedCards = getAllFlashcards("completed");
+    const now = Date.now();
+    let dueNow = 0;
+    let scheduled1d = 0;
+    let scheduled3d = 0;
+    let scheduled7d = 0;
+
+    completedCards.forEach((c) => {
+      const info = state.srsData[c.key];
+      if (!info || info.due <= now) {
+        dueNow++;
+      } else if (info.lastRate === "hard" || info.intervalDays === 1) {
+        scheduled1d++;
+      } else if (info.lastRate === "good" || info.intervalDays === 3) {
+        scheduled3d++;
+      } else if (info.lastRate === "easy" || info.intervalDays === 7) {
+        scheduled7d++;
+      } else {
+        dueNow++;
+      }
+    });
+
+    return {
+      totalCompletedCards: completedCards.length,
+      dueNow,
+      scheduled1d,
+      scheduled3d,
+      scheduled7d
+    };
   }
 
   function buildSrsQueue() {
@@ -710,34 +843,74 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
     cards.sort((a, b) => {
       const dueA = state.srsData[a.key]?.due || 0;
       const dueB = state.srsData[b.key]?.due || 0;
-      return dueA - dueB;
+      if (dueA !== dueB) return dueA - dueB;
+      return a.sessionId - b.sessionId;
     });
     state.srsQueue = cards;
-    state.srsCurrentIndex = 0;
+    if (state.srsCurrentIndex >= state.srsQueue.length) {
+      state.srsCurrentIndex = 0;
+    }
     state.srsRevealed = false;
   }
 
   function renderSrsTab() {
-    if (state.srsQueue.length === 0) {
-      buildSrsQueue();
-    }
-    const card = state.srsQueue[state.srsCurrentIndex];
     const container = document.getElementById("srs-arena-container");
+    if (!container) return;
+
+    const stats = getSrsBreakdownStats();
+    const completedListText = state.completedIds.length
+      ? state.completedIds.map((id) => `Buổi #${id}`).join(", ")
+      : "Chưa có buổi nào";
+
+    const dashboardHtml = `
+      <div style="background:rgba(15,23,42,0.75); border:1px solid var(--border-color); border-radius:12px; padding:0.9rem 1rem; margin-bottom:1rem; text-align:left;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.65rem;">
+          <div>
+            <span style="font-size:0.86rem; font-weight:700; color:var(--accent-aws);">📊 Trạng Thái Lưu Lịch Ôn Ngắt Quãng (SRS)</span>
+            <span style="font-size:0.8rem; color:var(--text-secondary); margin-left:0.4rem;">• Chỉ lấy thẻ từ các buổi bạn <strong>ĐÃ HOÀN THÀNH</strong> (${completedListText})</span>
+          </div>
+          <button class="btn btn-outline btn-sm" id="btn-toggle-srs-table" style="font-size:0.76rem; padding:0.25rem 0.65rem;">
+            ${state.showSrsTable ? "🔼 Ẩn bảng chi tiết lịch hẹn từng thẻ" : `📋 Xem bảng lịch hẹn 1-3-7 ngày (${stats.totalCompletedCards} thẻ)`}
+          </button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(155px, 1fr)); gap:0.6rem;">
+          <div style="background:var(--bg-card); padding:0.55rem 0.75rem; border-radius:8px; border-left:3px solid var(--accent-aws);">
+            <div style="font-size:0.74rem; color:var(--text-secondary);">🔥 Cần ôn hôm nay (Due)</div>
+            <div style="font-size:1.1rem; font-weight:800; color:#fcd34d;">${stats.dueNow} thẻ</div>
+          </div>
+          <div style="background:var(--bg-card); padding:0.55rem 0.75rem; border-radius:8px; border-left:3px solid #f59e0b;">
+            <div style="font-size:0.74rem; color:var(--text-secondary);">⏳ Đang hẹn 1 ngày (Hard)</div>
+            <div style="font-size:1.1rem; font-weight:800; color:#fde68a;">${stats.scheduled1d} thẻ</div>
+          </div>
+          <div style="background:var(--bg-card); padding:0.55rem 0.75rem; border-radius:8px; border-left:3px solid var(--accent-blue);">
+            <div style="font-size:0.74rem; color:var(--text-secondary);">📅 Đang hẹn 3 ngày (Good)</div>
+            <div style="font-size:1.1rem; font-weight:800; color:#7dd3fc;">${stats.scheduled3d} thẻ</div>
+          </div>
+          <div style="background:var(--bg-card); padding:0.55rem 0.75rem; border-radius:8px; border-left:3px solid var(--accent-green);">
+            <div style="font-size:0.74rem; color:var(--text-secondary);">🚀 Đang hẹn 7 ngày (Easy)</div>
+            <div style="font-size:1.1rem; font-weight:800; color:#6ee7b7;">${stats.scheduled7d} thẻ</div>
+          </div>
+        </div>
+      </div>
+    `;
 
     const filterBarHtml = `
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
         <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
-          <button class="btn btn-sm ${state.srsFilter === "unlocked" ? "btn-primary" : "btn-outline"}" data-srs-filter="unlocked">
-            Thẻ từ các buổi đã học (${getAllFlashcards("unlocked").length})
+          <button class="btn btn-sm ${state.srsFilter === "due" ? "btn-primary" : "btn-outline"}" data-srs-filter="due">
+            🔥 Cần ôn hôm nay (${getAllFlashcards("due").length})
+          </button>
+          <button class="btn btn-sm ${state.srsFilter === "completed" ? "btn-primary" : "btn-outline"}" data-srs-filter="completed">
+            ✅ Đã học xong (${getAllFlashcards("completed").length})
           </button>
           <button class="btn btn-sm ${state.srsFilter === "current" ? "btn-primary" : "btn-outline"}" data-srs-filter="current">
-            Chỉ Buổi #${state.currentSessionId} (${getAllFlashcards("current").length})
+            📍 Chỉ Buổi đang học #${state.currentSessionId} (${getAllFlashcards("current").length})
           </button>
           <button class="btn btn-sm ${state.srsFilter === "custom" ? "btn-primary" : "btn-outline"}" data-srs-filter="custom">
             ✨ Thẻ tự tạo (${state.customCards.length})
           </button>
           <button class="btn btn-sm ${state.srsFilter === "all" ? "btn-primary" : "btn-outline"}" data-srs-filter="all">
-            Toàn bộ (${getAllFlashcards("all").length})
+            📚 Toàn bộ 80 buổi (${getAllFlashcards("all").length})
           </button>
         </div>
         <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
@@ -747,14 +920,93 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       </div>
     `;
 
+    const completedCardsForTable = getAllFlashcards("completed");
+    const scheduleTableHtml = state.showSrsTable ? `
+      <div style="margin-top:1.25rem; text-align:left; background:var(--bg-primary); border:1px solid var(--border-color); border-radius:10px; padding:1rem; max-height:380px; overflow-y:auto;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.65rem;">
+          <h4 style="font-size:0.92rem; color:var(--accent-blue); margin:0;">📋 Danh sách thẻ từ các buổi đã hoàn thành & Ngày hẹn ôn lại</h4>
+          <span style="font-size:0.76rem; color:var(--text-secondary);">Lưu tự động vào Trình duyệt & Cloud</span>
+        </div>
+        ${completedCardsForTable.length === 0 ? `
+          <p style="font-size:0.85rem; color:var(--text-secondary);">Bạn chưa đánh dấu hoàn thành buổi học nào.</p>
+        ` : `
+          <table class="comp-table" style="font-size:0.82rem;">
+            <thead>
+              <tr>
+                <th>Buổi</th>
+                <th>Câu hỏi mặt trước</th>
+                <th>Mức hẹn gần nhất</th>
+                <th>Ngày đến hạn ôn</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${completedCardsForTable.map((c) => {
+                const st = formatSrsStatusBadge(c.key);
+                return `
+                  <tr>
+                    <td><span class="badge badge-blue">Buổi #${c.sessionId}</span></td>
+                    <td style="max-width:340px;">${c.q}</td>
+                    <td><strong>${st.intervalText}</strong></td>
+                    <td>${st.dueText}</td>
+                    <td>
+                      <button class="btn btn-outline btn-sm" data-reset-srs="${c.key}" style="padding:0.15rem 0.45rem; font-size:0.72rem;">🔄 Ôn lại ngay</button>
+                    </td>
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        `}
+      </div>
+    ` : "";
+
+    const card = state.srsQueue[state.srsCurrentIndex];
+
     if (!card) {
-      container.innerHTML = `
-        <div class="srs-box">
-          ${filterBarHtml}
+      let emptyMessageHtml = "";
+      if (state.srsFilter === "due" && state.completedIds.length > 0 && stats.totalCompletedCards > 0) {
+        emptyMessageHtml = `
+          <div style="padding:2rem 1rem;">
+            <div style="font-size:2.4rem; margin-bottom:0.5rem;">🎉</div>
+            <h3 style="color:var(--accent-green); margin-bottom:0.4rem;">Tuyệt vời! Bạn đã ôn xong toàn bộ thẻ đến hạn hôm nay!</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; max-width:560px; margin:0 auto 1.2rem;">
+              Tất cả các thẻ từ những buổi bạn đã hoàn thành (${completedListText}) đều đã được lưu lịch hẹn ôn sau <strong>1 ngày, 3 ngày hoặc 7 ngày</strong>. Bạn có thể bấm nút bên dưới nếu muốn ôn vượt trước lịch hoặc xem thẻ của Buổi đang học #${state.currentSessionId}.
+            </p>
+            <div style="display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" data-srs-filter="completed">🔄 Ôn lại toàn bộ thẻ đã học (${stats.totalCompletedCards} thẻ)</button>
+              <button class="btn btn-outline" data-srs-filter="current">📍 Xem trước thẻ Buổi đang học #${state.currentSessionId}</button>
+            </div>
+          </div>
+        `;
+      } else if ((state.srsFilter === "due" || state.srsFilter === "completed") && state.completedIds.length === 0) {
+        emptyMessageHtml = `
+          <div style="padding:2rem 1rem;">
+            <div style="font-size:2rem; margin-bottom:0.5rem;">💡</div>
+            <h3 style="color:var(--accent-aws); margin-bottom:0.4rem;">Chưa có buổi học nào được đánh dấu Hoàn Thành</h3>
+            <p style="color:var(--text-secondary); font-size:0.9rem; max-width:560px; margin:0 auto 1.2rem;">
+              Để tránh việc hiển thị trước câu hỏi của các buổi bạn chưa học xong, bộ lọc <strong>Cần ôn hôm nay</strong> chỉ lấy thẻ từ những buổi bạn đã bấm nút <strong>"🎉 Hoàn thành Buổi học"</strong>.
+            </p>
+            <div style="display:flex; justify-content:center; gap:0.6rem; flex-wrap:wrap;">
+              <button class="btn btn-primary" data-srs-filter="current">📍 Học thử thẻ của Buổi hiện tại #${state.currentSessionId} (${getAllFlashcards("current").length} thẻ)</button>
+            </div>
+          </div>
+        `;
+      } else {
+        emptyMessageHtml = `
           <div style="padding:2rem; color:var(--text-secondary);">
             <p style="margin-bottom:1rem;">Chưa có thẻ nào trong bộ lọc này.</p>
             <button class="btn btn-primary" id="btn-empty-add-card">➕ Tạo thẻ Spaced Repetition đầu tiên của bạn</button>
           </div>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="srs-box">
+          ${dashboardHtml}
+          ${filterBarHtml}
+          ${emptyMessageHtml}
+          ${scheduleTableHtml}
         </div>
       `;
       attachSrsCommonListeners(container);
@@ -763,12 +1015,16 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       return;
     }
 
+    const cardStatus = formatSrsStatusBadge(card.key);
+
     container.innerHTML = `
       <div class="srs-box">
+        ${dashboardHtml}
         ${filterBarHtml}
 
-        <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; font-size:0.84rem; color:var(--text-secondary);">
-          <span>Thẻ ${state.srsCurrentIndex + 1} / ${state.srsQueue.length} • Thuộc <strong>Buổi #${card.sessionId}: ${card.sessionTitle}</strong></span>
+        <div style="display:flex; justify-content:center; align-items:center; gap:0.5rem; flex-wrap:wrap; font-size:0.84rem; color:var(--text-secondary);">
+          <span>Thẻ <strong>${state.srsCurrentIndex + 1} / ${state.srsQueue.length}</strong> trong hàng đợi • Thuộc <strong>Buổi #${card.sessionId}: ${card.sessionTitle}</strong></span>
+          <span class="badge ${cardStatus.badgeClass}">${cardStatus.label}</span>
           ${card.isCustom ? `<span class="badge badge-blue">✨ Thẻ của bạn</span>` : ""}
           ${card.isCustom ? `<button class="btn btn-outline btn-sm" id="btn-srs-delete-custom" style="padding:0.15rem 0.5rem; font-size:0.75rem; color:#fca5a5;">🗑️ Xóa</button>` : ""}
         </div>
@@ -777,11 +1033,11 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
           <div style="font-size:0.78rem; text-transform:uppercase; color:var(--accent-aws); font-weight:700; margin-bottom:0.5rem;">
             ${state.srsRevealed ? "ĐÁP ÁN CHUẨN SAA-C03" : "CÂU HỎI TÌNH HUỐNG (BẤM ĐỂ LẬT THẺ)"}
           </div>
-          <div style="font-size:1.15rem; font-weight:700; max-width:600px;">
+          <div style="font-size:1.15rem; font-weight:700; max-width:650px;">
             ${card.q}
           </div>
           ${state.srsRevealed ? `
-            <div style="margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed var(--border-color); font-size:1.05rem; color:var(--accent-green); font-weight:600;">
+            <div style="margin-top:1.25rem; padding-top:1.25rem; border-top:1px dashed var(--border-color); font-size:1.05rem; color:var(--accent-green); font-weight:600; max-width:680px;">
               ${card.a}
             </div>
           ` : `
@@ -794,21 +1050,25 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         ${state.srsRevealed ? `
           <div class="srs-rating-btns">
             <button class="btn btn-outline" style="border-color:var(--accent-red); color:#fca5a5;" data-rate="again">
-              🔄 Quên (Hỏi lại ngay)
+              🔄 Quên (Hỏi lại ngay cuối buổi)
             </button>
             <button class="btn btn-outline" style="border-color:var(--accent-aws); color:#fcd34d;" data-rate="hard">
-              😓 Hơi khó (Ôn ngày mai)
+              😓 Hơi khó (Hẹn 1 ngày sau)
             </button>
             <button class="btn btn-outline" style="border-color:var(--accent-blue); color:#7dd3fc;" data-rate="good">
-              👍 Nhớ rõ (3 ngày sau)
+              👍 Nhớ rõ (Hẹn 3 ngày sau)
             </button>
             <button class="btn btn-outline" style="border-color:var(--accent-green); color:#6ee7b7;" data-rate="easy">
-              ⚡ Quá dễ (7 ngày sau)
+              ⚡ Quá dễ (Hẹn 7 ngày sau)
             </button>
           </div>
         ` : `
-          <button class="btn btn-primary" id="btn-srs-show">👁️ Hiện Đáp Án</button>
+          <div style="display:flex; justify-content:center; gap:0.5rem;">
+            <button class="btn btn-primary" id="btn-srs-show">👁️ Hiện Đáp Án</button>
+          </div>
         `}
+
+        ${scheduleTableHtml}
       </div>
     `;
 
@@ -845,17 +1105,56 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         const rate = btn.getAttribute("data-rate");
         const now = Date.now();
         const dayMs = 86400 * 1000;
+        let intervalDays = 0;
         let nextDue = now + 60 * 1000;
-        if (rate === "hard") nextDue = now + 1 * dayMs;
-        if (rate === "good") nextDue = now + 3 * dayMs;
-        if (rate === "easy") nextDue = now + 7 * dayMs;
 
+        if (rate === "hard") {
+          intervalDays = 1;
+          nextDue = now + 1 * dayMs;
+        } else if (rate === "good") {
+          intervalDays = 3;
+          nextDue = now + 3 * dayMs;
+        } else if (rate === "easy") {
+          intervalDays = 7;
+          nextDue = now + 7 * dayMs;
+        }
+
+        const prevReps = state.srsData[card.key]?.reps || 0;
         state.srsData[card.key] = {
           due: nextDue,
-          lastRate: rate
+          intervalDays,
+          lastRate: rate,
+          reps: prevReps + 1,
+          updatedAt: now
         };
         saveState();
-        state.srsCurrentIndex = (state.srsCurrentIndex + 1) % state.srsQueue.length;
+
+        if (rate === "again") {
+          // Move forgotten card to the end of today's queue so user reviews it again before finishing
+          const currentCard = state.srsQueue.splice(state.srsCurrentIndex, 1)[0];
+          state.srsQueue.push(currentCard);
+          if (state.srsCurrentIndex >= state.srsQueue.length) {
+            state.srsCurrentIndex = 0;
+          }
+          showToast("🔄 Đã xếp thẻ này xuống cuối hàng đợi để hỏi lại bạn ngay trong hôm nay!");
+        } else {
+          const nextDateStr = new Date(nextDue).toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit"
+          });
+          showToast(`✅ Đã lưu SRS: Hẹn ôn lại sau ${intervalDays} ngày (${nextDateStr})!`);
+
+          if (state.srsFilter === "due") {
+            // Remove card from today's due queue so remaining count drops accurately
+            state.srsQueue.splice(state.srsCurrentIndex, 1);
+            if (state.srsCurrentIndex >= state.srsQueue.length) {
+              state.srsCurrentIndex = 0;
+            }
+          } else {
+            state.srsCurrentIndex = (state.srsCurrentIndex + 1) % state.srsQueue.length;
+          }
+        }
+
         state.srsRevealed = false;
         renderProgressBanner();
         renderSrsTab();
@@ -869,6 +1168,26 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         state.srsFilter = btn.getAttribute("data-srs-filter");
         buildSrsQueue();
         renderSrsTab();
+      });
+    });
+
+    const toggleTableBtn = document.getElementById("btn-toggle-srs-table");
+    if (toggleTableBtn) {
+      toggleTableBtn.addEventListener("click", () => {
+        state.showSrsTable = !state.showSrsTable;
+        renderSrsTab();
+      });
+    }
+
+    container.querySelectorAll("[data-reset-srs]").forEach((rBtn) => {
+      rBtn.addEventListener("click", () => {
+        const key = rBtn.getAttribute("data-reset-srs");
+        delete state.srsData[key];
+        saveState();
+        buildSrsQueue();
+        renderProgressBanner();
+        renderSrsTab();
+        showToast("🔄 Đã đưa thẻ về trạng thái Cần ôn ngay hôm nay!");
       });
     });
 

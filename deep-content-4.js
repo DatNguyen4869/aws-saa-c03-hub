@@ -35,10 +35,10 @@ Chuỗi Phân Tích Dữ Liệu Serverless (Data Lake Pipeline) Kinh Điển Nh�
         qEn: "A company stores 50 TB of application logs in CSV format in an Amazon S3 bucket. Data analysts use Amazon Athena to run ad-hoc SQL queries on these logs, but the queries are slow and monthly Athena costs are very high because each query scans the entire CSV dataset. How can the solutions architect significantly improve query performance and reduce Athena costs?",
         qVi: "Công ty lưu 50 TB file log định dạng CSV trên S3. Đội phân tích dùng Amazon Athena chạy SQL nhưng tốc độ rất chậm và tốn nhiều tiền vì mỗi lần chạy phải quét toàn bộ file CSV. Làm sao tăng tốc truy vấn và giảm mạnh chi phí Athena?",
         options: [
-          "A. Chuyển các file CSV sang S3 Glacier Deep Archive.",
-          "B. Sử dụng AWS Glue ETL để chuyển đổi các file CSV sang định dạng cột nén Apache Parquet (hoặc ORC) và phân vùng (Partition) dữ liệu theo ngày trên S3.",
-          "C. Đặt Amazon CloudFront phía trước S3 Bucket.",
-          "D. Đổi tên S3 Bucket."
+          "A. Move the CSV files to S3 Glacier Deep Archive.",
+          "B. Use AWS Glue ETL to convert the CSV files into compressed columnar format (Apache Parquet or ORC) and partition the data by date in Amazon S3.",
+          "C. Place Amazon CloudFront in front of the S3 bucket.",
+          "D. Rename the S3 bucket."
         ],
         correctIdx: 1,
         explanation: "Athena tính phí $5 trên mỗi TB dữ liệu quét qua. Chuyển CSV sang định dạng cột nén (Apache Parquet/ORC) và phân vùng dữ liệu (Partitioning) giúp Athena chỉ đọc đúng các cột và phân vùng cần thiết, giảm tới 90% lượng dữ liệu phải quét."
@@ -106,10 +106,10 @@ Bảng Ghép Cặp Nhanh 10 Dịch Vụ AI/ML Trong Đề Thi SAA-C03:
         qEn: "A company operates a customer call center using Amazon Connect. All call audio recordings are saved to Amazon S3. The company wants to convert the audio recordings into text, automatically mask any customer credit card numbers or Social Security numbers in the text, and then analyze the text to determine whether customer sentiment is positive or negative. Which combination of services meets these requirements?",
         qVi: "Công ty vận hành tổng đài dùng Amazon Connect lưu file ghi âm cuộc gọi vào S3. Họ muốn chuyển giọng nói thành văn bản, tự động che giấu thông tin nhạy cảm (PII) như số thẻ tín dụng, sau đó phân tích xem thái độ khách hàng là tích cực hay tiêu cực. Kết hợp dịch vụ nào đáp ứng được?",
         options: [
-          "A. Amazon Polly và Amazon Translate.",
-          "B. Amazon Transcribe (bật PII Redaction) kết hợp với Amazon Comprehend (Sentiment Analysis).",
-          "C. Amazon Textract và Amazon Kendra.",
-          "D. Amazon Lex và Amazon Rekognition."
+          "A. Amazon Polly and Amazon Translate",
+          "B. Amazon Transcribe (with PII Redaction enabled) combined with Amazon Comprehend (for Sentiment Analysis)",
+          "C. Amazon Textract and Amazon Kendra",
+          "D. Amazon Lex and Amazon Rekognition"
         ],
         correctIdx: 1,
         explanation: "Amazon Transcribe chuyển âm thanh thành văn bản kèm tính năng ẩn PII (PII Redaction), sau đó Amazon Comprehend thực hiện phân tích cảm xúc (Sentiment Analysis) trên văn bản đó."
@@ -148,10 +148,10 @@ Phân Biệt Bộ Ba Giám Sát Trong 5 Giây:
         qEn: "A system administrator wants to create an Amazon CloudWatch alarm that sends an notification whenever an EC2 instance's memory (RAM) utilization exceeds 85% or its root disk free space drops below 10%. However, the administrator cannot find these metrics in the CloudWatch console. What must be done to collect these metrics?",
         qVi: "Quản trị viên muốn tạo cảnh báo CloudWatch khi dung lượng RAM của máy EC2 vượt quá 85% hoặc dung lượng trống của ổ đĩa dưới 10%, nhưng tìm mãi trong CloudWatch không thấy 2 chỉ số này. Phải làm gì để thu thập được chúng?",
         options: [
-          "A. Bật EC2 Detailed Monitoring.",
-          "B. Cài đặt và cấu hình phần mềm Amazon CloudWatch Unified Agent bên trong từng máy EC2 để đẩy các chỉ số tùy chỉnh (RAM và Disk space) lên CloudWatch.",
-          "C. Bật AWS CloudTrail Insights.",
-          "D. Bật VPC Flow Logs."
+          "A. Enable EC2 Detailed Monitoring.",
+          "B. Install and configure the Amazon CloudWatch Unified Agent on the EC2 instances to push custom memory and disk space utilization metrics to CloudWatch.",
+          "C. Enable AWS CloudTrail Insights.",
+          "D. Enable VPC Flow Logs."
         ],
         correctIdx: 1,
         explanation: "Mặc định Hypervisor của AWS không nhìn vào bên trong hệ điều hành để đo RAM hay dung lượng ổ cứng trống. Bắt buộc phải cài đặt CloudWatch Unified Agent vào trong OS của máy EC2."
@@ -205,10 +205,10 @@ Cấu trúc Cây Quản Trị Đa Tài Khoản (AWS Organizations + Control Towe
         qEn: "A company uses AWS Organizations to manage 15 AWS accounts across multiple departments. Due to European data sovereignty laws, the company must ensure that no user—including the root user of any member account—can launch AWS resources in any Region outside of eu-central-1 (Frankfurt). How can the solutions architect enforce this rule centrally?",
         qVi: "Công ty dùng AWS Organizations quản lý 15 tài khoản AWS. Do luật chủ quyền dữ liệu Châu Âu, công ty phải đảm bảo không một ai — kể cả Root user của các tài khoản thành viên — được phép tạo tài nguyên ở ngoài Region eu-central-1 (Frankfurt). Thực thi quy tắc này tập trung bằng cách nào?",
         options: [
-          "A. Tạo IAM Permissions Boundary trên từng User.",
-          "B. Tạo một Service Control Policy (SCP) trong AWS Organizations với lệnh Deny mọi hành động nếu điều kiện 'aws:RequestedRegion' khác 'eu-central-1', rồi gắn vào Root OU.",
-          "C. Dùng AWS WAF chặn theo vị trí địa lý.",
-          "D. Dùng Network ACL."
+          "A. Attach an IAM Permissions Boundary to each individual IAM user.",
+          "B. Create a Service Control Policy (SCP) in AWS Organizations with an Explicit Deny for all actions when 'aws:RequestedRegion' is not 'eu-central-1', and attach it to the Root OU.",
+          "C. Use AWS WAF geographic match rules.",
+          "D. Configure Network ACLs."
         ],
         correctIdx: 1,
         explanation: "Service Control Policy (SCP) trong AWS Organizations cho phép áp đặt ranh giới quyền tập trung lên toàn bộ tài khoản thành viên (bao gồm cả Root user của các tài khoản đó)."
@@ -258,7 +258,7 @@ So sánh Cặp Đôi Lưu Trữ Cấu Hình & Mật Khẩu Kinh Điển Nhất:
         qEn: "A company hosts a web application on an Amazon Aurora PostgreSQL database. Security compliance mandates that the database master password must be encrypted at rest and automatically rotated every 30 days without requiring any application downtime or manual intervention. Which AWS service meets this requirement with the LEAST operational effort?",
         qVi: "Công ty chạy ứng dụng trên DB Amazon Aurora PostgreSQL. Quy định bảo mật bắt buộc mật khẩu DB phải được mã hóa và tự động xoay vòng đổi mới mỗi 30 ngày mà không làm gián đoạn ứng dụng. Dịch vụ nào đáp ứng tốn ít công vận hành nhất?",
         options: [
-          "A. AWS Systems Manager Parameter Store (Standard)",
+          "A. AWS Systems Manager Parameter Store (Standard parameters)",
           "B. AWS Secrets Manager",
           "C. AWS KMS",
           "D. IAM Credentials Report"
@@ -270,10 +270,10 @@ So sánh Cặp Đôi Lưu Trữ Cấu Hình & Mật Khẩu Kinh Điển Nhất:
         qEn: "A solutions architect deployed a static website on an Amazon S3 bucket in the ap-northeast-1 (Tokyo) Region and placed an Amazon CloudFront distribution in front of it. The architect requested a public SSL/TLS certificate in AWS Certificate Manager (ACM) in the ap-northeast-1 Region, but CloudFront does not allow selecting the certificate. How should the architect fix this?",
         qVi: "Kiến trúc sư đặt website tĩnh trên S3 ở Region Tokyo (ap-northeast-1) và đặt CloudFront ở phía trước. Kiến trúc sư đã tạo chứng chỉ SSL trong ACM tại Region Tokyo nhưng CloudFront không hiển thị chứng chỉ đó để chọn. Sửa bằng cách nào?",
         options: [
-          "A. Chuyển S3 Bucket sang Region us-east-1.",
-          "B. Tạo (Request) chứng chỉ ACM mới tại Region us-east-1 (N. Virginia) rồi gắn vào CloudFront.",
-          "C. Dùng AWS CloudHSM thay cho ACM.",
-          "D. Tạo chứng chỉ trên Route 53."
+          "A. Migrate the S3 bucket to the us-east-1 Region.",
+          "B. Request or import a public SSL/TLS certificate in AWS Certificate Manager (ACM) in the us-east-1 (N. Virginia) Region and attach it to the CloudFront distribution.",
+          "C. Use AWS CloudHSM instead of ACM.",
+          "D. Request the SSL certificate inside Amazon Route 53."
         ],
         correctIdx: 1,
         explanation: "Mọi chứng chỉ ACM gắn vào Amazon CloudFront bắt buộc phải nằm tại Region us-east-1 (N. Virginia), bất kể Origin S3 hay ALB nằm ở Region nào."
@@ -316,10 +316,10 @@ Biệt Đội Bảo Mật Đa Tầng AWS (Nhìn Từ Khóa Chọn Đáp Án Tron
         qEn: "A company runs a public web application directly on a single Amazon EC2 instance with an Elastic IP address. Recently, the application has been targeted by SQL injection attacks and Layer 7 HTTP flood attacks originating from constantly changing IP addresses. How can the solutions architect protect the application with the LEAST operational effort?",
         qVi: "Công ty đang chạy ứng dụng web trực tiếp trên 1 máy EC2 gắn Elastic IP. Gần đây ứng dụng liên tục bị tấn công SQL Injection và HTTP Flood từ các địa chỉ IP thay đổi liên tục. Làm sao bảo vệ ứng dụng tốn ít công sức nhất?",
         options: [
-          "A. Gắn trực tiếp AWS WAF vào card mạng ENI của máy chủ EC2.",
-          "B. Đặt một Application Load Balancer (hoặc Amazon CloudFront) ở phía trước máy EC2, sau đó gắn AWS WAF (với SQL injection rules và Rate-based rules) vào ALB/CloudFront đó.",
-          "C. Chặn từng địa chỉ IP thủ công trong Network ACL.",
-          "D. Dùng Amazon Macie."
+          "A. Attach AWS WAF directly to the Elastic Network Interface (ENI) of the EC2 instance.",
+          "B. Place an Application Load Balancer (or Amazon CloudFront distribution) in front of the EC2 instance, and associate an AWS WAF web ACL (with SQL injection and rate-based rules) with the ALB/CloudFront.",
+          "C. Manually block each IP address in the subnet Network ACL.",
+          "D. Enable Amazon Macie."
         ],
         correctIdx: 1,
         explanation: "AWS WAF không thể gắn trực tiếp vào EC2. Phải đặt một ALB hoặc CloudFront ở phía trước EC2 để gắn AWS WAF kèm quy tắc chống SQLi và Rate-based rule."
@@ -382,10 +382,10 @@ Thang Đo 4 Chiến Lược Disaster Recovery (DR) Trong Đề Thi SAA-C03:
         qEn: "An enterprise is migrating a 10 TB on-premises Oracle database to Amazon Aurora PostgreSQL. The database must remain online and accessible to users during the migration to ensure near-zero downtime. Which combination of AWS tools should the solutions architect use?",
         qVi: "Doanh nghiệp di chuyển một cơ sở dữ liệu Oracle nặng 10 TB từ dưới On-premise lên Amazon Aurora PostgreSQL. Cơ sở dữ liệu gốc phải tiếp tục hoạt động phục vụ người dùng trong suốt quá trình di chuyển để đảm bảo gần như không gián đoạn. Cần kết hợp bộ công cụ nào?",
         options: [
-          "A. Chỉ dùng S3 Transfer Acceleration.",
-          "B. Sử dụng AWS Schema Conversion Tool (AWS SCT) để chuyển đổi schema và code PL/SQL sang PostgreSQL, kết hợp với AWS Database Migration Service (AWS DMS) bật chế độ Continuous Data Replication (CDC).",
-          "C. Dùng Amazon Data Lifecycle Manager.",
-          "D. Chụp EBS Snapshot của máy Oracle rồi gắn vào Aurora."
+          "A. Use S3 Transfer Acceleration only.",
+          "B. Use the AWS Schema Conversion Tool (AWS SCT) to convert the schema and PL/SQL code to PostgreSQL, combined with AWS Database Migration Service (AWS DMS) with Continuous Data Replication (CDC) enabled.",
+          "C. Use Amazon Data Lifecycle Manager (DLM).",
+          "D. Take an EBS Snapshot of the Oracle server and attach it to Aurora."
         ],
         correctIdx: 1,
         explanation: "Vì đây là di chuyển khác hệ quản trị CSDL (Heterogeneous migration: từ Oracle sang PostgreSQL), bắt buộc phải dùng AWS SCT để chuyển đổi Schema trước, sau đó dùng AWS DMS với tính năng CDC để đồng bộ dữ liệu liên tục mà không gây downtime."
@@ -425,10 +425,10 @@ Tự Động Hóa Hạ Tầng & Tối Ưu Hóa Chi Phí:
         qEn: "A security team in a large enterprise needs to deploy a standardized set of IAM roles and Amazon S3 audit buckets across 40 AWS member accounts in 5 different AWS Regions within their AWS Organization. Whenever a new account is added to the Organization, these resources must be provisioned automatically. Which solution meets this requirement with the LEAST operational effort?",
         qVi: "Đội bảo mật của tập đoàn cần triển khai một bộ IAM Roles và S3 buckets chuẩn hóa đồng loạt lên 40 tài khoản AWS thành viên ở 5 Regions khác nhau trong AWS Organization. Hễ có tài khoản mới thêm vào là phải tự động tạo sẵn các tài nguyên này. Giải pháp nào tốn ít công sức nhất?",
         options: [
-          "A. Đăng nhập thủ công vào từng tài khoản và chạy script CLI.",
-          "B. Sử dụng AWS CloudFormation StackSets (tích hợp với AWS Organizations và bật Automatic deployments).",
-          "C. Dùng AWS Elastic Beanstalk.",
-          "D. Dùng AWS Compute Optimizer."
+          "A. Manually log in to each of the 40 accounts and run AWS CLI scripts.",
+          "B. Use AWS CloudFormation StackSets (integrated with AWS Organizations and automatic deployments enabled).",
+          "C. Use AWS Elastic Beanstalk.",
+          "D. Use AWS Compute Optimizer."
         ],
         correctIdx: 1,
         explanation: "AWS CloudFormation StackSets cho phép triển khai hạ tầng tự động xuyên qua nhiều tài khoản (Multi-account) và nhiều vùng (Multi-Region) trong AWS Organizations, bao gồm cả việc tự động chạy khi có tài khoản mới gia nhập OU."
@@ -492,9 +492,9 @@ Sơ đồ Phản Xạ 5 Giây Nhóm Storage & Database:
         qEn: "A global e-commerce application uses an Amazon Aurora MySQL database in us-east-1. The company is expanding to Europe (eu-west-1) and Japan (ap-northeast-1) and requires sub-second data replication latency to the secondary Regions for local read queries, plus the ability to promote a secondary Region to full read/write capability in under 1 minute during a Region-wide disaster. Which solution meets these requirements?",
         qVi: "Ứng dụng dùng Aurora MySQL ở Mỹ (us-east-1) muốn mở rộng sang Châu Âu và Nhật Bản, yêu cầu độ trễ nhân bản dữ liệu sang các Region phụ dưới 1 giây để phục vụ đọc tại chỗ, đồng thời có thể nâng cấp Region phụ lên đọc/ghi hoàn chỉnh trong dưới 1 phút nếu Region chính gặp thảm họa. Chọn giải pháp nào?",
         options: [
-          "A. RDS Multi-AZ",
+          "A. RDS Multi-AZ deployment",
           "B. Amazon Aurora Global Database",
-          "C. Sao chép EBS Snapshot hàng ngày",
+          "C. Daily cross-Region EBS Snapshot copies",
           "D. Amazon Redshift"
         ],
         correctIdx: 1,
@@ -533,10 +533,10 @@ Luồng Đi Của Gói Tin Từ Người Dùng Vào Tận Trong VPC:
         qEn: "A company runs a web application on EC2 instances in private subnets behind an Application Load Balancer (ALB). Corporate customers require fixed static IP addresses to whitelist in their firewalls, AND the application requires Layer 7 path-based routing (`/api/v1` vs `/api/v2`). Which architecture meets BOTH requirements?",
         qVi: "Công ty chạy ứng dụng web sau ALB. Khách hàng doanh nghiệp vừa yêu cầu phải có địa chỉ IP tĩnh cố định để mở tường lửa (Whitelist), VỪA yêu cầu ứng dụng phải định tuyến theo đường dẫn URL ở Layer 7 (`/api/v1` và `/api/v2`). Kiến trúc nào đáp ứng được CẢ HAI yêu cầu?",
         options: [
-          "A. Gắn trực tiếp Elastic IP vào Application Load Balancer.",
-          "B. Đặt một Network Load Balancer (NLB - có gắn Elastic IP tĩnh) ở phía trước và cấu hình NLB chuyển tiếp lưu lượng về Application Load Balancer (ALB) ở phía sau.",
-          "C. Thay ALB bằng Gateway Load Balancer.",
-          "D. Dùng CNAME Record trên Route 53."
+          "A. Attach Elastic IP addresses directly to the Application Load Balancer.",
+          "B. Place a Network Load Balancer (NLB with static Elastic IPs) in front of the Application Load Balancer (ALB) and forward traffic from the NLB to the ALB.",
+          "C. Replace the ALB with a Gateway Load Balancer.",
+          "D. Use a CNAME record in Route 53."
         ],
         correctIdx: 1,
         explanation: "ALB không hỗ trợ gắn Static/Elastic IP, còn NLB không hỗ trợ định tuyến Layer 7 Path-based routing. Đặt NLB (gắn Elastic IP) ở phía trước trỏ vào ALB ở phía sau giải quyết hoàn hảo cả hai yêu cầu."
@@ -546,7 +546,7 @@ Luồng Đi Của Gói Tin Từ Người Dùng Vào Tận Trong VPC:
         qVi: "Ứng dụng chạy trên EC2 trong một Private Subnet bị cô lập hoàn toàn (không có Internet Gateway và không có NAT Gateway) cần đọc mật khẩu từ AWS Secrets Manager và gửi tin nhắn tới Amazon SQS. Tính năng nào của VPC cho phép kết nối riêng tư này?",
         options: [
           "A. Gateway VPC Endpoints",
-          "B. Interface VPC Endpoints (AWS PrivateLink) cho Secrets Manager và SQS",
+          "B. Interface VPC Endpoints (AWS PrivateLink) for Secrets Manager and SQS",
           "C. Egress-Only Internet Gateway",
           "D. VPC Flow Logs"
         ],
@@ -584,7 +584,7 @@ Bảng Chọn Nhanh Công Cụ Tính Toán & Bất Đồng Bộ:
         qVi: "Công ty tài chính cần chạy một tác vụ xử lý dữ liệu đóng gói trong container mỗi ngày, mất 45 phút để hoàn thành và cần 32 GB RAM. Đội ngũ muốn một giải pháp Serverless để không phải quản lý máy chủ EC2. Nên chọn dịch vụ nào?",
         options: [
           "A. AWS Lambda",
-          "B. Amazon ECS với AWS Fargate (hoặc AWS Batch trên Fargate)",
+          "B. Amazon ECS with AWS Fargate (or AWS Batch on AWS Fargate)",
           "C. Amazon CloudFront Functions",
           "D. Amazon API Gateway"
         ],
@@ -595,10 +595,10 @@ Bảng Chọn Nhanh Công Cụ Tính Toán & Bất Đồng Bộ:
         qEn: "An application processes orders using an Amazon SQS FIFO queue. To increase throughput, the architect deployed 10 EC2 consumer instances, but notices that only 1 EC2 instance is processing messages at any given time while the other 9 sit idle. Why is this happening and how can it be fixed?",
         qVi: "Ứng dụng xử lý đơn hàng dùng hàng đợi SQS FIFO. Để tăng tốc độ, kiến trúc sư bật 10 máy EC2 cùng đọc hàng đợi, nhưng phát hiện tại một thời điểm chỉ có đúng 1 máy EC2 làm việc còn 9 máy kia ngồi chơi. Tại sao và cách sửa là gì?",
         options: [
-          "A. Vì toàn bộ tin nhắn đang được gửi với cùng một giá trị 'MessageGroupId' duy nhất. Cần gán 'MessageGroupId' đa dạng (ví dụ theo CustomerID) để SQS FIFO cho phép nhiều máy xử lý song song các nhóm khác nhau.",
-          "B. Vì SQS FIFO chỉ cho phép tối đa 1 máy EC2 kết nối.",
-          "C. Vì chưa bật Long Polling.",
-          "D. Vì Visibility Timeout bằng 0."
+          "A. All messages are being sent with the same single 'MessageGroupId' value. Assign distinct 'MessageGroupId' values (e.g., by CustomerID) so SQS FIFO can process multiple message groups in parallel across consumers.",
+          "B. SQS FIFO queues only allow 1 EC2 consumer instance to connect at a time.",
+          "C. SQS Long Polling is not enabled.",
+          "D. The Visibility Timeout is set to 0."
         ],
         correctIdx: 0,
         explanation: "Trong SQS FIFO, các tin nhắn có cùng MessageGroupId được khóa chặt để xử lý tuần tự từng cái một. Muốn 10 máy xử lý song song mà vẫn giữ đúng thứ tự cho từng khách hàng, phải dùng nhiều MessageGroupId khác nhau (ví dụ: CustomerID)."
@@ -628,7 +628,7 @@ Tổng Kết Sơ Đồ Bảo Mật & Quản Trị Toàn Diện:
     ],
     quizzes: [
       {
-        qEn: "A healthcare company stores millions of files in puluhan Amazon S3 buckets across multiple AWS accounts. A new compliance officer wants to automatically discover and classify any files across all buckets that might accidentally contain unencrypted patient names, addresses, or credit card numbers (PII), and receive alerts in AWS Security Hub. Which service should be enabled?",
+        qEn: "A healthcare company stores millions of files in dozens of Amazon S3 buckets across multiple AWS accounts. A new compliance officer wants to automatically discover and classify any files across all buckets that might accidentally contain unencrypted patient names, addresses, or credit card numbers (PII), and receive alerts in AWS Security Hub. Which service should be enabled?",
         qVi: "Công ty y tế lưu hàng triệu file trên hàng chục S3 buckets. Giám đốc tuân thủ mới muốn tự động rà quét và phân loại bất kỳ file nào trên toàn bộ các S3 buckets có vô tình chứa tên bệnh nhân, địa chỉ hoặc số thẻ tín dụng (PII) và gửi cảnh báo về Security Hub. Cần bật dịch vụ nào?",
         options: [
           "A. Amazon Inspector",
@@ -643,10 +643,10 @@ Tổng Kết Sơ Đồ Bảo Mật & Quản Trị Toàn Diện:
         qEn: "A company wants to automatically detect if an EC2 instance in its AWS account is compromised and communicating with known cryptocurrency mining pools or malicious IP addresses, and then automatically isolate the instance by replacing its security group. Which combination of services achieves this with the LEAST operational overhead?",
         qVi: "Công ty muốn tự động phát hiện nếu có máy EC2 nào bị chiếm quyền điều khiển để đào tiền ảo hoặc kết nối tới IP độc hại, sau đó tự động cách ly máy EC2 đó bằng cách đổi Security Group. Kết hợp dịch vụ nào tối ưu nhất?",
         options: [
-          "A. Amazon GuardDuty + Amazon EventBridge + AWS Lambda.",
-          "B. AWS Artifact + Amazon Athena.",
-          "C. AWS Cost Explorer + AWS Budgets.",
-          "D. Amazon Macie + S3 Object Lock."
+          "A. Amazon GuardDuty + Amazon EventBridge + AWS Lambda",
+          "B. AWS Artifact + Amazon Athena",
+          "C. AWS Cost Explorer + AWS Budgets",
+          "D. Amazon Macie + S3 Object Lock"
         ],
         correctIdx: 0,
         explanation: "Amazon GuardDuty tự động phân tích VPC Flow Logs, DNS Logs và CloudTrail để phát hiện hành vi đào tiền ảo, sau đó bắn Finding sang Amazon EventBridge để kích hoạt hàm AWS Lambda tự động cách ly máy chủ."
@@ -687,10 +687,10 @@ Chiến Thuật 3 Bước Giải Quyết Mọi Câu Hỏi Dài Trong Đề Thi S
         qEn: "A company is designing a new 3-tier web application on AWS. Which of the following architectural designs contains a fundamental technical flaw that will prevent it from working?",
         qVi: "Công ty đang thiết kế ứng dụng web 3 tầng trên AWS. Thiết kế nào dưới đây chứa một lỗi kỹ thuật sai bản chất khiến hệ thống KHÔNG THỂ hoạt động được?",
         options: [
-          "A. Đặt Application Load Balancer ở Public Subnet và đặt các máy EC2 ở Private Subnet.",
-          "B. Đặt NAT Gateway ở bên trong Private Subnet và gắn AWS WAF trực tiếp vào Network Load Balancer.",
-          "C. Tạo Gateway VPC Endpoint cho Amazon S3 và gắn vào Route Table của Private Subnet.",
-          "D. Dùng Amazon RDS Proxy đứng giữa AWS Lambda và Amazon Aurora."
+          "A. Placing an Application Load Balancer in a public subnet and EC2 instances in a private subnet.",
+          "B. Placing a Public NAT Gateway inside a private subnet and attaching AWS WAF directly to a Network Load Balancer.",
+          "C. Creating a Gateway VPC Endpoint for Amazon S3 and adding it to the private subnet route table.",
+          "D. Placing Amazon RDS Proxy between AWS Lambda and Amazon Aurora."
         ],
         correctIdx: 1,
         explanation: "Câu B chứa tới 2 lỗi kỹ thuật nghiêm trọng thường dùng làm phương án nhiễu trong đề thi: (1) NAT Gateway bắt buộc phải đặt ở Public Subnet chứ không thể đặt ở Private Subnet; (2) AWS WAF chỉ gắn được vào ALB/CloudFront/API Gateway chứ không gắn được vào NLB."
@@ -699,10 +699,10 @@ Chiến Thuật 3 Bước Giải Quyết Mọi Câu Hỏi Dài Trong Đề Thi S
         qEn: "An architect is reviewing four requirements for a new cloud-native system. Which requirement CANNOT be met by AWS Lambda alone and requires an alternative compute service like AWS Batch or Amazon ECS on AWS Fargate?",
         qVi: "Kiến trúc sư đang xem xét 4 yêu cầu cho hệ thống mới. Yêu cầu nào dưới đây KHÔNG THỂ đáp ứng được bằng AWS Lambda mà bắt buộc phải chuyển sang dùng AWS Batch hoặc ECS Fargate?",
         options: [
-          "A. Xử lý ảnh thu nhỏ mất 5 giây mỗi khi có file tải lên S3.",
-          "B. Chạy một tác vụ nén và mã hóa video kéo dài liên tục 40 phút cho mỗi file.",
-          "C. Xác thực JWT token cho API Gateway trong 50 mili-giây.",
-          "D. Đọc bản ghi thay đổi từ DynamoDB Streams."
+          "A. Generating image thumbnails in 5 seconds whenever a file is uploaded to Amazon S3.",
+          "B. Running a continuous 40-minute video transcoding and compression job per file.",
+          "C. Validating a JWT token for Amazon API Gateway in 50 milliseconds.",
+          "D. Processing change records from Amazon DynamoDB Streams."
         ],
         correctIdx: 1,
         explanation: "AWS Lambda có giới hạn cứng thời gian thực thi tối đa (Maximum timeout) là 15 phút (900 giây). Mọi tác vụ chạy liên tục trên 15 phút (như 40 phút) đều phải loại bỏ Lambda và chọn ECS Fargate hoặc AWS Batch."

@@ -37,7 +37,7 @@ window.DEEP_CONTENT_PART2 = {
         qVi: "Công ty chạy nhiều microservices trên ECS phía sau 1 bộ cân bằng tải duy nhất. Yêu cầu tới '/orders' phải vào dịch vụ Orders, còn '/payments' phải vào dịch vụ Payments. Chọn loại Load Balancer nào?",
         options: [
           "A. Network Load Balancer (NLB)",
-          "B. Application Load Balancer (ALB) với Path-based Routing",
+          "B. Application Load Balancer (ALB) with path-based routing listener rules",
           "C. Gateway Load Balancer (GWLB)",
           "D. Classic Load Balancer (CLB)"
         ],
@@ -48,10 +48,10 @@ window.DEEP_CONTENT_PART2 = {
         qEn: "A web application hosted on EC2 instances behind an Application Load Balancer (ALB) logs the client IP address for security auditing. However, the logs only show the private IP addresses of the ALB nodes instead of the actual end-user IPs. How can the developer fix this?",
         qVi: "Ứng dụng web trên EC2 đứng sau ALB ghi log địa chỉ IP khách hàng để kiểm toán. Nhưng trong log chỉ toàn thấy IP nội bộ của ALB chứ không thấy IP thật của người dùng. Sửa bằng cách nào?",
         options: [
-          "A. Chuyển từ ALB sang Gateway Load Balancer.",
-          "B. Cấu hình ứng dụng web đọc giá trị từ HTTP Header 'X-Forwarded-For'.",
-          "C. Gắn Elastic IP trực tiếp cho từng máy EC2.",
-          "D. Tắt tính năng Cross-Zone Load Balancing."
+          "A. Migrate from the ALB to a Gateway Load Balancer.",
+          "B. Configure the web application to read the client IP address from the 'X-Forwarded-For' HTTP request header.",
+          "C. Attach Elastic IP addresses directly to each backend EC2 instance.",
+          "D. Disable Cross-Zone Load Balancing on the ALB."
         ],
         correctIdx: 1,
         explanation: "ALB thực hiện kết thúc kết nối (connection termination) và tự động ghi IP gốc của khách hàng vào HTTP Header 'X-Forwarded-For'."
@@ -94,7 +94,7 @@ Khi nào chọn NLB vs GWLB vs Kết hợp NLB + ALB?
         qVi: "Ứng dụng tài chính dùng giao thức TCP tùy chỉnh, đòi hỏi độ trễ cực thấp xử lý hàng triệu request/giây. Ngoài ra khách hàng yêu cầu địa chỉ IP tĩnh cố định để họ mở tường lửa (whitelist). Nên dùng Load Balancer nào?",
         options: [
           "A. Application Load Balancer (ALB)",
-          "B. Network Load Balancer (NLB) gắn kèm Elastic IP",
+          "B. Network Load Balancer (NLB) with Elastic IP addresses assigned",
           "C. Gateway Load Balancer (GWLB)",
           "D. Amazon CloudFront"
         ],
@@ -150,10 +150,10 @@ Khi nào chọn NLB vs GWLB vs Kết hợp NLB + ALB?
         qEn: "A company hosts multiple websites (site1.com, site2.com, site3.com) on a single fleet of EC2 instances behind one Application Load Balancer (ALB). Each website requires its own separate SSL/TLS certificate. How can the solutions architect configure this at the lowest cost?",
         qVi: "Công ty chạy nhiều website có tên miền khác nhau phía sau duy nhất 1 ALB. Mỗi website yêu cầu một chứng chỉ SSL/TLS riêng biệt. Cấu hình thế nào để tiết kiệm chi phí nhất?",
         options: [
-          "A. Tạo 3 ALB riêng biệt cho từng chứng chỉ SSL.",
-          "B. Gắn cả 3 chứng chỉ SSL lên cùng 1 HTTPS Listener của ALB bằng tính năng Server Name Indication (SNI).",
-          "C. Chuyển sang dùng Classic Load Balancer (CLB).",
-          "D. Mua 3 địa chỉ Elastic IP gắn vào ALB."
+          "A. Create 3 separate Application Load Balancers, one for each SSL certificate.",
+          "B. Bind all 3 SSL/TLS certificates to the same HTTPS listener on the single ALB using Server Name Indication (SNI).",
+          "C. Switch to a Classic Load Balancer (CLB).",
+          "D. Attach 3 Elastic IP addresses to the single ALB."
         ],
         correctIdx: 1,
         explanation: "Tính năng SNI (Server Name Indication) trên ALB và NLB cho phép gắn tối đa 25 chứng chỉ SSL/TLS của nhiều tên miền khác nhau lên cùng 1 Listener mà không cần mua thêm Load Balancer."
@@ -162,10 +162,10 @@ Khi nào chọn NLB vs GWLB vs Kết hợp NLB + ALB?
         qEn: "A company has 2 EC2 instances in AZ-a and 8 EC2 instances in AZ-b behind a Network Load Balancer (NLB). The team notices that the 2 instances in AZ-a are running at 90% CPU utilization while the 8 instances in AZ-b are only at 20% CPU. Why is this happening and how can it be fixed?",
         qVi: "Công ty có 2 máy EC2 ở AZ-a và 8 máy EC2 ở AZ-b đứng sau một NLB. Đội ngũ phát hiện 2 máy ở AZ-a bị quá tải 90% CPU trong khi 8 máy ở AZ-b chỉ chạy 20% CPU. Tại sao và cách sửa là gì?",
         options: [
-          "A. Do NLB mặc định tắt Cross-Zone Load Balancing nên mỗi AZ nhận 50% lưu lượng. Cần bật Cross-Zone Load Balancing trên NLB.",
-          "B. Do chưa bật tính năng Sticky Sessions.",
-          "C. Do Deregistration Delay quá dài.",
-          "D. Do chưa gắn chứng chỉ SNI."
+          "A. Cross-Zone Load Balancing is disabled by default on NLBs, so each AZ receives 50% of the traffic. Enable Cross-Zone Load Balancing on the NLB target group.",
+          "B. Sticky Sessions have not been enabled on the NLB.",
+          "C. The Deregistration Delay is configured too high.",
+          "D. SNI certificates have not been attached."
         ],
         correctIdx: 0,
         explanation: "Trên NLB, Cross-Zone Load Balancing mặc định bị tắt, khiến node NLB ở AZ-a đẩy trọn 50% tổng lưu lượng vào chỉ 2 máy ở AZ-a. Bật Cross-Zone Load Balancing sẽ chia đều tải (10% mỗi máy) cho cả 10 máy."
@@ -204,10 +204,10 @@ Khi nào chọn NLB vs GWLB vs Kết hợp NLB + ALB?
         qEn: "An application runs on an Auto Scaling group of EC2 instances and writes diagnostic logs to the local disk before uploading them to Amazon S3 every 15 minutes. During scale-in events, instances are terminated before the latest logs are uploaded, causing data loss. How can the solutions architect ensure all logs are uploaded to S3 before an instance is terminated?",
         qVi: "Ứng dụng chạy trên cụm Auto Scaling ghi log ra đĩa cục bộ rồi mỗi 15 phút mới đẩy lên S3. Khi Scale-in, máy EC2 bị xóa trước khi kịp đẩy log mới nhất gây mất dữ liệu. Làm sao đảm bảo toàn bộ log được đẩy lên S3 trước khi máy bị xóa?",
         options: [
-          "A. Tăng thời gian Cooldown Period của Auto Scaling Group lên 30 phút.",
-          "B. Cấu hình một EC2 Auto Scaling Lifecycle Hook ở trạng thái Terminating:Wait để kích hoạt script đẩy log lên S3 trước khi hoàn tất xóa máy.",
-          "C. Bật tính năng Sticky Sessions trên Load Balancer.",
-          "D. Đổi chính sách sang Predictive Scaling."
+          "A. Increase the Auto Scaling group cooldown period to 30 minutes.",
+          "B. Configure an EC2 Auto Scaling Lifecycle Hook for the Terminating:Wait state to trigger a script that uploads the remaining logs to S3 before termination completes.",
+          "C. Enable Sticky Sessions on the load balancer.",
+          "D. Change the scaling policy to Predictive Scaling."
         ],
         correctIdx: 1,
         explanation: "Auto Scaling Lifecycle Hook (Terminating:Wait) cho phép tạm giữ máy EC2 trước khi bị xóa hoàn toàn để thực thi các tác vụ dọn dẹp hoặc đẩy log cuối cùng lên S3."
@@ -257,10 +257,10 @@ Khi nào chọn NLB vs GWLB vs Kết hợp NLB + ALB?
         qEn: "A company has 500,000 existing objects in an S3 bucket and just enabled Cross-Region Replication (CRR) to a destination bucket in another Region. However, the engineer notices that only newly uploaded objects are being replicated. How can the engineer replicate the 500,000 existing objects?",
         qVi: "Công ty có sẵn 500.000 file trong S3 bucket và vừa bật Cross-Region Replication (CRR) sang Region khác. Nhưng kỹ sư thấy chỉ có các file mới upload mới được sao chép sang. Làm sao để sao chép 500.000 file cũ đã tồn tại trước đó?",
         options: [
-          "A. Tắt rồi bật lại S3 Versioning.",
-          "B. Sử dụng tính năng S3 Batch Operations (Batch Replication) để sao chép toàn bộ các đối tượng đã tồn tại.",
-          "C. Đổi sang dùng Same-Region Replication (SRR).",
-          "D. Đợi 24 giờ để S3 tự động quét các file cũ."
+          "A. Disable and then re-enable S3 Versioning on the source bucket.",
+          "B. Use S3 Batch Operations (S3 Batch Replication) to replicate all existing objects to the destination bucket.",
+          "C. Switch from Cross-Region Replication (CRR) to Same-Region Replication (SRR).",
+          "D. Wait 24 hours for S3 to automatically scan and replicate historical objects."
         ],
         correctIdx: 1,
         explanation: "S3 CRR/SRR mặc định chỉ sao chép các object mới từ thời điểm bật. Để sao chép các object cũ đã có sẵn (existing objects), bạn phải chạy một job S3 Batch Replication (S3 Batch Operations)."
@@ -321,10 +321,10 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         qEn: "A media company allows users to upload large video files to Amazon S3 using Multipart Upload. A cost audit reveals that the bucket is incurring significant storage charges for thousands of unfinished, abandoned upload parts from failed connections. How can the architect automatically clean up these parts?",
         qVi: "Công ty truyền thông cho phép người dùng tải video lớn lên S3 bằng Multipart Upload. Kiểm toán chi phí phát hiện tốn rất nhiều tiền lưu trữ cho hàng nghìn mảnh file tải dở bị bỏ rơi do đứt mạng. Làm sao tự động dọn dẹp chúng?",
         options: [
-          "A. Bật S3 Intelligent-Tiering.",
-          "B. Tạo một S3 Lifecycle Rule với cấu hình 'Abort incomplete multipart uploads' sau 7 ngày.",
-          "C. Bật S3 Versioning và MFA Delete.",
-          "D. Dùng S3 Transfer Acceleration."
+          "A. Enable S3 Intelligent-Tiering on the bucket.",
+          "B. Create an S3 Lifecycle rule configured to 'Abort incomplete multipart uploads' after 7 days.",
+          "C. Enable S3 Versioning and MFA Delete.",
+          "D. Enable S3 Transfer Acceleration."
         ],
         correctIdx: 1,
         explanation: "S3 Lifecycle Rule hỗ trợ tính năng tự động hủy và xóa các phiên Multipart Upload chưa hoàn tất (AbortIncompleteMultipartUpload) sau số ngày chỉ định."
@@ -362,10 +362,10 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         qEn: "An e-commerce company stores customer order files in a single S3 bucket. The analytics application needs to read these files, but compliance rules require that all Personally Identifiable Information (PII) be masked before the analytics application receives the data. The company does not want to duplicate or create modified copies of the files in S3. Which solution meets these requirements?",
         qVi: "Công ty lưu file đơn hàng trong 1 S3 bucket. Ứng dụng phân tích cần đọc các file này, nhưng luật bảo mật bắt buộc phải che giấu toàn bộ thông tin cá nhân (PII) trước khi ứng dụng phân tích nhận được dữ liệu. Công ty không muốn tốn tiền lưu thêm bản sao thứ 2 của file trên S3. Chọn giải pháp nào?",
         options: [
-          "A. Dùng S3 Cross-Region Replication.",
-          "B. Sử dụng S3 Object Lambda Access Point để gọi hàm Lambda tự động che giấu PII ngay khi có lệnh GET.",
-          "C. Dùng S3 Batch Operations.",
-          "D. Dùng S3 Glacier Vault Lock."
+          "A. Use S3 Cross-Region Replication.",
+          "B. Use an S3 Object Lambda Access Point to invoke a Lambda function that dynamically masks PII data during GET requests.",
+          "C. Use S3 Batch Operations.",
+          "D. Use S3 Glacier Vault Lock."
         ],
         correctIdx: 1,
         explanation: "S3 Object Lambda cho phép gắn một hàm AWS Lambda vào quá trình xử lý lệnh S3 GET để tự động biến đổi hoặc ẩn dữ liệu nhạy cảm trực tiếp trên đường truyền mà không cần tạo bản sao file."
@@ -374,10 +374,10 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         qEn: "Users located across Europe, Asia, and South America upload 50 GB video files to a centralized S3 bucket in us-east-1. Users complain about slow upload speeds over the public internet. Which combination of S3 features will maximize upload performance?",
         qVi: "Người dùng ở khắp Châu Âu, Châu Á và Nam Mỹ upload các file video 50 GB về 1 S3 bucket đặt tại Mỹ (us-east-1) và phàn nàn tốc độ quá chậm. Kết hợp 2 tính năng nào của S3 để tăng tốc tối đa?",
         options: [
-          "A. S3 Transfer Acceleration và S3 Multipart Upload.",
-          "B. S3 Byte-Range Fetches và S3 Intelligent-Tiering.",
-          "C. AWS Global Accelerator và S3 Versioning.",
-          "D. Amazon CloudFront OAC và S3 Same-Region Replication."
+          "A. S3 Transfer Acceleration and S3 Multipart Upload",
+          "B. S3 Byte-Range Fetches and S3 Intelligent-Tiering",
+          "C. AWS Global Accelerator and S3 Versioning",
+          "D. Amazon CloudFront Origin Access Control (OAC) and S3 Same-Region Replication"
         ],
         correctIdx: 0,
         explanation: "Với file lớn 50 GB (>5GB bắt buộc dùng Multipart Upload) gửi từ xa xuyên lục địa, kết hợp Multipart Upload (chia nhỏ gửi song song) và S3 Transfer Acceleration (đi qua Edge Location vào mạng trục AWS) sẽ cho tốc độ nhanh nhất."
@@ -417,10 +417,10 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         qEn: "A company stores millions of sensitive financial documents in an S3 bucket encrypted with a custom AWS KMS key (SSE-KMS). Recently, high-volume analytics jobs reading from the bucket started failing with KMS 'ThrottlingException' errors, and AWS KMS costs have spiked. How can the architect resolve the throttling and reduce KMS costs by up to 99%?",
         qVi: "Công ty lưu hàng triệu tài liệu tài chính trên S3 mã hóa bằng khóa SSE-KMS. Gần đây các tác vụ phân tích đọc lượng lớn file bị báo lỗi KMS 'ThrottlingException' và chi phí KMS tăng vọt. Làm sao khắc phục lỗi nghẽn này và giảm tới 99% chi phí KMS?",
         options: [
-          "A. Chuyển từ SSE-KMS về không mã hóa.",
-          "B. Bật tính năng S3 Bucket Keys trên S3 bucket đó.",
-          "C. Bật S3 Transfer Acceleration.",
-          "D. Tạo thêm 10 S3 Access Points."
+          "A. Disable encryption on the S3 bucket.",
+          "B. Enable Amazon S3 Bucket Keys on the S3 bucket.",
+          "C. Enable S3 Transfer Acceleration.",
+          "D. Create 10 additional S3 Access Points."
         ],
         correctIdx: 1,
         explanation: "S3 Bucket Keys tạo một khóa cấp độ bucket tạm thời từ KMS để mã hóa các object bên trong, giúp giảm tới 99% lưu lượng gọi API trực tiếp tới AWS KMS."
@@ -429,10 +429,10 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         qEn: "A security policy mandates that all objects in an S3 bucket must be encrypted in transit. How should the solutions architect enforce this requirement?",
         qVi: "Chính sách bảo mật yêu cầu toàn bộ dữ liệu truyền qua lại với một S3 bucket bắt buộc phải được mã hóa trên đường truyền (Encrypted in transit). Thực thi yêu cầu này như thế nào?",
         options: [
-          "A. Bật tính năng SSE-S3 mặc định cho bucket.",
-          "B. Thêm quy tắc Deny trong S3 Bucket Policy đối với mọi request có điều kiện 'aws:SecureTransport': 'false'.",
-          "C. Bật S3 Object Lock ở chế độ Compliance Mode.",
-          "D. Bật S3 Versioning."
+          "A. Enable default SSE-S3 encryption on the bucket.",
+          "B. Add an explicit Deny statement to the S3 Bucket Policy with the condition 'aws:SecureTransport': 'false'.",
+          "C. Enable S3 Object Lock in Compliance mode.",
+          "D. Enable S3 Versioning."
         ],
         correctIdx: 1,
         explanation: "Điều kiện 'aws:SecureTransport': 'false' dùng với lệnh Effect: Deny trong S3 Bucket Policy sẽ từ chối mọi kết nối HTTP không mã hóa, ép buộc dùng HTTPS."
@@ -472,10 +472,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A financial firm must store transaction records in Amazon S3 for 7 years to meet strict regulatory standards. During this 7-year period, NO user—not even the AWS account root user or system administrators—can be allowed to modify or delete the files, or shorten the retention period. Which S3 feature meets this requirement?",
         qVi: "Công ty tài chính phải lưu hồ sơ giao dịch trên S3 trong 7 năm theo luật định. Trong suốt 7 năm này, KHÔNG MỘT AI — kể cả tài khoản Root hay Admin — được phép sửa, xóa file hoặc rút ngắn thời hạn lưu giữ. Tính năng nào đáp ứng được?",
         options: [
-          "A. S3 Versioning kết hợp MFA Delete.",
-          "B. S3 Object Lock ở chế độ Governance Mode.",
-          "C. S3 Object Lock ở chế độ Compliance Mode.",
-          "D. S3 Bucket Policy với Explicit Deny."
+          "A. S3 Versioning combined with MFA Delete",
+          "B. S3 Object Lock in Governance Mode",
+          "C. S3 Object Lock in Compliance Mode",
+          "D. S3 Bucket Policy with an Explicit Deny"
         ],
         correctIdx: 2,
         explanation: "S3 Object Lock ở chế độ Compliance Mode đảm bảo tính bất biến tuyệt đối (WORM): Không bất kỳ ai, kể cả tài khoản Root của AWS, có thể xóa file hoặc rút ngắn thời gian lưu giữ trước khi hết hạn."
@@ -525,10 +525,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "An e-commerce application uses an Amazon RDS for MySQL database. Every afternoon, the business intelligence team runs complex reporting queries against the database, which slows down customer order processing. What should the solutions architect do to improve performance?",
         qVi: "Ứng dụng thương mại điện tử dùng RDS MySQL. Mỗi buổi chiều, đội phân tích chạy các câu truy vấn báo cáo phức tạp làm chậm hệ thống đặt hàng của khách. Kiến trúc sư nên làm gì để cải thiện hiệu năng?",
         options: [
-          "A. Bật tính năng RDS Multi-AZ và trỏ công cụ báo cáo vào máy Standby.",
-          "B. Tạo một RDS Read Replica và cấu hình công cụ báo cáo truy vấn vào Read Replica đó.",
-          "C. Chuyển cơ sở dữ liệu sang S3 Glacier.",
-          "D. Đặt một NAT Gateway phía trước RDS."
+          "A. Enable RDS Multi-AZ and point the reporting tool to the Standby instance.",
+          "B. Create an RDS Read Replica and configure the business intelligence reporting tool to query the Read Replica.",
+          "C. Migrate the database to S3 Glacier.",
+          "D. Place a NAT Gateway in front of the RDS database."
         ],
         correctIdx: 1,
         explanation: "Máy Standby trong RDS Multi-AZ tiêu chuẩn không thể dùng để đọc dữ liệu. Để tách tải các câu lệnh đọc/báo cáo nặng ra khỏi DB chính, giải pháp đúng là tạo RDS Read Replica."
@@ -540,7 +540,7 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
           "A. RDS Read Replica Promotion",
           "B. Amazon RDS Blue/Green Deployments",
           "C. AWS Database Migration Service (DMS)",
-          "D. RDS Proxy"
+          "D. Amazon RDS Proxy"
         ],
         correctIdx: 1,
         explanation: "RDS Blue/Green Deployments tạo môi trường staging (Green) nhân bản liên tục từ môi trường thật (Blue), cho phép nâng cấp và kiểm thử trên Green rồi chuyển đổi (Switchover) trong dưới 1 phút mà không mất dữ liệu."
@@ -581,10 +581,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A serverless application uses hundreds of concurrent AWS Lambda functions that read and write to an Amazon RDS for MySQL database. During traffic spikes, the database experiences high CPU usage and 'Too many connections' errors due to the rapid opening and closing of database connections. Which solution resolves this issue?",
         qVi: "Ứng dụng Serverless dùng hàng trăm hàm AWS Lambda chạy đồng thời đọc ghi vào RDS MySQL. Khi lưu lượng tăng vọt, DB bị quá tải CPU và báo lỗi 'Too many connections' do đóng mở kết nối liên tục. Giải pháp nào xử lý triệt để vấn đề này?",
         options: [
-          "A. Đặt Amazon RDS Proxy ở giữa các hàm Lambda và cơ sở dữ liệu RDS.",
-          "B. Bật tính năng RDS Multi-AZ.",
-          "C. Chuyển sang dùng Amazon ElastiCache for Memcached.",
-          "D. Tăng thời gian Timeout của hàm Lambda lên 15 phút."
+          "A. Place Amazon RDS Proxy between the AWS Lambda functions and the RDS database.",
+          "B. Enable RDS Multi-AZ deployment.",
+          "C. Migrate to Amazon ElastiCache for Memcached.",
+          "D. Increase the Lambda function timeout to 15 minutes."
         ],
         correctIdx: 0,
         explanation: "Amazon RDS Proxy quản lý hồ kết nối (Connection Pool) tập trung, giữ các kết nối mở sẵn tới DB và tái sử dụng chúng cho hàng nghìn hàm Lambda."
@@ -593,10 +593,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A company runs a 40 TB production database on Amazon Aurora. The QA team needs an identical copy of the production data to run performance tests today, but wants to minimize storage costs and create the test database as quickly as possible without impacting production. Which feature should be used?",
         qVi: "Công ty chạy DB chính nặng 40 TB trên Amazon Aurora. Đội QA cần một bản sao dữ liệu giống hệt để chạy kiểm thử ngay hôm nay, yêu cầu tạo nhanh nhất có thể và tốn ít chi phí lưu trữ nhất. Nên dùng tính năng gì?",
         options: [
-          "A. Chụp DB Snapshot rồi Restore sang cụm mới.",
-          "B. Sử dụng tính năng Aurora Fast Database Cloning (Copy-on-Write).",
-          "C. Dùng AWS DMS để chép dữ liệu sang DB mới.",
-          "D. Tạo thêm một Aurora Read Replica."
+          "A. Take a DB Snapshot and restore it to a new cluster.",
+          "B. Use Aurora Fast Database Cloning (Copy-on-Write protocol).",
+          "C. Use AWS DMS to copy the data to a new database.",
+          "D. Create an additional Aurora Read Replica."
         ],
         correctIdx: 1,
         explanation: "Aurora Database Cloning sử dụng giao thức Copy-on-Write giúp tạo bản sao độc lập của DB 40 TB chỉ trong vài phút và ban đầu không tốn thêm bất kỳ chi phí lưu trữ nào vì dùng chung các trang dữ liệu gốc."
@@ -634,7 +634,7 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qVi: "Công ty game đang phát triển trò chơi di động nhiều người chơi cần một bảng xếp hạng điểm số thời gian thực (real-time leaderboard) cho hàng triệu người. Giải pháp cần độ trễ dưới 1ms, có Multi-AZ tự động failover và hỗ trợ sẵn việc sắp xếp điểm số. Chọn dịch vụ nào?",
         options: [
           "A. Amazon ElastiCache for Memcached",
-          "B. Amazon ElastiCache for Redis (sử dụng Sorted Sets)",
+          "B. Amazon ElastiCache for Redis (using Sorted Sets)",
           "C. Amazon RDS for MySQL Read Replicas",
           "D. Amazon Athena"
         ],
@@ -645,10 +645,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "An application uses Amazon ElastiCache in front of an RDS database to cache user profiles. The team wants to ensure that customers NEVER see stale profile data immediately after updating their profile, while keeping read latency as low as possible. Which caching strategy should be implemented?",
         qVi: "Ứng dụng dùng ElastiCache đứng trước RDS để cache hồ sơ người dùng. Đội ngũ muốn đảm bảo khách hàng KHÔNG BAO GIỜ nhìn thấy dữ liệu cũ ngay sau khi họ vừa cập nhật hồ sơ. Nên áp dụng chiến lược caching nào?",
         options: [
-          "A. Chỉ dùng Lazy Loading không có TTL.",
-          "B. Áp dụng chiến lược Write-Through (cập nhật vào Cache ngay mỗi khi ghi xuống Database).",
-          "C. Xóa toàn bộ cụm ElastiCache mỗi 5 phút.",
-          "D. Đổi từ Redis sang Memcached."
+          "A. Use Lazy Loading only without a TTL.",
+          "B. Implement a Write-Through caching strategy (updating the cache synchronously whenever data is written to the database).",
+          "C. Flush the entire ElastiCache cluster every 5 minutes.",
+          "D. Switch from Redis to Memcached."
         ],
         correctIdx: 1,
         explanation: "Chiến lược Write-Through cập nhật dữ liệu trong Cache đồng bộ ngay khi dữ liệu được ghi vào Database, đảm bảo dữ liệu trên Cache không bao giờ bị cũ (never stale)."
@@ -685,10 +685,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A flash-sale e-commerce website uses Amazon DynamoDB. For 23 hours a day, traffic is almost zero, but during a 1-hour flash sale, traffic spikes unpredictably to 50,000 requests per second within seconds, causing 'ProvisionedThroughputExceededException' errors because Auto Scaling cannot react fast enough. Which solution resolves this?",
         qVi: "Website săn sale dùng DynamoDB. Suốt 23 giờ mỗi ngày hầu như không có khách, nhưng trong 1 giờ Flash Sale lưu lượng vọt lên 50.000 request/giây chỉ trong vài giây khiến Auto Scaling không kịp phản ứng và gây lỗi 'ProvisionedThroughputExceededException'. Giải pháp nào xử lý triệt để?",
         options: [
-          "A. Chuyển bảng DynamoDB sang chế độ On-Demand Capacity Mode.",
-          "B. Bật tính năng DynamoDB TTL.",
-          "C. Chuyển sang dùng RDS MySQL.",
-          "D. Tạo thêm một Local Secondary Index (LSI)."
+          "A. Switch the DynamoDB table capacity mode to On-Demand Mode.",
+          "B. Enable DynamoDB Time To Live (TTL).",
+          "C. Migrate the workload to Amazon RDS for MySQL.",
+          "D. Create a Local Secondary Index (LSI)."
         ],
         correctIdx: 0,
         explanation: "DynamoDB On-Demand Mode có khả năng mở rộng tức thì (instantly scales) để đón các đợt lưu lượng tăng đột biến (spiky/unpredictable traffic) mà không bị lỗi Throttling và chỉ tính phí theo request thực tế."
@@ -697,10 +697,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A social media application stores celebrity posts in Amazon DynamoDB. When a celebrity posts an update, millions of users read that single item simultaneously, causing throttling on that specific partition key. How can the architect reduce read latency to microseconds and eliminate the hot key issue without changing application logic?",
         qVi: "Ứng dụng mạng xã hội lưu bài đăng của người nổi tiếng trên DynamoDB. Khi người nổi tiếng đăng bài, hàng triệu người cùng đọc đúng 1 bản ghi đó gây nghẽn phân vùng (Hot Key). Làm sao giảm độ trễ đọc xuống micro-giây và xóa bỏ lỗi Hot Key mà không cần viết lại logic ứng dụng?",
         options: [
-          "A. Bật DynamoDB Streams.",
-          "B. Triển khai Amazon DynamoDB Accelerator (DAX).",
-          "C. Dùng S3 Transfer Acceleration.",
-          "D. Dùng Amazon RDS Proxy."
+          "A. Enable DynamoDB Streams.",
+          "B. Deploy Amazon DynamoDB Accelerator (DAX) in front of the table.",
+          "C. Use S3 Transfer Acceleration.",
+          "D. Use Amazon RDS Proxy."
         ],
         correctIdx: 1,
         explanation: "DynamoDB Accelerator (DAX) là bộ nhớ đệm in-memory tương thích hoàn toàn với API của DynamoDB, giúp trả kết quả đọc cho các Hot Keys ngay từ RAM trong vài micro-giây."
@@ -738,10 +738,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A company stores temporary user session tokens in an Amazon DynamoDB table. Each item has an 'expiration_time' epoch timestamp attribute. The company wants to automatically delete expired sessions after 24 hours and archive the deleted items to Amazon S3 for audit purposes without consuming write capacity units (WCUs) for deletions. Which architecture meets these requirements?",
         qVi: "Công ty lưu token phiên đăng nhập trong DynamoDB có cột 'expiration_time'. Công ty muốn tự động xóa các phiên hết hạn sau 24 giờ và chuyển các bản ghi vừa bị xóa đó sang lưu trữ ở S3 mà không tốn WCU khi xóa. Kiến trúc nào đáp ứng được?",
         options: [
-          "A. Chạy một hàm Lambda quét toàn bộ bảng (Scan) mỗi giờ rồi gọi lệnh DeleteItem.",
-          "B. Bật DynamoDB Time To Live (TTL) trên cột 'expiration_time', bật DynamoDB Streams và gắn hàm AWS Lambda để đọc các bản ghi bị xóa bởi TTL rồi đẩy vào S3.",
-          "C. Bật DynamoDB Accelerator (DAX).",
-          "D. Dùng S3 Lifecycle Policy."
+          "A. Run an hourly Lambda function that performs a full table Scan and calls DeleteItem.",
+          "B. Enable DynamoDB Time To Live (TTL) on 'expiration_time', enable DynamoDB Streams, and trigger an AWS Lambda function to archive the TTL-deleted records to Amazon S3.",
+          "C. Enable DynamoDB Accelerator (DAX).",
+          "D. Configure an S3 Lifecycle Policy."
         ],
         correctIdx: 1,
         explanation: "DynamoDB TTL tự động xóa các dòng hết hạn miễn phí (không tốn WCU), và sự kiện xóa đó được đẩy vào DynamoDB Streams để hàm Lambda bắt lấy và lưu trữ sang S3."
@@ -750,10 +750,10 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
         qEn: "A data science team wants to run complex SQL analytics using Amazon Athena on data stored in a production Amazon DynamoDB table. However, running Scan operations on the DynamoDB table throttles production traffic. How can the team export the data to S3 without consuming ANY read capacity (RCUs) on the active table?",
         qVi: "Đội khoa học dữ liệu muốn dùng Athena chạy SQL phân tích dữ liệu của một bảng DynamoDB Production, nhưng không muốn quét trực tiếp làm tốn RCU gây nghẽn bảng thật. Làm sao xuất dữ liệu ra S3 mà KHÔNG tốn bất kỳ RCU nào của bảng đang chạy?",
         options: [
-          "A. Bật Point-in-Time Recovery (PITR) và sử dụng tính năng gốc 'DynamoDB Export to S3'.",
-          "B. Tạo một Global Secondary Index (GSI).",
-          "C. Tăng RCU của bảng lên gấp 10 lần.",
-          "D. Dùng DynamoDB Accelerator (DAX)."
+          "A. Enable Point-in-Time Recovery (PITR) and use the native 'DynamoDB Export to S3' feature.",
+          "B. Create a Global Secondary Index (GSI).",
+          "C. Increase the table's provisioned RCUs by 10x.",
+          "D. Use DynamoDB Accelerator (DAX)."
         ],
         correctIdx: 0,
         explanation: "Tính năng DynamoDB Export to S3 đọc dữ liệu từ bản sao lưu PITR ở hậu trường nên hoàn toàn không tiêu tốn RCU hay ảnh hưởng đến hiệu năng của bảng Production đang chạy."
@@ -846,10 +846,10 @@ Bản đồ Chọn Nhanh Database Chuyên Biệt trên AWS:
         qEn: "A company has connected its on-premises data center to an AWS VPC using AWS Direct Connect. Applications running on EC2 instances inside the VPC need to resolve DNS domain names (such as 'db.corp.internal') that are hosted on an on-premises Microsoft Active Directory DNS server. Which solution enables this DNS resolution?",
         qVi: "Công ty đã nối trung tâm dữ liệu dưới đất lên AWS VPC qua Direct Connect. Các ứng dụng trên EC2 trong VPC cần phân giải các tên miền nội bộ (như 'db.corp.internal') nằm trên máy chủ DNS dưới công ty. Giải pháp nào giúp thực hiện việc này?",
         options: [
-          "A. Tạo một Route 53 Resolver Inbound Endpoint.",
-          "B. Tạo một Route 53 Resolver Outbound Endpoint và cấu hình Conditional Forwarding Rule chuyển tiếp các truy vấn 'corp.internal' về IP của DNS server dưới On-premise.",
-          "C. Tạo một bản ghi Alias trên Public Hosted Zone.",
-          "D. Bật tính năng Sticky Sessions."
+          "A. Create a Route 53 Resolver Inbound Endpoint.",
+          "B. Create a Route 53 Resolver Outbound Endpoint and configure a Conditional Forwarding Rule to forward queries for 'corp.internal' to the on-premises DNS server IP.",
+          "C. Create an Alias record in a Public Hosted Zone.",
+          "D. Enable Sticky Sessions on the ALB."
         ],
         correctIdx: 1,
         explanation: "Vì luồng truy vấn DNS đi từ TRONG VPC đi RA ngoài về phía On-premise, ta phải dùng Route 53 Resolver Outbound Endpoint kết hợp với Forwarding Rule."
@@ -859,7 +859,7 @@ Bản đồ Chọn Nhanh Database Chuyên Biệt trên AWS:
         qVi: "Đội marketing muốn trỏ tên miền gốc 'example.com' (Zone Apex) thẳng vào một Application Load Balancer (ALB). Cần tạo loại bản ghi nào trên Route 53?",
         options: [
           "A. CNAME Record",
-          "B. A Record kiểu Alias (Alias Record) trỏ vào ALB",
+          "B. Route 53 Alias A Record pointing to the ALB",
           "C. PTR Record",
           "D. MX Record"
         ],
@@ -913,10 +913,10 @@ Mẹo Chọn Nhanh 7 Chính Sách Điều Hướng Route 53:
         qEn: "A company wants to configure Route 53 Failover routing for an internal database server running on an EC2 instance inside a Private Subnet with no internet access. Since Route 53 health checkers cannot reach private IP addresses directly, how can the architect implement a health check for this instance?",
         qVi: "Công ty muốn cấu hình Route 53 Failover cho một máy chủ DB nằm trong Private Subnet không có Internet. Vì Route 53 Health Checker không gọi trực tiếp vào Private IP được, làm sao kiểm tra sức khỏe cho máy này?",
         options: [
-          "A. Mở cổng 80 cho 0.0.0.0/0 trong Network ACL.",
-          "B. Tạo một CloudWatch Alarm theo dõi trạng thái của máy EC2 nội bộ, rồi cấu hình Route 53 Health Check kiểm tra trạng thái của CloudWatch Alarm đó.",
-          "C. Dùng Simple Routing thay cho Failover Routing.",
-          "D. Đặt NAT Gateway vào Private Subnet."
+          "A. Open port 80 to 0.0.0.0/0 in the Network ACL.",
+          "B. Create a CloudWatch Alarm monitoring the private EC2 instance's status, and configure a Route 53 Health Check to monitor the state of that CloudWatch Alarm.",
+          "C. Use Simple Routing instead of Failover Routing.",
+          "D. Place a NAT Gateway inside the Private Subnet."
         ],
         correctIdx: 1,
         explanation: "Route 53 hỗ trợ loại Health Check dựa trên CloudWatch Alarm (Health Check that monitors a CloudWatch Alarm), giúp giám sát gián tiếp các tài nguyên nằm trong Private Subnet."
@@ -954,10 +954,10 @@ So sánh CloudFront Functions vs Lambda@Edge:
         qEn: "A media website uses Amazon CloudFront to deliver premium video courses consisting of thousands of small HLS video segment files stored in Amazon S3. Only authenticated paid subscribers should be able to access all the video segments of a course. What is the MOST efficient way to restrict access?",
         qVi: "Website truyền thông dùng CloudFront để phát các khóa học video trả phí gồm hàng nghìn file phân đoạn video nhỏ (HLS) lưu trên S3. Chỉ những học viên đã trả tiền mới được xem toàn bộ các file phân đoạn này. Cách hiệu quả nhất để giới hạn truy cập là gì?",
         options: [
-          "A. Sinh hàng nghìn S3 Presigned URLs cho từng mảnh video.",
-          "B. Sử dụng CloudFront Signed Cookies.",
-          "C. Mở Public Access cho S3 Bucket.",
-          "D. Sử dụng AWS Global Accelerator."
+          "A. Generate thousands of individual S3 Presigned URLs for each video segment.",
+          "B. Use CloudFront Signed Cookies.",
+          "C. Enable public read access on the S3 bucket.",
+          "D. Use AWS Global Accelerator."
         ],
         correctIdx: 1,
         explanation: "Khi cần cấp quyền truy cập tạm thời cho NHIỀU file (như hàng nghìn phân đoạn video HLS hoặc toàn bộ khu vực thành viên VIP) qua CloudFront, CloudFront Signed Cookies là giải pháp tối ưu nhất."

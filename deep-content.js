@@ -46,10 +46,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "An IAM user belongs to two IAM groups: 'Developers' and 'Contractors'. The 'Developers' group has a policy that allows all Amazon S3 actions (s3:*). The 'Contractors' group has a policy that explicitly denies s3:DeleteBucket. What happens when this user tries to delete an S3 bucket?",
         qVi: "Một IAM user thuộc cả 2 nhóm 'Developers' và 'Contractors'. Nhóm Developers cho phép mọi thao tác S3 (s3:*). Nhóm Contractors có lệnh cấm tường minh (Explicit Deny) hành động s3:DeleteBucket. Chuyện gì xảy ra khi user này xóa 1 S3 bucket?",
         options: [
-          "A. Xóa thành công vì quyền Allow s3:* rộng hơn.",
-          "B. Bị từ chối (Access Denied) vì lệnh Explicit Deny luôn ghi đè mọi lệnh Allow.",
-          "C. Hệ thống hỏi xác nhận mã MFA trước khi xóa.",
-          "D. Phụ thuộc vào việc user được thêm vào nhóm nào trước."
+          "A. The bucket is deleted successfully because the Allow s3:* permission is broader.",
+          "B. The action is denied (Access Denied) because an explicit deny always overrides any allow.",
+          "C. The system prompts the user for an MFA code before deleting the bucket.",
+          "D. It depends on which IAM group the user was added to first."
         ],
         correctIdx: 1,
         explanation: "Theo quy tắc vàng của AWS IAM: Một lệnh cấm tường minh (Explicit Deny) ở bất kỳ Policy nào sẽ LUÔN LUÔN thắng mọi lệnh Allow."
@@ -58,10 +58,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "A company hires 50 new developers. Each developer needs read/write access ONLY to their own personal folder (s3://company-bucket/users/<username>/*) in a shared S3 bucket. How can the solutions architect implement this with the LEAST administrative effort?",
         qVi: "Công ty tuyển 50 lập trình viên mới. Mỗi người chỉ được đọc/ghi vào đúng thư mục cá nhân mang tên mình trong chung 1 S3 bucket. Cách nào tốn ít công sức quản trị nhất?",
         options: [
-          "A. Tạo 50 Inline Policies riêng biệt gắn cho từng IAM User.",
-          "B. Tạo 1 IAM Group, gắn 1 Customer Managed Policy có chứa biến động '${aws:username}' trong đường dẫn Resource ARN.",
-          "C. Tạo 50 S3 Buckets riêng cho từng lập trình viên.",
-          "D. Tạo 50 S3 Access Points riêng cho từng người."
+          "A. Create 50 separate inline policies and attach each one to an individual IAM user.",
+          "B. Create a single IAM group and attach a customer managed policy that uses the '${aws:username}' policy variable in the Resource ARN.",
+          "C. Create 50 separate S3 buckets, one for each developer.",
+          "D. Create 50 separate S3 Access Points, one for each developer."
         ],
         correctIdx: 1,
         explanation: "Dùng IAM Policy Variable '${aws:username}' trong 1 Group Policy giúp AWS tự động thay thế tên User đang đăng nhập vào đường dẫn S3 mà không phải tạo 50 policies thủ công."
@@ -116,10 +116,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "A Java application running on an Amazon EC2 instance needs to read and write items to an Amazon DynamoDB table. What is the MOST secure way to grant the application access to the DynamoDB table?",
         qVi: "Một ứng dụng Java chạy trên máy chủ EC2 cần đọc và ghi dữ liệu vào bảng DynamoDB. Cách nào AN TOÀN NHẤT để cấp quyền cho ứng dụng?",
         options: [
-          "A. Tạo một IAM User, sinh Access Key và lưu vào file cấu hình mã hóa trên EC2.",
-          "B. Tạo một IAM Role có quyền truy cập DynamoDB và gắn (attach) Role đó vào EC2 instance.",
-          "C. Lưu Access Key vào S3 Bucket rồi cho EC2 tải về lúc khởi động qua User Data.",
-          "D. Mở cổng DynamoDB trong Security Group của máy chủ EC2."
+          "A. Create an IAM user, generate access keys, and store them in an encrypted configuration file on the EC2 instance.",
+          "B. Create an IAM role with permissions to access the DynamoDB table and attach the role to the EC2 instance (Instance Profile).",
+          "C. Store access keys in an S3 bucket and download them at boot time using EC2 User Data.",
+          "D. Open the DynamoDB port in the EC2 instance's security group."
         ],
         correctIdx: 1,
         explanation: "Gắn IAM Role trực tiếp vào EC2 Instance (Instance Profile) giúp AWS SDK tự động sử dụng Temporary Credentials từ AWS STS mà không bao giờ phải lưu trữ Access Key cố định."
@@ -186,10 +186,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "An Auto Scaling group launches new EC2 instances during traffic spikes, but the instances take 15 minutes to become healthy because the EC2 User Data script downloads and compiles large software packages. How can a solutions architect reduce the launch time to under 2 minutes?",
         qVi: "Cụm Auto Scaling bật thêm máy EC2 khi lưu lượng tăng đột biến, nhưng mất tới 15 phút máy mới sẵn sàng vì script User Data phải tải và biên dịch các gói phần mềm rất nặng. Làm sao giảm thời gian khởi động xuống dưới 2 phút?",
         options: [
-          "A. Đổi sang dòng máy EC2 R5 có nhiều RAM hơn.",
-          "B. Cài đặt sẵn toàn bộ phần mềm lên một máy EC2, tạo một Custom AMI (Golden AMI) từ máy đó, rồi cập nhật Launch Template dùng AMI mới này.",
-          "C. Chuyển đoạn script từ EC2 User Data sang lưu trên S3.",
-          "D. Gắn thêm một ổ cứng EBS phụ vào máy chủ."
+          "A. Change the instance type to an R5 memory-optimized instance.",
+          "B. Pre-install all required software onto an EC2 instance, create a custom Golden AMI from it, and update the Launch Template to use the new AMI.",
+          "C. Move the installation script from EC2 User Data to an Amazon S3 bucket.",
+          "D. Attach an additional secondary EBS volume to the instance."
         ],
         correctIdx: 1,
         explanation: "Đóng gói sẵn hệ điều hành và các phần mềm nặng thành một Custom AMI (hoặc dùng EC2 Image Builder) giúp máy mới bật lên là chạy được ngay không cần chờ tải và cài đặt lại."
@@ -210,10 +210,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "A security audit revealed that an application running on EC2 is vulnerable to Server-Side Request Forgery (SSRF) attacks that could steal temporary IAM credentials from http://169.254.169.254. How should the architect mitigate this risk?",
         qVi: "Kiểm toán bảo mật phát hiện ứng dụng trên EC2 có nguy cơ bị tấn công SSRF đánh cắp thông tin xác thực IAM tạm thời từ địa chỉ 169.254.169.254. Kiến trúc sư nên khắc phục bằng cách nào?",
         options: [
-          "A. Tắt IAM Role của máy EC2 và chuyển sang dùng Access Key cứng.",
-          "B. Bắt buộc sử dụng Instance Metadata Service Version 2 (IMDSv2) yêu cầu xác thực bằng Session Token (PUT request).",
-          "C. Chặn địa chỉ 169.254.169.254 trong Network ACL của Subnet.",
-          "D. Bật mã hóa cho ổ đĩa EBS."
+          "A. Detach the IAM role from the EC2 instance and use hardcoded access keys instead.",
+          "B. Enforce the use of Instance Metadata Service Version 2 (IMDSv2), which requires session-oriented PUT requests with a token.",
+          "C. Block 169.254.169.254 in the subnet's Network ACL.",
+          "D. Enable encryption on the root EBS volume."
         ],
         correctIdx: 1,
         explanation: "IMDSv2 sử dụng cơ chế hướng phiên (session-oriented) yêu cầu gửi lệnh PUT kèm header TTL để lấy token trước khi đọc metadata, chặn đứng hiệu quả các lỗ hổng SSRF."
@@ -267,10 +267,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "A 3-tier web application consists of an Application Load Balancer (ALB), a fleet of EC2 instances in an Auto Scaling group, and an Amazon RDS MySQL database. How should the solutions architect configure the security groups to ensure that the EC2 instances only accept traffic from the ALB?",
         qVi: "Ứng dụng web 3 tầng gồm ALB, dàn máy chủ EC2 tự động co giãn (Auto Scaling) và cơ sở dữ liệu RDS MySQL. Cấu hình Security Group như thế nào để đảm bảo các máy EC2 chỉ nhận lưu lượng đi qua từ ALB?",
         options: [
-          "A. Trong Inbound rule của EC2 Security Group, cho phép cổng HTTP từ địa chỉ IP tĩnh của ALB.",
-          "B. Trong Inbound rule của EC2 Security Group, cho phép cổng HTTP với nguồn (Source) là Security Group ID của ALB.",
-          "C. Tạo một Network ACL chặn toàn bộ lưu lượng trừ tên miền DNS của ALB.",
-          "D. Bật tính năng Sticky Sessions trên ALB."
+          "A. In the EC2 security group inbound rules, allow HTTP traffic from the static IP address of the ALB.",
+          "B. In the EC2 security group inbound rules, allow HTTP traffic and specify the ALB's Security Group ID as the source.",
+          "C. Create a Network ACL that blocks all traffic except the DNS name of the ALB.",
+          "D. Enable Sticky Sessions on the ALB."
         ],
         correctIdx: 1,
         explanation: "Vì địa chỉ IP của ALB có thể thay đổi linh hoạt, cách chuẩn xác và an toàn nhất là tham chiếu trực tiếp Security Group ID của ALB làm Source trong Inbound Rule của EC2 Security Group."
@@ -279,10 +279,10 @@ window.DEEP_CONTENT_PART1 = {
         qEn: "A developer launched a Linux EC2 instance and wants to allow HTTP (port 80) traffic from the internet. The developer added an Inbound rule allowing port 80 from 0.0.0.0/0 and removed all Outbound rules from the Security Group. What happens when a user requests a web page over port 80?",
         qVi: "Lập trình viên bật máy EC2 Linux, thêm Inbound rule mở cổng 80 cho 0.0.0.0/0 nhưng xóa sạch toàn bộ Outbound rules trong Security Group. Chuyện gì xảy ra khi người dùng truy cập trang web qua cổng 80?",
         options: [
-          "A. Request đi vào được nhưng phản hồi bị chặn lại vì không có Outbound rule.",
-          "B. Trang web vẫn tải thành công bình thường vì Security Group có tính chất Stateful.",
-          "C. AWS không cho phép xóa toàn bộ Outbound rules.",
-          "D. Người dùng nhận lỗi Connection Refused."
+          "A. The request reaches the instance, but the response is blocked because there are no outbound rules.",
+          "B. The web page loads normally because security groups are stateful and automatically allow return traffic.",
+          "C. AWS does not allow removing all outbound rules from a security group.",
+          "D. The user receives a Connection Refused error."
         ],
         correctIdx: 1,
         explanation: "Vì Security Group là Stateful (Có trạng thái), bất kỳ kết nối nào đã được cho phép đi VÀO qua Inbound rule thì luồng gói tin phản hồi của kết nối đó sẽ TỰ ĐỘNG được phép đi RA bất kể bảng Outbound rules có trống hay không!"
@@ -408,10 +408,10 @@ Bài toán Chi phí EC2 trong đề thi:
         qEn: "A research team runs a weather forecasting High Performance Computing (HPC) application on Linux EC2 instances using Message Passing Interface (MPI). The application requires tightly coupled inter-node communication with the lowest possible latency and highest packet-per-second performance. Which configuration should the architect choose?",
         qVi: "Nhóm nghiên cứu chạy ứng dụng dự báo thời tiết HPC trên các máy EC2 Linux sử dụng giao thức MPI, đòi hỏi giao tiếp giữa các node cực kỳ chặt chẽ với độ trễ thấp nhất có thể. Cấu hình nào nên được chọn?",
         options: [
-          "A. Đặt các máy EC2 vào Spread Placement Group và gắn thêm Elastic IP.",
-          "B. Đặt các máy EC2 vào Cluster Placement Group trong 1 AZ và bật Elastic Fabric Adapter (EFA).",
-          "C. Đặt các máy EC2 vào Partition Placement Group trải qua 3 AZ.",
-          "D. Đặt các máy EC2 phía sau một Application Load Balancer."
+          "A. Place the EC2 instances in a Spread Placement Group and attach Elastic IPs.",
+          "B. Place the EC2 instances in a Cluster Placement Group within a single AZ and enable Elastic Fabric Adapter (EFA).",
+          "C. Place the EC2 instances in a Partition Placement Group across 3 AZs.",
+          "D. Place the EC2 instances behind an Application Load Balancer."
         ],
         correctIdx: 1,
         explanation: "Cluster Placement Group (đặt chung 1 AZ) kết hợp với Elastic Fabric Adapter (EFA - hỗ trợ MPI và OS-bypass trên Linux) là bộ đôi chuẩn cho bài toán HPC."
@@ -447,10 +447,10 @@ Bài toán Chi phí EC2 trong đề thi:
         qEn: "A legacy Java application running on an EC2 instance takes 12 minutes to initialize its in-memory cache upon startup. The instance is only needed during business hours. How can the solutions architect minimize the startup time each morning while saving compute costs overnight?",
         qVi: "Một ứng dụng Java cũ chạy trên EC2 mất 12 phút để nạp bộ nhớ đệm lên RAM mỗi khi khởi động. Máy chủ chỉ cần dùng trong giờ hành chính. Làm sao giảm tối đa thời gian bật máy mỗi sáng mà vẫn tiết kiệm tiền máy chủ ban đêm?",
         options: [
-          "A. Dùng EC2 Stop/Start thông thường kết hợp Placement Group.",
-          "B. Bật tính năng EC2 Hibernate (với ổ Root EBS đã được mã hóa) để ngủ đông máy chủ vào ban đêm.",
-          "C. Chuyển sang dùng ổ cứng EC2 Instance Store.",
-          "D. Tạo EBS Snapshot mỗi tối và khôi phục lại mỗi sáng."
+          "A. Use standard EC2 Stop/Start combined with a Placement Group.",
+          "B. Enable EC2 Hibernate (with an encrypted root EBS volume) to hibernate the instance overnight.",
+          "C. Switch to an EC2 Instance Store volume.",
+          "D. Create an EBS Snapshot every night and restore it every morning."
         ],
         correctIdx: 1,
         explanation: "EC2 Hibernate lưu trạng thái in-memory (RAM) xuống ổ Root EBS được mã hóa, giúp máy bật lại vào sáng hôm sau giữ nguyên cache trong RAM mà không tốn tiền thuê CPU/RAM ban đêm."
@@ -559,10 +559,10 @@ Chọn loại ổ cứng cho EC2:
         qEn: "A production relational database runs on an EC2 instance using a 1 TB gp2 EBS volume. The database is experiencing I/O bottlenecks and requires 12,000 IOPS consistently, but does not need additional storage capacity. What is the MOST cost-effective way to meet the performance requirement?",
         qVi: "Một cơ sở dữ liệu chạy trên EC2 đang dùng ổ EBS gp2 dung lượng 1 TB (chỉ đạt 3,000 IOPS). Hiện DB bị nghẽn I/O và cần 12,000 IOPS ổn định nhưng không cần tăng thêm dung lượng lưu trữ. Cách nào tiết kiệm chi phí nhất?",
         options: [
-          "A. Tăng dung lượng ổ gp2 từ 1 TB lên 4 TB để đạt 12,000 IOPS.",
-          "B. Chuyển đổi ổ đĩa sang loại gp3 và cấu hình 12,000 IOPS độc lập mà vẫn giữ nguyên dung lượng 1 TB.",
-          "C. Chuyển sang ổ EBS io2 Block Express.",
-          "D. Chuyển dữ liệu sang ổ cứng cơ học st1."
+          "A. Increase the gp2 volume size from 1 TB to 4 TB to achieve 12,000 IOPS.",
+          "B. Modify the volume type to gp3 and provision 12,000 IOPS independently while keeping the 1 TB capacity.",
+          "C. Migrate the volume to EBS io2 Block Express.",
+          "D. Migrate the data to an st1 Throughput Optimized HDD volume."
         ],
         correctIdx: 1,
         explanation: "Vì mức 12,000 IOPS vẫn nằm dưới ngưỡng tối đa 16,000 IOPS của gp3, việc chuyển từ gp2 sang gp3 cho phép tăng riêng chỉ số IOPS lên 12,000 mà không cần mua thừa dung lượng hay trả giá đắt cho io2."
@@ -572,8 +572,8 @@ Chọn loại ổ cứng cho EC2:
         qVi: "Công ty triển khai ứng dụng cụm quan trọng trên 4 máy EC2 Linux trong cùng 1 AZ (us-east-1a). Ứng dụng dùng hệ thống file GFS2 và yêu cầu cả 4 máy cùng đọc/ghi trực tiếp vào chung 1 ổ đĩa Block Storage với tốc độ 40,000 IOPS. Chọn giải pháp nào?",
         options: [
           "A. Amazon EFS",
-          "B. Amazon EBS gp3 với Multi-Attach",
-          "C. Amazon EBS io2 với tính năng Multi-Attach",
+          "B. Amazon EBS gp3 with Multi-Attach enabled",
+          "C. Amazon EBS io2 with Multi-Attach enabled",
           "D. EC2 Instance Store"
         ],
         correctIdx: 2,
@@ -615,10 +615,10 @@ Chọn loại ổ cứng cho EC2:
         qEn: "A company hosts a content management system (CMS) on a fleet of Linux EC2 instances distributed across three Availability Zones behind an Application Load Balancer. All instances must read and write user-uploaded documents to a shared POSIX-compliant file system concurrently. Which storage solution should be used?",
         qVi: "Công ty chạy hệ thống quản trị nội dung (CMS) trên dàn máy Linux EC2 trải rộng qua 3 AZ phía sau ALB. Tất cả các máy chủ phải đọc và ghi tài liệu do người dùng tải lên vào chung một hệ thống file chuẩn POSIX đồng thời. Chọn giải pháp lưu trữ nào?",
         options: [
-          "A. Amazon EBS io2 với tính năng Multi-Attach.",
-          "B. Amazon EFS (Elastic File System).",
-          "C. Amazon S3 Standard.",
-          "D. Amazon FSx for Windows File Server."
+          "A. Amazon EBS io2 with Multi-Attach enabled",
+          "B. Amazon EFS (Elastic File System)",
+          "C. Amazon S3 Standard",
+          "D. Amazon FSx for Windows File Server"
         ],
         correctIdx: 1,
         explanation: "EBS Multi-Attach chỉ hoạt động trong CÙNG 1 AZ. Để chia sẻ hệ thống file POSIX đồng thời cho nhiều máy Linux EC2 trải trên NHIỀU AZ (Multi-AZ), đáp án duy nhất đúng là Amazon EFS."
@@ -627,10 +627,10 @@ Chọn loại ổ cứng cho EC2:
         qEn: "An engineer created an Amazon EFS file system and mount targets in each Availability Zone. However, when running the 'mount' command from an EC2 instance in the same VPC, the connection times out. What is the MOST likely cause?",
         qVi: "Kỹ sư đã tạo ổ EFS và Mount Target ở từng AZ. Tuy nhiên khi chạy lệnh 'mount' từ máy EC2 trong cùng VPC thì bị lỗi Connection Timed Out. Nguyên nhân khả dĩ nhất là gì?",
         options: [
-          "A. Chưa bật tính năng EFS Lifecycle Policy.",
-          "B. Security Group gắn với EFS Mount Target chưa mở cổng Inbound TCP 2049 (NFS) cho Security Group của máy EC2.",
-          "C. Chưa gắn Elastic IP cho ổ đĩa EFS.",
-          "D. Máy EC2 chưa được đặt trong Spread Placement Group."
+          "A. An EFS Lifecycle Policy has not been enabled.",
+          "B. The security group attached to the EFS mount target does not allow inbound TCP port 2049 (NFS) from the EC2 instance's security group.",
+          "C. An Elastic IP has not been attached to the EFS file system.",
+          "D. The EC2 instance is not in a Spread Placement Group."
         ],
         correctIdx: 1,
         explanation: "Amazon EFS giao tiếp qua giao thức NFS ở cổng TCP 2049. Nếu Security Group của EFS Mount Target chưa cho phép cổng 2049 từ Security Group của EC2 thì lệnh mount sẽ bị Connection Timed Out."

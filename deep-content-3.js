@@ -32,7 +32,7 @@ Chọn Nhanh 4 Anh Em Nhà Amazon FSx:
         qVi: "Công ty tài chính chạy mô phỏng rủi ro HPC trên hàng trăm máy EC2 Linux. Mô phỏng cần đọc dữ liệu đầu vào từ S3, đòi hỏi băng thông hàng trăm GB/s với độ trễ dưới 1ms trong suốt 4 giờ tính toán, rồi ghi kết quả trả ngược về S3. Dịch vụ lưu trữ nào phù hợp nhất?",
         options: [
           "A. Amazon EFS",
-          "B. Amazon FSx for Lustre (Scratch file system) liên kết với S3 bucket",
+          "B. Amazon FSx for Lustre (Scratch file system) linked to the Amazon S3 bucket",
           "C. Amazon FSx for Windows File Server",
           "D. Amazon EBS sc1"
         ],
@@ -86,10 +86,10 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
         qEn: "A company has 500 TB of archival files on an on-premises NAS server and wants to migrate them to Amazon S3 Glacier Deep Archive. The company's internet connection is only 50 Mbps, which cannot be upgraded. What is the MOST efficient way to migrate this data?",
         qVi: "Công ty có 500 TB file lưu trữ trên máy chủ NAS dưới đất muốn đưa lên S3 Glacier Deep Archive, nhưng đường truyền Internet chỉ có 50 Mbps không nâng cấp được. Cách hiệu quả nhất để chuyển khối dữ liệu này là gì?",
         options: [
-          "A. Dùng AWS DataSync truyền qua mạng 50 Mbps.",
-          "B. Đặt các thiết bị AWS Snowball Edge để chép dữ liệu và gửi về AWS nạp vào S3 Standard, sau đó dùng S3 Lifecycle Policy chuyển xuống S3 Glacier Deep Archive.",
-          "C. Dùng AWS Snowball Edge nạp trực tiếp thẳng vào S3 Glacier Deep Archive mà không qua S3.",
-          "D. Dùng S3 Transfer Acceleration."
+          "A. Use AWS DataSync over the 50 Mbps internet connection.",
+          "B. Order AWS Snowball Edge devices to copy the data to Amazon S3 Standard, and then use an S3 Lifecycle policy to transition the objects to S3 Glacier Deep Archive.",
+          "C. Use AWS Snowball Edge to load the data directly into S3 Glacier Deep Archive without using S3 Standard.",
+          "D. Use S3 Transfer Acceleration."
         ],
         correctIdx: 1,
         explanation: "Vì đường truyền 50 Mbps quá chậm cho 500 TB nên phải dùng thiết bị vật lý Snowball Edge. Tuy nhiên Snowball không thể nạp trực tiếp vào Glacier, mà phải nạp vào S3 trước rồi dùng S3 Lifecycle chuyển xuống Glacier Deep Archive."
@@ -141,10 +141,10 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
         qEn: "An image processing application uses an Auto Scaling group of EC2 instances to poll an Amazon SQS queue. Currently, the Auto Scaling group scales based on EC2 CPU utilization, but during peak hours the SQS queue builds up a massive backlog of hundreds of thousands of messages resulting in slow processing times. How should the architect redesign the scaling strategy?",
         qVi: "Ứng dụng xử lý ảnh dùng cụm EC2 Auto Scaling lấy việc từ hàng đợi SQS. Hiện tại ASG co giãn theo CPU của EC2, nhưng giờ cao điểm hàng đợi SQS bị ứ đọng hàng trăm nghìn tin nhắn làm xử lý rất chậm. Kiến trúc sư nên thiết kế lại chiến lược co giãn thế nào?",
         options: [
-          "A. Đổi sang dùng Scheduled Scaling.",
-          "B. Cấu hình Auto Scaling Group co giãn dựa trên chỉ số tồn đọng hàng đợi 'ApproximateNumberOfMessagesVisible' (tính Backlog per instance) với Target Tracking Scaling Policy.",
-          "C. Giảm Visibility Timeout xuống 1 giây.",
-          "D. Chuyển từ SQS sang dùng SNS."
+          "A. Switch to Scheduled Scaling.",
+          "B. Configure the Auto Scaling group to scale based on the SQS 'ApproximateNumberOfMessagesVisible' metric (calculating backlog per instance) with a Target Tracking Scaling policy.",
+          "C. Reduce the SQS Visibility Timeout to 1 second.",
+          "D. Replace Amazon SQS with Amazon SNS."
         ],
         correctIdx: 1,
         explanation: "Với kiến trúc Worker đọc từ SQS, co giãn dựa trên độ dài hàng đợi (ApproximateNumberOfMessagesVisible chia cho số instance đang chạy) phản ánh chính xác khối lượng việc đang chờ xử lý."
@@ -153,10 +153,10 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
         qEn: "A Java application needs to send XML payloads through Amazon SQS. Most payloads are 50 KB, but occasionally some payloads reach 15 MB, causing SQS to reject the messages. What is the MOST operationally efficient way to handle these large messages?",
         qVi: "Ứng dụng Java gửi các gói tin XML qua SQS. Hầu hết nặng 50 KB, nhưng thỉnh thoảng có gói nặng tới 15 MB khiến SQS từ chối nhận. Cách hiệu quả nhất để xử lý các tin nhắn lớn này là gì?",
         options: [
-          "A. Chuyển sang dùng SQS FIFO Queue vì FIFO hỗ trợ tới 50 MB.",
-          "B. Sử dụng Amazon SQS Extended Client Library for Java để tự động lưu payload lớn vào Amazon S3 và gửi tham chiếu qua SQS.",
-          "C. Dùng AWS Snowball Edge.",
-          "D. Lưu toàn bộ tin nhắn vào Route 53."
+          "A. Switch to an SQS FIFO queue because FIFO supports up to 50 MB payloads.",
+          "B. Use the Amazon SQS Extended Client Library for Java to store large payloads in Amazon S3 and send a pointer reference message via SQS.",
+          "C. Use AWS Snowball Edge.",
+          "D. Store all message payloads in Amazon Route 53."
         ],
         correctIdx: 1,
         explanation: "Mọi hàng đợi SQS (cả Standard và FIFO) đều giới hạn cứng 256 KB mỗi tin nhắn. Dùng SQS Extended Client Library kết hợp S3 là cách chuẩn để xử lý tin nhắn từ 256 KB lên tới 2 GB."
@@ -194,10 +194,10 @@ Mô hình Fan-Out + Message Filtering chuẩn SAA-C03:
         qEn: "An e-commerce application publishes all order events (Created, Shipped, Canceled) to a single Amazon SNS topic. Three different microservices subscribe to this topic via their own Amazon SQS queues. However, the Refund microservice only needs to process 'Canceled' orders and is wasting compute resources filtering out 'Created' and 'Shipped' messages. How can the architect optimize this?",
         qVi: "Ứng dụng thương mại điện tử đẩy mọi sự kiện đơn hàng (Tạo mới, Đã giao, Đã hủy) vào 1 SNS topic. Có 3 microservices đăng ký nhận qua 3 SQS queues riêng. Tuy nhiên dịch vụ Hoàn tiền chỉ cần xử lý đơn 'Đã hủy' và đang tốn tài nguyên vô ích để lọc bỏ các đơn khác. Tối ưu bằng cách nào?",
         options: [
-          "A. Tạo thêm 3 SNS Topics riêng biệt và sửa code ứng dụng gốc.",
-          "B. Cấu hình một Amazon SNS Subscription Filter Policy (Message Filtering) trên subscription của hàng đợi SQS Hoàn tiền để chỉ nhận các tin nhắn có thuộc tính 'Canceled'.",
-          "C. Bật tính năng SQS Long Polling.",
-          "D. Chuyển sang dùng Amazon Kinesis Data Firehose."
+          "A. Create 3 separate SNS topics and modify the publisher application code.",
+          "B. Configure an Amazon SNS Subscription Filter Policy (Message Filtering) on the Refund SQS queue subscription to only receive messages with the 'Canceled' attribute.",
+          "C. Enable SQS Long Polling.",
+          "D. Switch to Amazon Kinesis Data Firehose."
         ],
         correctIdx: 1,
         explanation: "SNS Message Filtering (Subscription Filter Policy) cho phép lọc tin nhắn ngay tại tầng SNS dựa trên thuộc tính JSON trước khi đẩy xuống từng SQS Subscriber, không cần sửa code."
@@ -206,10 +206,10 @@ Mô hình Fan-Out + Message Filtering chuẩn SAA-C03:
         qEn: "A company wants an Amazon S3 bucket to send an event notification whenever a '.jpg' file is uploaded to the 'uploads/' prefix. The event must simultaneously trigger two separate processes: one SQS queue for image resizing and another SQS queue for virus scanning. However, S3 does not allow two event notifications with overlapping prefixes for the same event type. How should the architect solve this?",
         qVi: "Công ty muốn mỗi khi có file '.jpg' tải lên thư mục 'uploads/' của S3 thì kích hoạt đồng thời 2 hàng đợi SQS riêng biệt (1 cái để resize ảnh, 1 cái để quét virus). Nhưng S3 không cho phép tạo 2 Event Notifications trùng cả loại sự kiện lẫn prefix. Giải quyết thế nào?",
         options: [
-          "A. Tạo 2 S3 Buckets giống hệt nhau.",
-          "B. Cấu hình S3 gửi 1 Event Notification vào một Amazon SNS Topic, sau đó cho cả 2 hàng đợi SQS đăng ký (subscribe) vào SNS Topic đó (Fan-out).",
-          "C. Dùng S3 Transfer Acceleration.",
-          "D. Dùng S3 Presigned URL."
+          "A. Create 2 identical S3 buckets.",
+          "B. Configure S3 to send a single event notification to an Amazon SNS topic, and subscribe both SQS queues to that SNS topic (Fan-out pattern).",
+          "C. Enable S3 Transfer Acceleration.",
+          "D. Use S3 Presigned URLs."
         ],
         correctIdx: 1,
         explanation: "Đưa sự kiện từ S3 vào 1 SNS Topic rồi thực hiện Fan-out ra 2 SQS Queues (hoặc dùng Amazon EventBridge) là cách chuẩn để vượt qua giới hạn trùng lặp Event Notification của S3."
@@ -249,7 +249,7 @@ Phân biệt Bộ Ba Streaming của Amazon Kinesis:
         qVi: "Công ty muốn thu thập dữ liệu click chuột từ website và nạp thẳng vào S3 Data Lake dưới định dạng Apache Parquet. Độ trễ từ 1 đến 2 phút (gần thời gian thực) là hoàn toàn chấp nhận được và công ty muốn giải pháp Serverless tốn ít công vận hành nhất. Chọn dịch vụ nào?",
         options: [
           "A. Amazon Kinesis Data Streams",
-          "B. Amazon Kinesis Data Firehose (bật tính năng chuyển đổi định dạng sang Parquet)",
+          "B. Amazon Kinesis Data Firehose (with dynamic record format conversion to Parquet enabled)",
           "C. Amazon SQS FIFO",
           "D. Amazon MQ"
         ],
@@ -304,10 +304,10 @@ Kiến trúc Chuẩn Serverless Container trên AWS:
         qEn: "A company wants to migrate a monolithic web application to a microservices architecture using Docker containers. The engineering team is small and wants to avoid managing, patching, or scaling underlying Amazon EC2 instances. The containers also need to share a common POSIX file system across multiple Availability Zones. Which combination of services meets these requirements?",
         qVi: "Công ty muốn chuyển ứng dụng sang kiến trúc microservices dùng Docker containers. Đội kỹ thuật ít người nên không muốn phải quản lý, vá lỗi hay co giãn các máy chủ EC2 bên dưới. Ngoài ra các containers cần dùng chung một hệ thống file POSIX qua nhiều AZ. Kết hợp dịch vụ nào đáp ứng được?",
         options: [
-          "A. Amazon ECS với EC2 Launch Type + Amazon EBS.",
-          "B. Amazon ECS với AWS Fargate Launch Type + Amazon EFS.",
-          "C. AWS Lambda + Amazon FSx for Windows.",
-          "D. Amazon EC2 + S3 Glacier."
+          "A. Amazon ECS with the EC2 launch type + Amazon EBS",
+          "B. Amazon ECS with the AWS Fargate launch type + Amazon EFS",
+          "C. AWS Lambda + Amazon FSx for Windows File Server",
+          "D. Amazon EC2 + Amazon S3 Glacier"
         ],
         correctIdx: 1,
         explanation: "ECS với AWS Fargate giúp chạy Docker containers hoàn toàn Serverless (không cần quản lý EC2), và kết hợp hoàn hảo với Amazon EFS để chia sẻ file chuẩn POSIX qua nhiều AZ."
@@ -316,10 +316,10 @@ Kiến trúc Chuẩn Serverless Container trên AWS:
         qEn: "Five different microservices run as separate ECS tasks on a shared cluster of EC2 instances. Currently, permissions are granted via the EC2 Instance Profile, allowing all containers to access each other's S3 buckets and DynamoDB tables. How can the architect enforce least-privilege access for each individual microservice container?",
         qVi: "Có 5 microservices chạy dưới dạng các ECS tasks khác nhau trên chung một cụm máy chủ EC2. Hiện tại quyền đang được cấp qua EC2 Instance Profile khiến mọi container đều truy cập được vào S3 và DynamoDB của nhau. Làm sao áp dụng nguyên tắc tối thiểu quyền cho từng microservice riêng biệt?",
         options: [
-          "A. Nhúng Access Key riêng vào từng Docker Image.",
-          "B. Xóa các quyền ứng dụng khỏi EC2 Instance Profile và cấu hình một IAM Role riêng biệt ở cấp độ 'ECS Task Role' cho từng Task Definition.",
-          "C. Tạo 5 VPC riêng biệt.",
-          "D. Dùng Network ACL."
+          "A. Embed static IAM access keys inside each Docker container image.",
+          "B. Remove application permissions from the EC2 Instance Profile and assign a dedicated IAM role at the 'ECS Task Role' level for each Task Definition.",
+          "C. Create 5 separate VPCs.",
+          "D. Configure Network ACL rules."
         ],
         correctIdx: 1,
         explanation: "Sử dụng IAM Roles for Tasks (ECS Task Role) trong Task Definition cho phép gán quyền IAM độc lập cho từng Container/Task thay vì dùng chung quyền của máy chủ EC2."
@@ -358,10 +358,10 @@ Hàm AWS Lambda (Max 15 phút, Max 10GB RAM, Max 10GB /tmp)
         qEn: "A financial application uses AWS Lambda functions behind Amazon API Gateway. Users report that the first request after a period of inactivity takes 4 seconds to respond due to function initialization (cold start), while subsequent requests take only 50 ms. How can the solutions architect ensure consistent low latency for all requests?",
         qVi: "Ứng dụng tài chính dùng AWS Lambda sau API Gateway. Người dùng báo cáo rằng request đầu tiên sau một khoảng thời gian vắng khách bị mất tới 4 giây để phản hồi do khởi tạo hàm (Cold Start), trong khi các request sau chỉ mất 50 ms. Làm sao đảm bảo độ trễ thấp đồng nhất cho mọi request?",
         options: [
-          "A. Tăng thời gian Timeout của Lambda lên 15 phút.",
-          "B. Bật tính năng Lambda Provisioned Concurrency (hoặc Lambda SnapStart đối với Java).",
-          "C. Đặt hàm Lambda vào trong Private Subnet.",
-          "D. Giảm dung lượng RAM của Lambda xuống mức tối thiểu 128 MB."
+          "A. Increase the Lambda function timeout to 15 minutes.",
+          "B. Enable Lambda Provisioned Concurrency (or Lambda SnapStart for Java runtimes).",
+          "C. Place the Lambda function inside a Private Subnet.",
+          "D. Reduce the Lambda function memory allocation to 128 MB."
         ],
         correctIdx: 1,
         explanation: "Provisioned Concurrency khởi tạo và giữ nóng sẵn số lượng môi trường thực thi được chỉ định, giúp loại bỏ hoàn toàn hiện tượng Cold Start."
@@ -370,10 +370,10 @@ Hàm AWS Lambda (Max 15 phút, Max 10GB RAM, Max 10GB /tmp)
         qEn: "A developer configured an AWS Lambda function to connect to a private Amazon RDS instance inside a VPC Private Subnet. After this change, the Lambda function can successfully query RDS, but it can no longer reach an external third-party payment gateway API over the internet. How should the architect fix this?",
         qVi: "Lập trình viên cấu hình hàm Lambda kết nối vào RDS trong Private Subnet của VPC. Sau khi cấu hình xong, Lambda gọi được RDS nhưng lại mất khả năng gọi ra cổng thanh toán bên thứ 3 ngoài Internet. Sửa bằng cách nào?",
         options: [
-          "A. Gắn một địa chỉ Elastic IP trực tiếp vào hàm AWS Lambda.",
-          "B. Triển khai một NAT Gateway trong Public Subnet và thêm route 0.0.0.0/0 trong Route Table của Private Subnet trỏ về NAT Gateway đó.",
-          "C. Mở cổng 443 trong Network ACL.",
-          "D. Tạo một Gateway VPC Endpoint cho S3."
+          "A. Attach an Elastic IP address directly to the AWS Lambda function.",
+          "B. Deploy a NAT Gateway in a Public Subnet and update the Private Subnet's route table to route 0.0.0.0/0 traffic to the NAT Gateway.",
+          "C. Open port 443 in the Network ACL.",
+          "D. Create a Gateway VPC Endpoint for Amazon S3."
         ],
         correctIdx: 1,
         explanation: "Hàm Lambda gắn vào VPC không bao giờ có Public IP trực tiếp. Để một hàm Lambda trong Private Subnet đi ra được Internet, luồng mạng của Private Subnet bắt buộc phải đi qua một NAT Gateway đặt tại Public Subnet."
@@ -415,7 +415,7 @@ Kiến trúc Chuẩn Ứng Dụng Serverless Hiện Đại:
         options: [
           "A. Amazon SQS Standard Queue",
           "B. AWS Step Functions",
-          "C. Gọi nối tiếp các hàm AWS Lambda từ bên trong code",
+          "C. Daisy-chaining AWS Lambda functions directly inside application code",
           "D. Amazon EventBridge"
         ],
         correctIdx: 1,
@@ -425,10 +425,10 @@ Kiến trúc Chuẩn Ứng Dụng Serverless Hiện Đại:
         qEn: "A mobile game allows players to sign in using their existing social media accounts (Google, Apple, Facebook) or a custom username/password. Once signed in, the mobile app needs temporary, limited-privilege AWS credentials to save the player's game progress directly to an Amazon DynamoDB table. Which combination of services meets these requirements?",
         qVi: "Game di động cho phép người chơi đăng nhập bằng mạng xã hội (Google, Apple, Facebook) hoặc tài khoản riêng. Sau khi đăng nhập xong, ứng dụng di động cần được cấp thông tin xác thực AWS tạm thời để lưu tiến độ chơi trực tiếp vào bảng DynamoDB. Kết hợp nào đáp ứng được?",
         options: [
-          "A. Tạo IAM User cho từng người chơi.",
-          "B. Sử dụng Amazon Cognito User Pools (để xác thực đăng nhập) kết hợp với Amazon Cognito Identity Pools (để cấp quyền IAM tạm thời gọi vào DynamoDB).",
-          "C. Sử dụng AWS IAM Identity Center (AWS SSO).",
-          "D. Lưu cứng một cặp Access Key vào bên trong bộ cài ứng dụng di động."
+          "A. Create an individual IAM user for each mobile player.",
+          "B. Use Amazon Cognito User Pools (for authentication) combined with Amazon Cognito Identity Pools (to vend temporary IAM credentials for DynamoDB access).",
+          "C. Use AWS IAM Identity Center (AWS SSO).",
+          "D. Embed hardcoded AWS access keys inside the mobile application binary."
         ],
         correctIdx: 1,
         explanation: "Cognito User Pools xử lý việc đăng nhập người dùng (bao gồm liên kết Google/Facebook), sau đó Cognito Identity Pools đổi token đó lấy Temporary AWS Credentials (qua STS) để ứng dụng gọi trực tiếp vào DynamoDB an toàn."
@@ -482,10 +482,10 @@ Bảng Nhớ Nhanh Kích Thước CIDR & Số IP Thực Tế Dùng Được Cho 
         qEn: "A company's production VPC was originally created with a /24 CIDR block and has now run out of available IP addresses for new microservices. How can the solutions architect add more IP addresses to this VPC with minimal disruption?",
         qVi: "VPC Production của công ty ban đầu tạo với dải /24 nay đã hết sạch địa chỉ IP trống cho các microservices mới. Làm thế nào để bổ sung thêm địa chỉ IP vào VPC này ít gây gián đoạn nhất?",
         options: [
-          "A. Sửa trực tiếp dải CIDR gốc từ /24 thành /16.",
-          "B. Liên kết thêm một Secondary IPv4 CIDR block vào VPC hiện tại và tạo các Subnets mới trong dải CIDR mới đó.",
-          "C. Xóa toàn bộ VPC cũ và tạo lại VPC mới.",
-          "D. Dùng NAT Gateway để nhân bản IP."
+          "A. Directly modify the existing primary CIDR block from /24 to /16.",
+          "B. Associate a Secondary IPv4 CIDR block with the existing VPC and create new subnets within the new CIDR range.",
+          "C. Delete the entire VPC and recreate it with a larger CIDR block.",
+          "D. Use a NAT Gateway to multiply internal IP addresses."
         ],
         correctIdx: 1,
         explanation: "AWS không cho phép sửa trực tiếp kích thước của Primary CIDR block đang tồn tại, nhưng cho phép gắn thêm tối đa 4 Secondary IPv4 CIDR blocks vào VPC để mở rộng không gian địa chỉ ngay lập tức."
@@ -522,10 +522,10 @@ So sánh Cách Truy Cập Quản Trị Vào Máy EC2 Trong Private Subnet:
         qEn: "A company's security policy prohibits opening inbound SSH (port 22) or RDP (port 3389) ports on any EC2 instances and forbids the use of SSH key pairs or Bastion hosts. However, system administrators still need interactive shell access to troubleshoot EC2 instances in private subnets, and all commands executed during sessions must be logged to Amazon S3 for auditing. Which solution meets these requirements?",
         qVi: "Chính sách bảo mật của công ty cấm mở cổng Inbound SSH (22) hay RDP (3389) trên mọi máy EC2, đồng thời cấm dùng SSH key hay Bastion host. Tuy nhiên quản trị viên vẫn cần truy cập dòng lệnh vào các máy EC2 trong Private Subnet và mọi câu lệnh gõ vào phải được lưu log lên S3. Giải pháp nào đáp ứng được?",
         options: [
-          "A. Dùng EC2 Instance Connect qua cổng 22.",
-          "B. Sử dụng AWS Systems Manager (SSM) Session Manager kèm IAM Role thích hợp và bật tính năng ghi log phiên làm việc lên Amazon S3.",
-          "C. Đặt một Network Load Balancer ở Public Subnet chuyển tiếp cổng 22.",
-          "D. Dùng AWS Direct Connect."
+          "A. Use EC2 Instance Connect over port 22.",
+          "B. Use AWS Systems Manager (SSM) Session Manager with an appropriate IAM role and enable session logging to Amazon S3.",
+          "C. Deploy a Network Load Balancer in a public subnet forwarding port 22.",
+          "D. Use AWS Direct Connect."
         ],
         correctIdx: 1,
         explanation: "SSM Session Manager cho phép truy cập shell vào EC2 mà không cần mở bất kỳ cổng Inbound nào, không cần quản lý SSH keys hay Bastion host, phân quyền bằng IAM và hỗ trợ ghi log mọi câu lệnh lên S3/CloudWatch."
@@ -534,10 +534,10 @@ So sánh Cách Truy Cập Quản Trị Vào Máy EC2 Trong Private Subnet:
         qEn: "An engineer launched an EC2 instance with a public IP address in a new subnet and allowed inbound HTTP traffic in the security group. An Internet Gateway is attached to the VPC, but users on the internet still cannot reach the web server. What is the MOST likely missing configuration?",
         qVi: "Kỹ sư đã bật máy EC2 có Public IP trong một Subnet mới, đã mở cổng HTTP trong Security Group, và VPC đã gắn Internet Gateway, nhưng người dùng ngoài Internet vẫn không truy cập được. Cấu hình nào có khả năng bị thiếu cao nhất?",
         options: [
-          "A. Chưa bật tính năng Sticky Sessions.",
-          "B. Bảng định tuyến (Route Table) gắn với Subnet đó chưa có dòng route 0.0.0.0/0 trỏ ra Internet Gateway.",
-          "C. Chưa tạo NAT Gateway.",
-          "D. Chưa bật VPC Flow Logs."
+          "A. Sticky Sessions are not enabled.",
+          "B. The Route Table associated with the subnet does not have a 0.0.0.0/0 route pointing to the Internet Gateway.",
+          "C. A NAT Gateway has not been created.",
+          "D. VPC Flow Logs are disabled."
         ],
         correctIdx: 1,
         explanation: "Việc gắn Internet Gateway vào VPC là chưa đủ; Route Table của Subnet chứa máy EC2 đó bắt buộc phải có route 0.0.0.0/0 trỏ về Internet Gateway thì Subnet đó mới thực sự thông ra Internet."
@@ -579,10 +579,10 @@ Sơ đồ Chuẩn Multi-AZ NAT Gateway (Tuyệt đối không đặt nhầm vị
         qEn: "A solutions architect deployed an application on EC2 instances inside a Private Subnet (`10.0.2.0/24`). The instances need to download software patches from the internet, so the architect created a NAT Gateway inside the same Private Subnet (`10.0.2.0/24`) and updated the route table. However, the instances still cannot reach the internet. Why?",
         qVi: "Kiến trúc sư triển khai ứng dụng trên EC2 trong Private Subnet (`10.0.2.0/24`). Để các máy tải bản vá từ Internet, kiến trúc sư tạo một NAT Gateway nằm ngay bên trong Private Subnet (`10.0.2.0/24`) đó và cập nhật Route Table, nhưng các máy vẫn không ra được Internet. Tại sao?",
         options: [
-          "A. Vì chưa mở cổng 22 trên NAT Gateway.",
-          "B. Vì NAT Gateway bắt buộc phải được đặt ở trong một Public Subnet (nơi có route trỏ ra Internet Gateway), chứ không thể hoạt động nếu đặt trong Private Subnet.",
-          "C. Vì NAT Gateway chỉ hỗ trợ IPv6.",
-          "D. Vì chưa tắt Source/Destination Check trên NAT Gateway."
+          "A. Port 22 is not open on the NAT Gateway.",
+          "B. A Public NAT Gateway must be deployed inside a Public Subnet (which has a route to an Internet Gateway) and cannot function when placed inside a Private Subnet.",
+          "C. NAT Gateways only support IPv6 traffic.",
+          "D. Source/Destination Check was not disabled on the NAT Gateway."
         ],
         correctIdx: 1,
         explanation: "Đây là bẫy kinh điển nhất phần VPC: NAT Gateway phục vụ cho Private Subnet, nhưng bản thân cái NAT Gateway đó BẮT BUỘC phải được đặt bên trong một Public Subnet có đường đi ra Internet Gateway."
@@ -591,10 +591,10 @@ Sơ đồ Chuẩn Multi-AZ NAT Gateway (Tuyệt đối không đặt nhầm vị
         qEn: "A company currently uses a single t3.micro EC2 NAT Instance in AZ-a to provide outbound internet access for private subnets across three Availability Zones. During peak hours, outbound traffic is throttled due to network bandwidth limits on the NAT Instance, and it represents a single point of failure. How should the architect redesign this for high availability and high bandwidth with minimal operational overhead?",
         qVi: "Công ty đang dùng 1 máy EC2 t3.micro làm NAT Instance ở AZ-a cho các Private Subnets ở 3 AZ. Giờ cao điểm mạng bị nghẽn băng thông và có nguy cơ sập đơn điểm. Thiết kế lại như thế nào để vừa chịu lỗi cao, băng thông lớn và tốn ít công vận hành nhất?",
         options: [
-          "A. Đổi máy NAT Instance lên dòng c5.4xlarge.",
-          "B. Thay thế NAT Instance bằng việc triển khai một AWS NAT Gateway tại Public Subnet của mỗi Availability Zone và cập nhật Route Table của từng Private Subnet tương ứng.",
-          "C. Gắn thêm một Internet Gateway thứ hai vào VPC.",
-          "D. Dùng Egress-Only Internet Gateway cho IPv4."
+          "A. Upgrade the NAT Instance to a c5.4xlarge instance.",
+          "B. Replace the NAT Instance by deploying an AWS Managed NAT Gateway in the Public Subnet of each Availability Zone and updating each Private Subnet's route table accordingly.",
+          "C. Attach a second Internet Gateway to the VPC.",
+          "D. Use an Egress-Only Internet Gateway for IPv4 traffic."
         ],
         correctIdx: 1,
         explanation: "Sử dụng AWS Managed NAT Gateway đặt tại mỗi AZ giúp đạt băng thông lên tới 100 Gbps, tự động chịu lỗi ở từng AZ và loại bỏ hoàn toàn công sức quản trị máy chủ NAT Instance."
@@ -643,10 +643,10 @@ Luồng đi của Gói tin qua 2 lớp Tường lửa (NACL vs Security Group):
         qEn: "A security engineer notices in VPC Flow Logs that a specific external IP address (`198.51.100.44`) is attempting a brute-force attack against EC2 instances in a public subnet. The subnet's Network ACL currently has Rule 100 allowing inbound HTTP/HTTPS traffic from `0.0.0.0/0`. How should the engineer block this malicious IP address at the subnet level?",
         qVi: "Kỹ sư bảo mật phát hiện trong VPC Flow Logs có một địa chỉ IP cụ thể (`198.51.100.44`) đang tấn công dò mật khẩu vào các máy EC2 trong Public Subnet. Hiện tại NACL của Subnet đang có Rule #100 cho phép Inbound từ `0.0.0.0/0`. Làm sao chặn địa chỉ IP độc hại này ở tầng Subnet?",
         options: [
-          "A. Thêm một quy tắc Deny cho IP `198.51.100.44/32` vào Security Group của EC2.",
-          "B. Thêm một Inbound Rule trong Network ACL với hành động DENY cho nguồn `198.51.100.44/32` và đặt số thứ tự Rule nhỏ hơn 100 (ví dụ: Rule #50).",
-          "C. Thêm một Inbound Rule DENY trong Network ACL với số thứ tự Rule #200.",
-          "D. Xóa Internet Gateway khỏi VPC."
+          "A. Add a Deny rule for IP `198.51.100.44/32` to the EC2 Security Group.",
+          "B. Add an Inbound Rule to the Network ACL with a DENY action for source `198.51.100.44/32` and a rule number lower than 100 (e.g., Rule #50).",
+          "C. Add an Inbound DENY rule to the Network ACL with Rule #200.",
+          "D. Detach the Internet Gateway from the VPC."
         ],
         correctIdx: 1,
         explanation: "Security Group không hỗ trợ lệnh Deny. Trên Network ACL (NACL), các quy tắc được đọc theo thứ tự từ nhỏ đến lớn, nên lệnh DENY cho IP cụ thể bắt buộc phải có Rule Number nhỏ hơn 100."
@@ -696,10 +696,10 @@ So sánh 2 Loại VPC Endpoints & AWS PrivateLink:
         qEn: "A company runs a data processing application on EC2 instances in private subnets. The instances download and upload 100 TB of data daily to Amazon S3 and Amazon DynamoDB through a NAT Gateway, resulting in very high NAT Gateway data processing charges on the monthly AWS bill. How can the solutions architect reduce these data transfer costs to zero?",
         qVi: "Công ty chạy ứng dụng xử lý dữ liệu trên EC2 trong Private Subnets. Các máy tải lên và tải xuống 100 TB dữ liệu mỗi ngày với S3 và DynamoDB đi xuyên qua NAT Gateway khiến hóa đơn phí xử lý dữ liệu của NAT Gateway cực kỳ đắt đỏ. Làm sao giảm chi phí này về 0?",
         options: [
-          "A. Thay NAT Gateway bằng NAT Instance.",
-          "B. Tạo các Gateway VPC Endpoints cho cả Amazon S3 và Amazon DynamoDB, rồi cập nhật Route Table của các Private Subnets.",
-          "C. Tạo Interface VPC Endpoints (PrivateLink) cho S3 và DynamoDB.",
-          "D. Dùng S3 Transfer Acceleration."
+          "A. Replace the NAT Gateway with a NAT Instance.",
+          "B. Create Gateway VPC Endpoints for both Amazon S3 and Amazon DynamoDB, and update the Private Subnets' route tables.",
+          "C. Create Interface VPC Endpoints (AWS PrivateLink) for S3 and DynamoDB.",
+          "D. Enable S3 Transfer Acceleration."
         ],
         correctIdx: 1,
         explanation: "Gateway VPC Endpoints hỗ trợ đúng 2 dịch vụ là Amazon S3 và DynamoDB, hoạt động qua Route Table và HOÀN TOÀN MIỄN PHÍ (không tốn phí giờ và không tốn phí xử lý mỗi GB dữ liệu)."
@@ -708,10 +708,10 @@ So sánh 2 Loại VPC Endpoints & AWS PrivateLink:
         qEn: "A SaaS provider hosts a financial verification service inside its VPC (`10.0.0.0/16`) and needs to expose this single service privately to dozens of customer VPCs across different AWS accounts. Several customer VPCs also use the exact same `10.0.0.0/16` CIDR block, and security policies prohibit exposing the entire provider network via VPC Peering. Which architecture meets these requirements?",
         qVi: "Nhà cung cấp SaaS chạy dịch vụ xác thực tài chính trong VPC (`10.0.0.0/16`) và cần cung cấp dịch vụ này qua mạng riêng cho hàng chục VPC của khách hàng. Nhiều VPC của khách hàng cũng dùng trùng dải IP `10.0.0.0/16` và bảo mật cấm nối thông toàn bộ mạng bằng VPC Peering. Kiến trúc nào đáp ứng được?",
         options: [
-          "A. Dùng VPC Peering giữa các VPC.",
-          "B. Đặt dịch vụ phía sau một Network Load Balancer (NLB), công bố qua AWS PrivateLink (VPC Endpoint Service), và để khách hàng kết nối qua Interface VPC Endpoints.",
-          "C. Dùng AWS Transit Gateway.",
-          "D. Mở dịch vụ công khai ra Internet Gateway."
+          "A. Establish VPC Peering connections between the VPCs.",
+          "B. Place the service behind a Network Load Balancer (NLB), publish it as an AWS PrivateLink VPC Endpoint Service, and have customers connect via Interface VPC Endpoints.",
+          "C. Connect all VPCs to a single AWS Transit Gateway.",
+          "D. Expose the service publicly through an Internet Gateway."
         ],
         correctIdx: 1,
         explanation: "AWS PrivateLink (NLB + VPC Endpoint Service) cho phép chia sẻ 1 dịch vụ cụ thể theo chiều đơn hướng từ Consumer sang Provider mà không cần VPC Peering và hoàn toàn không bị lỗi khi các VPC trùng dải IP CIDR."
@@ -750,10 +750,10 @@ Kiến trúc Kết nối Hybrid Đỉnh Cao (Direct Connect + Transit Gateway + 
         qEn: "A healthcare company uses an AWS Direct Connect connection between its on-premises data center and AWS to transfer large medical files requiring consistent 10 Gbps throughput. A new compliance regulation requires that all data in transit over the Direct Connect connection must be encrypted using IPsec. Additionally, the company needs a cost-effective backup connection in case the Direct Connect fiber fails. What should the architect implement?",
         qVi: "Công ty y tế đang dùng đường cáp riêng Direct Connect 10 Gbps nối lên AWS. Quy định mới bắt buộc toàn bộ dữ liệu đi qua Direct Connect phải được mã hóa bằng giao thức IPsec, đồng thời cần một đường truyền dự phòng tiết kiệm chi phí nhất phòng khi đứt cáp quang. Kiến trúc sư nên làm gì?",
         options: [
-          "A. Bật tính năng SSE-KMS trên Direct Connect.",
-          "B. Thiết lập một kết nối AWS Site-to-Site VPN chạy đè lên trên đường truyền Direct Connect (để mã hóa IPsec) và dùng thêm một đường Site-to-Site VPN qua Internet làm kết nối dự phòng.",
-          "C. Thay thế Direct Connect bằng VPC Peering.",
-          "D. Dùng Gateway VPC Endpoint."
+          "A. Enable SSE-KMS directly on the Direct Connect connection.",
+          "B. Establish an AWS Site-to-Site VPN connection over the Direct Connect connection (for IPsec encryption) and configure a second Site-to-Site VPN over the public internet as a cost-effective backup.",
+          "C. Replace Direct Connect with VPC Peering.",
+          "D. Use a Gateway VPC Endpoint."
         ],
         correctIdx: 1,
         explanation: "Direct Connect không có sẵn mã hóa IPsec. Chạy AWS Site-to-Site VPN bên trên Direct Connect cung cấp mã hóa IPsec đầu cuối, và một kết nối VPN qua Internet là phương án backup rẻ nhất."
@@ -762,10 +762,10 @@ Kiến trúc Kết nối Hybrid Đỉnh Cao (Direct Connect + Transit Gateway + 
         qEn: "A global enterprise has 25 VPCs distributed across 4 different AWS Regions and wants to connect its on-premises data center to all 25 VPCs using a single AWS Direct Connect connection with the simplest network topology. Which combination of services should be used?",
         qVi: "Tập đoàn toàn cầu có 25 VPC nằm rải rác trên 4 AWS Regions khác nhau và muốn nối Data Center dưới đất tới cả 25 VPC này thông qua duy nhất 1 đường cáp Direct Connect với kiến trúc mạng gọn gàng nhất. Kết hợp dịch vụ nào nên được chọn?",
         options: [
-          "A. Tạo 25 kết nối VPC Peering.",
-          "B. Nối Direct Connect vào một Direct Connect Gateway, sau đó gắn Direct Connect Gateway đó với các AWS Transit Gateways ở từng Region.",
-          "C. Dùng AWS Global Accelerator.",
-          "D. Dùng 25 Internet Gateways."
+          "A. Create 25 individual VPC Peering connections.",
+          "B. Connect the Direct Connect connection to a Direct Connect Gateway, and associate the Direct Connect Gateway with AWS Transit Gateways in each Region.",
+          "C. Use AWS Global Accelerator.",
+          "D. Use 25 Internet Gateways."
         ],
         correctIdx: 1,
         explanation: "Direct Connect Gateway cho phép bắc cầu từ 1 đường cáp Direct Connect sang nhiều AWS Regions, và kết hợp với Transit Gateway ở mỗi Region sẽ gom toàn bộ 25 VPC theo mô hình Hub-and-Spoke gọn nhất."
@@ -803,7 +803,7 @@ So sánh Cổng Đi Ra Internet Cho Private Subnet (IPv4 vs IPv6):
         qVi: "Công ty đã nâng cấp VPC lên cấu hình Dual-stack chạy cả IPv4 và IPv6. Các máy EC2 trong Private Subnets sử dụng địa chỉ IPv6 cần đi ra ngoài Internet để tải bản vá hệ điều hành, nhưng quy định bảo mật cấm tuyệt đối mọi kết nối IPv6 từ ngoài Internet chủ động gọi vào. Cần cấu hình thành phần nào?",
         options: [
           "A. NAT Gateway",
-          "B. Egress-Only Internet Gateway (kèm route ::/0 trong Route Table của Private Subnet)",
+          "B. Egress-Only Internet Gateway (with a ::/0 route in the private subnet route table)",
           "C. Bastion Host",
           "D. Gateway VPC Endpoint"
         ],
