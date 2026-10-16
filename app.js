@@ -13,6 +13,8 @@
     srsData: {},       // cardKey -> { interval, ease, due, reps, updatedAt }
     customCards: [],   // Array of { id, sessionId, q, a }
     notes: {},         // sessionId -> string
+    quizAnswers: {},   // sessionId -> { quizIdx: chosenOptionIdx }  (giữ đáp án đã chọn khi đổi tab / sync Cloud)
+    labProgress: {},   // sessionId -> { stepIdx: true }              (tick các bước thực hành đã làm)
     updatedAt: 0,
     activeTab: "today",
     srsFilter: "due",  // "due" | "completed" | "current" | "custom" | "all"
@@ -21,6 +23,49 @@
     srsRevealed: false,
     showSrsTable: false
   };
+
+  // Trạng thái giao diện tạm thời (không cần lưu Cloud) – giữ lại khi trang bị render lại
+  const ui = {
+    viOpen: {},   // "sessionId_quizIdx" -> true
+    flipped: {}   // "sessionId_cardKey" -> true
+  };
+
+  function getPersistedPayload() {
+    return {
+      currentSessionId: state.currentSessionId,
+      completedIds: state.completedIds,
+      uncompletedAt: state.uncompletedAt,
+      srsData: state.srsData,
+      customCards: state.customCards,
+      notes: state.notes,
+      quizAnswers: state.quizAnswers,
+      labProgress: state.labProgress,
+      updatedAt: state.updatedAt
+    };
+  }
+
+  // JSON.stringify không phụ thuộc thứ tự key (để so sánh dữ liệu local vs Cloud)
+  function stableStr(obj) {
+    if (obj === null || typeof obj !== "object") return JSON.stringify(obj === undefined ? {} : obj);
+    if (Array.isArray(obj)) return "[" + obj.map(stableStr).join(",") + "]";
+    return "{" + Object.keys(obj).sort().map((k) => JSON.stringify(k) + ":" + stableStr(obj[k])).join(",") + "}";
+  }
+
+  // Gộp 2 object dạng { sessionId: { idx: value, _t: timestamp } } – mỗi buổi lấy bản ghi mới hơn (_t lớn hơn)
+  function mergeNestedMaps(localMap, cloudMap) {
+    const merged = {};
+    const loc = localMap || {};
+    const rem = cloudMap || {};
+    const keys = new Set([...Object.keys(rem), ...Object.keys(loc)]);
+    keys.forEach((k) => {
+      const a = loc[k];
+      const b = rem[k];
+      if (!a) merged[k] = b;
+      else if (!b) merged[k] = a;
+      else merged[k] = Number(b._t || 0) > Number(a._t || 0) ? b : a;
+    });
+    return merged;
+  }
 
   function setSyncBadgeStatus(text, isWarning = false) {
     const badge = document.getElementById("cloud-sync-badge");
@@ -41,6 +86,8 @@
         state.srsData = parsed.srsData || {};
         state.customCards = Array.isArray(parsed.customCards) ? parsed.customCards : [];
         state.notes = parsed.notes || {};
+        state.quizAnswers = parsed.quizAnswers || {};
+        state.labProgress = parsed.labProgress || {};
         state.updatedAt = parsed.updatedAt || 0;
       }
     } catch (e) {
@@ -53,18 +100,7 @@
 
   function saveLocalOnly() {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          currentSessionId: state.currentSessionId,
-          completedIds: state.completedIds,
-          uncompletedAt: state.uncompletedAt,
-          srsData: state.srsData,
-          customCards: state.customCards,
-          notes: state.notes,
-          updatedAt: state.updatedAt
-        })
-      );
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(getPersistedPayload()));
     } catch (e) {
       console.error("Failed to save local state", e);
     }
@@ -100,15 +136,7 @@
     try {
       const payload = {
         name: "aws_saa_sync",
-        data: {
-          currentSessionId: state.currentSessionId,
-          completedIds: state.completedIds,
-          uncompletedAt: state.uncompletedAt,
-          srsData: state.srsData,
-          customCards: state.customCards,
-          notes: state.notes,
-          updatedAt: state.updatedAt
-        }
+        data: getPersistedPayload()
       };
       const res = await fetch(CLOUD_SYNC_URL, {
         method: "PUT",
@@ -214,6 +242,12 @@
       // Always union-merge completedIds, srsData, and customCards so no machine ever overwrites progress from the other
       const prevCompletedStr = JSON.stringify(state.completedIds);
       const prevSessionId = state.currentSessionId;
+      const snapshotOf = () => {
+        const p = getPersistedPayload();
+        delete p.updatedAt;
+        return stableStr(p);
+      };
+      const prevSnapshot = snapshotOf();
 
       const mergedComp = mergeCompletedIds(
         state.completedIds,
@@ -228,10 +262,12 @@
       state.srsData = mergeSrsData(state.srsData, cloud.srsData);
       state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
       state.notes = { ...(cloud.notes || {}), ...state.notes };
+      state.quizAnswers = mergeNestedMaps(state.quizAnswers, cloud.quizAnswers);
+      state.labProgress = mergeNestedMaps(state.labProgress, cloud.labProgress);
 
       // Determine best currentSessionId:
       // If cloud is newer, prefer cloud.currentSessionId; also if currentSessionId is already completed, advance to next uncompleted
-      if (cloudTime >= localTime && cloud.currentSessionId) {
+      if (cloudTime > localTime && cloud.currentSessionId) {
         state.currentSessionId = Number(cloud.currentSessionId);
       }
       if (state.completedIds.includes(state.currentSessionId)) {
@@ -245,9 +281,17 @@
       hasInitialCloudPullDone = true;
 
       saveLocalOnly();
-      buildSrsQueue();
-      renderAll();
-      if (state.activeTab === "srs") renderSrsTab();
+
+      // CHỈ render lại khi dữ liệu thực sự thay đổi. Trước đây mỗi lần focus/đổi tab trình duyệt
+      // đều renderAll() → toàn bộ HTML bài học bị dựng lại → đáp án đang chọn bị reset.
+      const changed = snapshotOf() !== prevSnapshot;
+      if (changed) {
+        const scrollY = window.scrollY;
+        buildSrsQueue();
+        renderAll();
+        if (state.activeTab === "srs") renderSrsTab();
+        if (prevSessionId === state.currentSessionId) window.scrollTo(0, scrollY);
+      }
 
       const cloudCompletedStr = JSON.stringify(
         Array.isArray(cloud.completedIds) ? [...cloud.completedIds].map(Number).sort((a, b) => a - b) : []
@@ -259,7 +303,13 @@
       }
 
       // If local had newer changes or merged state has more data than cloud, push merged state back to cloud
-      if (pendingPushAfterPull || localTime > cloudTime || cloudCompletedStr !== mergedCompletedStr) {
+      if (
+        pendingPushAfterPull ||
+        localTime > cloudTime ||
+        cloudCompletedStr !== mergedCompletedStr ||
+        stableStr(cloud.quizAnswers) !== stableStr(state.quizAnswers) ||
+        stableStr(cloud.labProgress) !== stableStr(state.labProgress)
+      ) {
         pendingPushAfterPull = false;
         await pushToCloud();
       } else {
@@ -337,17 +387,81 @@
   }
 
   // ================= RENDER TODAY'S LESSON =================
+  function escapeHtml(str) {
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function stripTags(str) {
+    return String(str || "").replace(/<[^>]+>/g, "");
+  }
+
+  function getLab(sessionId) {
+    return (window.LAB_DATA && window.LAB_DATA[sessionId]) || null;
+  }
+
+  // Buổi lý thuyết (chặng 1-6) và 4 buổi tổng duyệt đều nên có lab; các buổi luyện đề thì không
+  function sessionNeedsLab(session) {
+    return session.phase < 7 || !!getLab(session.id);
+  }
+
+  // Khung sườn lab mặc định khi chưa có nội dung chi tiết – dùng kèm prompt để nhờ AI soạn đầy đủ
+  function buildLabSkeleton(session) {
+    return {
+      title: `Thực hành: ${session.title}`,
+      type: "skeleton",
+      duration: "30-45 phút",
+      cost: "Ưu tiên Free Tier – kiểm tra giá trước khi tạo tài nguyên",
+      goal: "Tự tay dựng và kiểm chứng các ý chính của buổi học trên AWS Console / CLI.",
+      prerequisites: ["Tài khoản AWS đã bật MFA + Billing Alarm (Buổi #1)", "Region mặc định: ap-southeast-1 (Singapore)"],
+      steps: [
+        { title: "Chuẩn bị", detail: "Xác định dịch vụ cần dùng, IAM quyền tối thiểu và chi phí dự kiến." },
+        { title: "Dựng tài nguyên chính", detail: "Tạo tài nguyên cốt lõi của buổi học bằng Console (ghi lại từng cấu hình đã chọn)." },
+        { title: "Cấu hình tính năng trọng tâm", detail: "Bật/thiết lập đúng tính năng mà đề thi hay hỏi trong buổi này." },
+        { title: "Kiểm chứng", detail: "Thử nghiệm để thấy kết quả thật (truy cập, failover, log, metric…)." },
+        { title: "Thử kịch bản lỗi / bẫy đề", detail: "Cố tình cấu hình sai 1 điểm để thấy hệ thống phản ứng thế nào." },
+        { title: "Dọn dẹp", detail: "Xóa toàn bộ tài nguyên vừa tạo để không phát sinh chi phí." }
+      ],
+      verify: ["Chụp màn hình / ghi chú kết quả kiểm chứng vào Notes."],
+      cleanup: ["Xóa mọi tài nguyên đã tạo trong lab này."],
+      examLink: "Nhờ AI chỉ ra lab này giúp trả lời loại câu hỏi nào trong đề SAA-C03."
+    };
+  }
+
   function buildAiPromptForSession(session) {
-    const cleanPoints = session.corePoints.map((p) => p.replace(/<[^>]+>/g, "")).join("\n- ");
+    const cleanPoints = session.corePoints.map((p) => stripTags(p)).join("\n- ");
+    const lab = getLab(session.id);
+    const labLine = lab ? `\nBài thực hành (lab) của buổi: "${stripTags(lab.title)}".` : "";
     return `Tôi là Java Developer đang ôn thi chứng chỉ AWS SAA-C03.
 Hôm nay tôi đang học Buổi #${session.id}: "${session.title}" (${session.section}).
 Các ý chính trong bài hôm nay:
-- ${cleanPoints}
+- ${cleanPoints}${labLine}
 
 Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
-1. Giải thích sâu hơn cách dịch vụ/tính năng này ứng dụng trong kiến trúc hệ thống Java thực tế.
-2. Đưa ra 2 câu hỏi trắc nghiệm tình huống (Scenario-based giống đề thi SAA-C03 thật, bằng tiếng Anh kèm dịch tiếng Việt) về đúng chủ đề này để tôi làm thử. (Khoan hiện đáp án, hãy đợi tôi chọn đáp án trước rồi mới giải thích tại sao đúng và tại sao các câu còn lại sai).
-3. Sau khi giải thích xong, hãy tóm tắt cho tôi 3 thẻ Flashcard theo đúng định dạng "Câu hỏi | Đáp án" (mỗi thẻ 1 dòng, ngăn cách bởi dấu |) để tôi copy dán thẳng vào Web Spaced Repetition của tôi.`;
+1. Giải thích sâu hơn cách dịch vụ/tính năng này ứng dụng trong kiến trúc hệ thống Java (Spring Boot) thực tế.
+2. Chỉ ra những điểm dễ hiểu nhầm nhất và cách phân biệt với các dịch vụ tương tự hay bị dùng làm bẫy trong đề.
+3. ${lab ? "Giải thích ý nghĩa từng bước của bài lab trên và các lỗi thường gặp khi làm." : "Gợi ý 1 bài thực hành nhỏ (ưu tiên Free Tier) để tôi tự tay kiểm chứng kiến thức này."}
+4. Hỏi ngược lại tôi 2-3 câu ngắn để kiểm tra tôi đã hiểu đúng chưa (đợi tôi trả lời rồi mới nhận xét).
+5. Tóm tắt 3 thẻ Flashcard theo đúng định dạng "Câu hỏi | Đáp án" (mỗi thẻ 1 dòng) để tôi dán vào Web Spaced Repetition.
+
+Sau khi trao đổi xong, tôi sẽ tự làm phần câu hỏi thi thật trên web.`;
+  }
+
+  function buildLabPromptForSession(session, lab, isSkeleton) {
+    const stepsText = lab.steps.map((s, i) => `${i + 1}. ${stripTags(s.title)}: ${stripTags(s.detail)}`).join("\n");
+    return `Tôi là Java Developer đang ôn AWS SAA-C03, đang làm bài thực hành cho Buổi #${session.id}: "${session.title}".
+${isSkeleton ? "Hiện tôi mới có khung sườn lab chung chung như sau:" : `Lab hiện có: "${stripTags(lab.title)}" với các bước:`}
+${stepsText}
+
+Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng tâm buổi học này" : "làm rõ chi tiết bài lab này"}:
+1. Từng bước thao tác chính xác trên AWS Console (region ap-southeast-1), kèm lệnh AWS CLI tương đương.
+2. Nếu phù hợp: đoạn code Java (Spring Boot + AWS SDK v2) tối giản để kiểm chứng.
+3. Cách kiểm chứng kết quả và 1 kịch bản "cố tình làm sai" để hiểu bẫy đề thi.
+4. Chi phí ước tính (Free Tier hay mất phí?) và checklist dọn dẹp tài nguyên để không mất tiền.
+5. Lab này giúp tôi trả lời loại câu hỏi nào trong đề SAA-C03?`;
   }
 
   function openAddCardModal(defaultSessionId) {
@@ -366,6 +480,75 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
     setTimeout(() => document.getElementById("new-card-q").focus(), 100);
   }
 
+  function renderLabSection(session, stepNo) {
+    const realLab = getLab(session.id);
+    const isSkeleton = !realLab;
+    const lab = realLab || buildLabSkeleton(session);
+    const progress = state.labProgress[session.id] || {};
+    const doneCount = lab.steps.filter((_, i) => progress[i]).length;
+    const typeLabel = {
+      console: "🖱️ AWS Console",
+      cli: "⌨️ AWS CLI",
+      design: "📝 Lab thiết kế (không tốn tiền)",
+      skeleton: "🧩 Khung sườn – nhờ AI soạn chi tiết"
+    }[lab.type] || "🛠️ Thực hành";
+
+    return `
+      <div class="lesson-section-block lab-box" id="sec-lab">
+        <div class="section-head">
+          <h3 style="margin-bottom:0;">${stepNo}. 🛠️ Thực Hành Lab: ${lab.title}</h3>
+          <span class="badge badge-green" id="lab-progress-badge">Đã làm ${doneCount}/${lab.steps.length} bước</span>
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin:0.6rem 0;">
+          <span class="badge badge-blue">${typeLabel}</span>
+          ${lab.duration ? `<span class="badge badge-purple">⏱️ ${lab.duration}</span>` : ""}
+          ${lab.cost ? `<span class="badge badge-aws">💰 ${lab.cost}</span>` : ""}
+        </div>
+        ${isSkeleton ? `
+          <div class="lab-note">⚠️ Buổi này chưa có lab chi tiết. Dưới đây là <strong>khung sườn chuẩn</strong> – bấm <strong>"Copy prompt soạn Lab với AI"</strong> để AI viết chi tiết từng bước cho bạn.</div>
+        ` : ""}
+        <p style="font-size:0.92rem; color:#e2e8f0; margin-bottom:0.6rem;"><strong>🎯 Mục tiêu:</strong> ${lab.goal || ""}</p>
+        ${lab.prerequisites && lab.prerequisites.length ? `
+          <div class="lab-sub">📋 Chuẩn bị trước</div>
+          <ul class="bullet-list" style="margin-bottom:0.6rem;">${lab.prerequisites.map((p) => `<li>${p}</li>`).join("")}</ul>
+        ` : ""}
+        <div class="lab-sub">🪜 Các bước thực hiện (tick khi làm xong – tự lưu & đồng bộ Cloud)</div>
+        <ol class="lab-steps">
+          ${lab.steps.map((st, i) => `
+            <li class="lab-step ${progress[i] ? "done" : ""}">
+              <label class="lab-step-head">
+                <input type="checkbox" data-lab-step="${i}" ${progress[i] ? "checked" : ""}>
+                <span><strong>Bước ${i + 1}: ${st.title}</strong></span>
+              </label>
+              <div class="lab-step-detail">${st.detail || ""}</div>
+              ${st.cli ? `
+                <div class="lab-cli-wrap">
+                  <button type="button" class="btn btn-outline btn-sm lab-copy-cli" data-copy-cli="${i}">📋 Copy</button>
+                  <pre class="lab-cli" id="lab-cli-${i}">${escapeHtml(st.cli)}</pre>
+                </div>
+              ` : ""}
+            </li>
+          `).join("")}
+        </ol>
+        ${lab.verify && lab.verify.length ? `
+          <div class="lab-sub">✅ Kiểm chứng kết quả</div>
+          <ul class="bullet-list" style="margin-bottom:0.6rem;">${lab.verify.map((v) => `<li>${v}</li>`).join("")}</ul>
+        ` : ""}
+        ${lab.cleanup && lab.cleanup.length ? `
+          <div class="lab-cleanup">
+            <div class="lab-sub" style="color:#fca5a5;">🧹 Dọn dẹp tài nguyên (BẮT BUỘC để không mất tiền)</div>
+            <ul class="bullet-list">${lab.cleanup.map((c) => `<li>${c}</li>`).join("")}</ul>
+          </div>
+        ` : ""}
+        ${lab.examLink ? `<p style="font-size:0.88rem; color:var(--text-secondary); margin-top:0.6rem;">🎓 <strong>Liên hệ đề thi:</strong> ${lab.examLink}</p>` : ""}
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.8rem;">
+          <button class="btn btn-primary btn-sm" id="btn-copy-lab-prompt">📋 ${isSkeleton ? "Copy prompt soạn Lab với AI" : "Copy prompt hỏi AI chi tiết Lab"}</button>
+          <button class="btn btn-outline btn-sm" id="btn-reset-lab">↺ Bỏ tick tất cả</button>
+        </div>
+      </div>
+    `;
+  }
+
   function renderTodayLesson() {
     const session = getSession(state.currentSessionId);
     const phaseObj = window.STUDY_DATA.phases.find((p) => p.id === session.phase);
@@ -374,6 +557,28 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
     const container = document.getElementById("today-lesson-container");
     const promptText = buildAiPromptForSession(session);
     const sessionCustomCards = state.customCards.filter((c) => Number(c.sessionId) === session.id);
+    const quizAnswers = state.quizAnswers[session.id] || {};
+    const hasQuiz = session.quizzes && session.quizzes.length;
+    const hasLab = sessionNeedsLab(session);
+
+    // Thứ tự học hợp lý: Lý thuyết → Thực hành → Hỏi AI cho chắc → Tự kiểm tra → Ghi nhớ
+    const steps = [{ id: "sec-learn", label: "Học lý thuyết" }];
+    if (hasLab) steps.push({ id: "sec-lab", label: "Thực hành Lab" });
+    steps.push({ id: "sec-ai", label: "Hỏi sâu AI" });
+    if (hasQuiz) steps.push({ id: "sec-quiz", label: "Tự kiểm tra" });
+    steps.push({ id: "sec-cards", label: "Flashcards & Hoàn thành" });
+    const stepNo = (id) => steps.findIndex((s) => s.id === id) + 1;
+
+    const quizScore = () => {
+      const answered = Object.keys(quizAnswers).filter((k) => k !== "_t");
+      const correct = answered.filter((k) => session.quizzes[k] && Number(quizAnswers[k]) === session.quizzes[k].correctIdx).length;
+      return { answered: answered.length, correct };
+    };
+
+    const completeBtnHtml = (id) => `
+      <button class="btn ${isCompleted ? "btn-outline" : "btn-success"}" data-complete-session id="${id}">
+        ${isCompleted ? "✅ Đã hoàn thành buổi này (Bấm để bỏ đánh dấu)" : "🎉 Hoàn thành Buổi #" + session.id + " & Sang buổi kế tiếp"}
+      </button>`;
 
     container.innerHTML = `
       <div class="lesson-nav-bar">
@@ -390,9 +595,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         </div>
 
         <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-          <button class="btn ${isCompleted ? "btn-outline" : "btn-success"}" id="btn-complete-session">
-            ${isCompleted ? "✅ Đã hoàn thành buổi này (Bấm để bỏ đánh dấu)" : "🎉 Hoàn thành Buổi #" + session.id + " & Sang buổi kế tiếp"}
-          </button>
+          ${completeBtnHtml("btn-complete-session")}
         </div>
       </div>
 
@@ -404,6 +607,14 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       </div>
 
       <h2 class="lesson-title">Buổi #${session.id}: ${session.title}</h2>
+
+      <!-- Lộ trình trong buổi học -->
+      <div class="lesson-steps">
+        ${steps.map((s, i) => `<button type="button" class="lesson-step-pill" data-jump="${s.id}"><span>${i + 1}</span>${s.label}</button>`).join("")}
+      </div>
+
+      <!-- ===== BƯỚC 1: HỌC LÝ THUYẾT ===== -->
+      <div class="step-divider" id="sec-learn">${stepNo("sec-learn")}. 📖 Học lý thuyết</div>
 
       <!-- Góc nhìn Java Developer -->
       <div class="lesson-section-block java-box">
@@ -460,47 +671,69 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         </ul>
       </div>
 
-      ${session.quizzes && session.quizzes.length ? `
-        <!-- Câu hỏi thi thử tương tác ngay trên web -->
-        <div class="lesson-section-block" style="border-left:4px solid var(--accent-aws);">
+      ${hasLab ? `
+        <!-- ===== BƯỚC 2: THỰC HÀNH LAB ===== -->
+        <div class="step-divider">${stepNo("sec-lab")}. 🛠️ Thực hành</div>
+        ${renderLabSection(session, stepNo("sec-lab"))}
+      ` : ""}
+
+      <!-- ===== HỎI SÂU AI (trước khi tự kiểm tra) ===== -->
+      <div class="step-divider">${stepNo("sec-ai")}. 🤖 Hỏi sâu với AI</div>
+      <div class="lesson-section-block prompt-box" id="sec-ai">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
+          <h3 style="margin-bottom:0;">🤖 Prompt Hỏi Sâu Thêm Với AI (Làm rõ chỗ chưa hiểu trước khi tự kiểm tra)</h3>
+          <button class="btn btn-primary btn-sm" id="btn-copy-prompt">📋 Copy Prompt Hỏi AI Ngay</button>
+        </div>
+        <pre id="session-prompt-text" style="background:var(--bg-primary); border:1px solid var(--border-color); padding:0.85rem; border-radius:8px; font-size:0.84rem; color:#cbd5e1; white-space:pre-wrap; font-family:inherit;">${escapeHtml(promptText)}</pre>
+      </div>
+
+      ${hasQuiz ? `
+        <!-- ===== TỰ KIỂM TRA: Câu hỏi thi thử tương tác ===== -->
+        <div class="step-divider">${stepNo("sec-quiz")}. ✍️ Tự kiểm tra</div>
+        <div class="lesson-section-block" id="sec-quiz" style="border-left:4px solid var(--accent-aws);">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
             <h3 style="margin-bottom:0;">✍️ Thực Chiến Câu Hỏi Thi Thật (100% Tiếng Anh Chuẩn Pearson VUE SAA-C03)</h3>
-            <span class="badge badge-aws">Bấm chọn A/B/C/D để chấm điểm & xem giải thích</span>
+            <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+              <span class="badge badge-aws" id="quiz-score-badge">Đã làm ${quizScore().answered}/${session.quizzes.length} • Đúng ${quizScore().correct}</span>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-reset-quiz" style="padding:0.2rem 0.55rem; font-size:0.75rem;">🔁 Làm lại</button>
+            </div>
           </div>
-          ${session.quizzes.map((qz, qIdx) => `
+          ${session.quizzes.map((qz, qIdx) => {
+            const chosen = quizAnswers[qIdx];
+            const answered = chosen !== undefined && chosen !== null;
+            const viOpen = !!ui.viOpen[`${session.id}_${qIdx}`];
+            return `
             <div class="quiz-card" data-quiz-idx="${qIdx}" data-correct-idx="${qz.correctIdx}">
               <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.45rem;">
                 <div class="quiz-question-en" style="margin-bottom:0; flex:1;">🇬🇧 <strong>Question ${qIdx + 1}:</strong> ${qz.qEn}</div>
-                <button type="button" class="btn btn-outline btn-sm" data-toggle-vi="${qIdx}" style="padding:0.2rem 0.55rem; font-size:0.75rem; white-space:nowrap;">🇻🇳 Dịch câu hỏi</button>
+                <button type="button" class="btn btn-outline btn-sm" data-toggle-vi="${qIdx}" style="padding:0.2rem 0.55rem; font-size:0.75rem; white-space:nowrap;">${viOpen ? "🙈 Ẩn dịch câu hỏi" : "🇻🇳 Dịch câu hỏi"}</button>
               </div>
-              <div class="quiz-question-vi" id="quiz-vi-${qIdx}" style="display:none; background:rgba(15,23,42,0.6); padding:0.5rem 0.75rem; border-radius:6px; margin-bottom:0.65rem; border-left:3px solid var(--accent-blue);">
+              <div class="quiz-question-vi" id="quiz-vi-${qIdx}" style="display:${viOpen ? "block" : "none"}; background:rgba(15,23,42,0.6); padding:0.5rem 0.75rem; border-radius:6px; margin-bottom:0.65rem; border-left:3px solid var(--accent-blue);">
                 🇻🇳 <strong>Tạm dịch đề bài:</strong> ${qz.qVi}
               </div>
               <div class="quiz-options">
-                ${qz.options.map((opt, oIdx) => `
-                  <button class="quiz-option" data-opt-idx="${oIdx}">${opt}</button>
-                `).join("")}
+                ${qz.options.map((opt, oIdx) => {
+                  let cls = "";
+                  if (answered) {
+                    if (oIdx === qz.correctIdx) cls = "correct";
+                    else if (oIdx === Number(chosen)) cls = "wrong";
+                  }
+                  return `<button class="quiz-option ${cls}" data-opt-idx="${oIdx}">${opt}</button>`;
+                }).join("")}
               </div>
-              <div class="quiz-explanation" id="quiz-exp-${qIdx}">
+              <div class="quiz-explanation ${answered ? "visible" : ""}" id="quiz-exp-${qIdx}">
                 <div style="margin-bottom:0.35rem; color:var(--text-secondary); font-size:0.84rem;">🇻🇳 <em>Dịch đề: ${qz.qVi}</em></div>
                 <strong>✅ Giải thích chi tiết:</strong> ${qz.explanation}
               </div>
             </div>
-          `).join("")}
+          `;
+          }).join("")}
         </div>
       ` : ""}
 
-      <!-- Prompt AI -->
-      <div class="lesson-section-block prompt-box">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
-          <h3 style="margin-bottom:0;">🤖 Prompt Hỏi Sâu Thêm Với AI (Tùy chọn)</h3>
-          <button class="btn btn-primary btn-sm" id="btn-copy-prompt">📋 Copy Prompt Hỏi AI Ngay</button>
-        </div>
-        <pre id="session-prompt-text" style="background:var(--bg-primary); border:1px solid var(--border-color); padding:0.85rem; border-radius:8px; font-size:0.84rem; color:#cbd5e1; white-space:pre-wrap; font-family:inherit;">${promptText}</pre>
-      </div>
-
-      <!-- Thẻ Flashcards của buổi này -->
-      <div class="lesson-section-block">
+      <!-- ===== GHI NHỚ: Thẻ Flashcards của buổi này ===== -->
+      <div class="step-divider">${stepNo("sec-cards")}. 🗂️ Ghi nhớ & Hoàn thành</div>
+      <div class="lesson-section-block" id="sec-cards">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
           <h3 style="margin-bottom:0;">🗂️ Thẻ Spaced Repetition Của Buổi #${session.id} (Bấm vào thẻ để lật đáp án)</h3>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
@@ -510,14 +743,14 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         </div>
         <div class="mini-cards-grid">
           ${session.cards.map((c, idx) => `
-            <div class="flip-card" data-card-idx="${idx}">
+            <div class="flip-card ${ui.flipped[`${session.id}_${idx}`] ? "revealed" : ""}" data-card-idx="${idx}" data-flip-key="${session.id}_${idx}">
               <div class="q-label">Thẻ chuẩn #${idx + 1} (Bấm để xem đáp án)</div>
               <div class="q-text">${c.q}</div>
               <div class="a-text"><strong>Đáp án:</strong> ${c.a}</div>
             </div>
           `).join("")}
           ${sessionCustomCards.map((c, idx) => `
-            <div class="flip-card" style="border-color:rgba(56,189,248,0.45);" data-custom-id="${c.id}">
+            <div class="flip-card ${ui.flipped[`${session.id}_${c.id}`] ? "revealed" : ""}" style="border-color:rgba(56,189,248,0.45);" data-custom-id="${c.id}" data-flip-key="${session.id}_${c.id}">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
                 <span class="q-label" style="color:var(--accent-blue); margin-bottom:0;">✨ Thẻ bạn tạo #${idx + 1}</span>
                 <button class="btn btn-outline btn-sm" data-delete-card="${c.id}" style="padding:0.1rem 0.45rem; font-size:0.72rem; color:#fca5a5; border-color:rgba(239,68,68,0.4);" title="Xóa thẻ này">🗑️</button>
@@ -527,10 +760,21 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
             </div>
           `).join("")}
         </div>
+        <div style="display:flex; justify-content:center; margin-top:1rem;">
+          ${completeBtnHtml("btn-complete-session-bottom")}
+        </div>
       </div>
     `;
 
-    // Toggle Vietnamese question translation
+    // Jump to step
+    container.querySelectorAll("[data-jump]").forEach((pill) => {
+      pill.addEventListener("click", () => {
+        const target = document.getElementById(pill.getAttribute("data-jump"));
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // Toggle Vietnamese question translation (giữ trạng thái khi render lại)
     container.querySelectorAll("[data-toggle-vi]").forEach((tBtn) => {
       tBtn.addEventListener("click", () => {
         const qIdx = tBtn.getAttribute("data-toggle-vi");
@@ -539,10 +783,20 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         const isHidden = viBox.style.display === "none";
         viBox.style.display = isHidden ? "block" : "none";
         tBtn.textContent = isHidden ? "🙈 Ẩn dịch câu hỏi" : "🇻🇳 Dịch câu hỏi";
+        const key = `${session.id}_${qIdx}`;
+        if (isHidden) ui.viOpen[key] = true;
+        else delete ui.viOpen[key];
       });
     });
 
-    // Interactive Quiz Click Listeners
+    // Interactive Quiz – đáp án được lưu vào state.quizAnswers (local + Cloud) nên không còn bị reset
+    const refreshQuizScore = () => {
+      const badge = document.getElementById("quiz-score-badge");
+      if (!badge) return;
+      const sc = quizScore();
+      badge.textContent = `Đã làm ${sc.answered}/${session.quizzes.length} • Đúng ${sc.correct}`;
+    };
+
     container.querySelectorAll(".quiz-card").forEach((qCard) => {
       const correctIdx = Number(qCard.getAttribute("data-correct-idx"));
       const qIdx = qCard.getAttribute("data-quiz-idx");
@@ -563,9 +817,76 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
             showToast("🎯 Chính xác 100%! Bạn đã nắm vững ý này.");
           }
           if (expEl) expEl.classList.add("visible");
+
+          quizAnswers[qIdx] = chosenIdx;
+          quizAnswers._t = Date.now();
+          state.quizAnswers[session.id] = quizAnswers;
+          saveState();
+          refreshQuizScore();
         });
       });
     });
+
+    const resetQuizBtn = document.getElementById("btn-reset-quiz");
+    if (resetQuizBtn) {
+      resetQuizBtn.addEventListener("click", () => {
+        state.quizAnswers[session.id] = { _t: Date.now() };
+        saveState();
+        const scrollY = window.scrollY;
+        renderTodayLesson();
+        window.scrollTo(0, scrollY);
+        showToast("🔁 Đã xóa đáp án – hãy làm lại từ đầu!");
+      });
+    }
+
+    // Lab step checkboxes
+    container.querySelectorAll("[data-lab-step]").forEach((cb) => {
+      cb.addEventListener("change", () => {
+        const idx = cb.getAttribute("data-lab-step");
+        const prog = { ...(state.labProgress[session.id] || {}) };
+        if (cb.checked) prog[idx] = true;
+        else delete prog[idx];
+        prog._t = Date.now();
+        state.labProgress[session.id] = prog;
+        cb.closest(".lab-step").classList.toggle("done", cb.checked);
+        const total = container.querySelectorAll("[data-lab-step]").length;
+        const done = Object.keys(prog).filter((k) => k !== "_t").length;
+        const badge = document.getElementById("lab-progress-badge");
+        if (badge) badge.textContent = `Đã làm ${done}/${total} bước`;
+        if (done === total) showToast("🏆 Hoàn thành toàn bộ lab! Nhớ dọn dẹp tài nguyên nhé.");
+        saveState();
+      });
+    });
+
+    container.querySelectorAll("[data-copy-cli]").forEach((cBtn) => {
+      cBtn.addEventListener("click", () => {
+        const pre = document.getElementById(`lab-cli-${cBtn.getAttribute("data-copy-cli")}`);
+        if (!pre) return;
+        navigator.clipboard.writeText(pre.textContent).then(() => showToast("📋 Đã copy lệnh!"));
+      });
+    });
+
+    const labPromptBtn = document.getElementById("btn-copy-lab-prompt");
+    if (labPromptBtn) {
+      labPromptBtn.addEventListener("click", () => {
+        const realLab = getLab(session.id);
+        const text = buildLabPromptForSession(session, realLab || buildLabSkeleton(session), !realLab);
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("📋 Đã copy prompt Lab! Dán vào ChatGPT / Gemini / Claude nhé.");
+        });
+      });
+    }
+
+    const resetLabBtn = document.getElementById("btn-reset-lab");
+    if (resetLabBtn) {
+      resetLabBtn.addEventListener("click", () => {
+        state.labProgress[session.id] = { _t: Date.now() };
+        saveState();
+        const scrollY = window.scrollY;
+        renderTodayLesson();
+        window.scrollTo(0, scrollY);
+      });
+    }
 
     // Attach listeners
     document.getElementById("btn-prev-session").addEventListener("click", () => {
@@ -592,26 +913,28 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       renderAll();
     });
 
-    document.getElementById("btn-complete-session").addEventListener("click", () => {
-      const id = session.id;
-      if (state.completedIds.includes(id)) {
-        state.completedIds = state.completedIds.filter((x) => x !== id);
-        state.uncompletedAt[id] = Date.now();
-        showToast(`Đã bỏ đánh dấu hoàn thành Buổi #${id}`);
-      } else {
-        state.completedIds.push(id);
-        state.completedIds.sort((a, b) => a - b);
-        delete state.uncompletedAt[id];
-        const nextUncompleted = window.STUDY_DATA.sessions.find((s) => s.id > id && !state.completedIds.includes(s.id));
-        if (nextUncompleted) {
-          state.currentSessionId = nextUncompleted.id;
+    container.querySelectorAll("[data-complete-session]").forEach((cBtn) => {
+      cBtn.addEventListener("click", () => {
+        const id = session.id;
+        if (state.completedIds.includes(id)) {
+          state.completedIds = state.completedIds.filter((x) => x !== id);
+          state.uncompletedAt[id] = Date.now();
+          showToast(`Đã bỏ đánh dấu hoàn thành Buổi #${id}`);
+        } else {
+          state.completedIds.push(id);
+          state.completedIds.sort((a, b) => a - b);
+          delete state.uncompletedAt[id];
+          const nextUncompleted = window.STUDY_DATA.sessions.find((s) => s.id > id && !state.completedIds.includes(s.id));
+          if (nextUncompleted) {
+            state.currentSessionId = nextUncompleted.id;
+          }
+          showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã lưu tiến độ lên Cloud & đưa thẻ vào Anki!`);
         }
-        showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã lưu tiến độ lên Cloud & đưa thẻ vào Anki!`);
-      }
-      saveState(true);
-      buildSrsQueue();
-      renderAll();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+        saveState(true);
+        buildSrsQueue();
+        renderAll();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
     });
 
     document.getElementById("btn-copy-prompt").addEventListener("click", () => {
@@ -632,6 +955,9 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       cardEl.addEventListener("click", (e) => {
         if (e.target.closest("[data-delete-card]")) return;
         cardEl.classList.toggle("revealed");
+        const key = cardEl.getAttribute("data-flip-key");
+        if (cardEl.classList.contains("revealed")) ui.flipped[key] = true;
+        else delete ui.flipped[key];
       });
     });
 
@@ -688,6 +1014,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
                     <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.25rem;">
                       <span class="badge ${isDone ? "badge-green" : "badge-blue"}">Buổi #${s.id}</span>
                       <span style="font-size:0.75rem; color:var(--text-secondary);">${s.section}</span>
+                      ${getLab(s.id) ? `<span class="badge badge-purple" title="${escapeHtml(stripTags(getLab(s.id).title))}">🛠️ Lab</span>` : ""}
                     </div>
                     <div style="font-weight:700; font-size:0.93rem; color:var(--text-primary);">${s.title}</div>
                   </div>
