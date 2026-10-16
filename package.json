@@ -1,0 +1,14 @@
+{
+  "name": "aws-saa-c03-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AWS SAA-C03 study hub (static site on GitHub Pages)",
+  "scripts": {
+    "test": "mocha \"tests/**/*.test.js\"",
+    "test:watch": "mocha \"tests/**/*.test.js\" --watch"
+  },
+  "devDependencies": {
+    "jsdom": "^22.1.0",
+    "mocha": "^10.8.2"
+  }
+}

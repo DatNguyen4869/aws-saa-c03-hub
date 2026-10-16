@@ -55,7 +55,7 @@ window.DEEP_CONTENT_PART1 = {
         explanation: "Theo quy tắc vàng của AWS IAM: Một lệnh cấm tường minh (Explicit Deny) ở bất kỳ Policy nào sẽ LUÔN LUÔN thắng mọi lệnh Allow."
       },
       {
-        qEn: "A company hires 50 new developers. Each developer needs read/write access ONLY to their own personal folder (s3://company-bucket/users/<username>/*) in a shared S3 bucket. How can the solutions architect implement this with the LEAST administrative effort?",
+        qEn: "A company hires 50 new developers. Each developer needs read/write access ONLY to their own personal folder (s3://company-bucket/users/&lt;username&gt;/*) in a shared S3 bucket. How can the solutions architect implement this with the LEAST administrative effort?",
         qVi: "Công ty tuyển 50 lập trình viên mới. Mỗi người chỉ được đọc/ghi vào đúng thư mục cá nhân mang tên mình trong chung 1 S3 bucket. Cách nào tốn ít công sức quản trị nhất?",
         options: [
           "A. Create 50 separate inline policies and attach each one to an individual IAM user.",

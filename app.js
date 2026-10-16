@@ -1756,4 +1756,30 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
       }
     });
   });
+
+  // ================= TEST HOOK =================
+  // Chỉ bật khi chạy unit test (tests/helpers/loadApp.js đặt cờ này trước khi nạp app.js)
+  if (window.__AWS_HUB_TEST__) {
+    window.__AWS_HUB_INTERNALS__ = {
+      state,
+      ui,
+      stableStr,
+      mergeNestedMaps,
+      mergeCompletedIds,
+      mergeSrsData,
+      mergeCustomCards,
+      getAllFlashcards,
+      buildSrsQueue,
+      escapeHtml,
+      stripTags,
+      getLab,
+      sessionNeedsLab,
+      buildLabSkeleton,
+      buildAiPromptForSession,
+      buildLabPromptForSession,
+      generateSyncCode,
+      applySyncCode,
+      pullFromCloud
+    };
+  }
 })();

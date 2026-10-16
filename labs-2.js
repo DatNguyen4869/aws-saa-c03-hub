@@ -247,7 +247,7 @@ Object.assign(window.LAB_DATA, {
     duration: "40-50 phút",
     cost: "CÓ PHÍ NHỎ: Data Streams provisioned 1 shard ≈ 0,015 USD/giờ (không dùng On-demand vì đắt hơn); Firehose tính theo GB nạp (lab vài KB ≈ 0). Amazon MQ tính theo giờ broker → không tạo. Xóa stream ngay sau lab.",
     goal: "Ghi và đọc dữ liệu clickstream qua Kinesis Data Streams (có replay), sau đó dùng Firehose đổ dữ liệu gần thời gian thực vào S3 mà không cần viết consumer.",
-    prerequisites: ["AWS CLI v2", "Một bucket S3 đích, ví dụ saa-firehose-<tên>"],
+    prerequisites: ["AWS CLI v2", "Một bucket S3 đích, ví dụ saa-firehose-&lt;tên&gt;"],
     steps: [
       { title: "Tạo Data Stream 1 shard", detail: "<strong>Kinesis → Data streams → Create data stream</strong> → tên <code>saa-clicks</code> → Capacity mode <strong>Provisioned</strong>, shards <code>1</code>. Retention mặc định 24h (tăng tới 365 ngày có phí).", cli: "aws kinesis create-stream --stream-name saa-clicks --shard-count 1 --region ap-southeast-1\naws kinesis wait stream-exists --stream-name saa-clicks" },
       { title: "Producer ghi bản ghi", detail: "Partition key quyết định shard; cùng key giữ thứ tự. CLI v2 cần cờ raw-in-base64-out để gửi text.", cli: "aws kinesis put-record --stream-name saa-clicks --partition-key user-dat --data 'page=home' --cli-binary-format raw-in-base64-out\naws kinesis put-record --stream-name saa-clicks --partition-key user-dat --data 'page=cart' --cli-binary-format raw-in-base64-out" },
