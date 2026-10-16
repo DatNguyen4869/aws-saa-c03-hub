@@ -3,34 +3,24 @@
 
   const CLOUD_SYNC_URL = "https://api.restful-api.dev/objects/ff808181a09d98f701a1399871fe5c18";
   let cloudPushTimer = null;
+  let hasInitialCloudPullDone = false;
+  let pendingPushAfterPull = false;
 
   const state = {
     currentSessionId: 1,
     completedIds: [],
-    srsData: {},      // cardKey -> { interval, ease, due, reps }
-    customCards: [],  // Array of { id, sessionId, q, a }
-    notes: {},        // sessionId -> string
+    uncompletedAt: {}, // sessionId -> timestamp when explicitly unchecked
+    srsData: {},       // cardKey -> { interval, ease, due, reps, updatedAt }
+    customCards: [],   // Array of { id, sessionId, q, a }
+    notes: {},         // sessionId -> string
     updatedAt: 0,
     activeTab: "today",
-    timer: {
-      stepIndex: 0,
-      secondsLeft: 600,
-      running: false,
-      intervalId: null
-    },
-    srsFilter: "due", // "due" | "completed" | "current" | "custom" | "all"
+    srsFilter: "due",  // "due" | "completed" | "current" | "custom" | "all"
     srsQueue: [],
     srsCurrentIndex: 0,
     srsRevealed: false,
     showSrsTable: false
   };
-
-  const FLOW_STEPS = [
-    { num: 1, title: "Bước 1: Quẹt thẻ Anki (10p)", desc: "Ôn lại thẻ cũ đến hạn hôm nay", seconds: 10 * 60 },
-    { num: 2, title: "Bước 2: Nạp kiến thức (20p)", desc: "Đọc tóm tắt bài học & xem video/slide", seconds: 20 * 60 },
-    { num: 3, title: "Bước 3: Hỏi AI & Giải tình huống (20p)", desc: "Copy Prompt chuẩn hỏi AI & trả lời 2 câu quiz", seconds: 20 * 60 },
-    { num: 4, title: "Bước 4: Đóng gói thẻ mới (10p)", desc: "Lật thẻ Flashcard bên dưới & đánh dấu hoàn thành", seconds: 10 * 60 }
-  ];
 
   function setSyncBadgeStatus(text, isWarning = false) {
     const badge = document.getElementById("cloud-sync-badge");
@@ -47,6 +37,7 @@
         const parsed = JSON.parse(saved);
         state.currentSessionId = parsed.currentSessionId || 1;
         state.completedIds = Array.isArray(parsed.completedIds) ? parsed.completedIds : [];
+        state.uncompletedAt = parsed.uncompletedAt || {};
         state.srsData = parsed.srsData || {};
         state.customCards = Array.isArray(parsed.customCards) ? parsed.customCards : [];
         state.notes = parsed.notes || {};
@@ -67,6 +58,7 @@
         JSON.stringify({
           currentSessionId: state.currentSessionId,
           completedIds: state.completedIds,
+          uncompletedAt: state.uncompletedAt,
           srsData: state.srsData,
           customCards: state.customCards,
           notes: state.notes,
@@ -78,10 +70,22 @@
     }
   }
 
-  function saveState() {
+  function saveState(immediate = false) {
     state.updatedAt = Date.now();
     saveLocalOnly();
-    schedulePushToCloud();
+    if (!hasInitialCloudPullDone) {
+      // Prevent a freshly opened stale tab from overwriting Cloud before initial pull finishes
+      pendingPushAfterPull = true;
+      pullFromCloud(true);
+      return;
+    }
+    if (immediate) {
+      if (cloudPushTimer) clearTimeout(cloudPushTimer);
+      setSyncBadgeStatus("🔄 Đang đồng bộ Cloud...", true);
+      pushToCloud();
+    } else {
+      schedulePushToCloud();
+    }
   }
 
   function schedulePushToCloud() {
@@ -89,7 +93,7 @@
     if (cloudPushTimer) clearTimeout(cloudPushTimer);
     cloudPushTimer = setTimeout(() => {
       pushToCloud();
-    }, 350);
+    }, 200);
   }
 
   async function pushToCloud() {
@@ -99,6 +103,7 @@
         data: {
           currentSessionId: state.currentSessionId,
           completedIds: state.completedIds,
+          uncompletedAt: state.uncompletedAt,
           srsData: state.srsData,
           customCards: state.customCards,
           notes: state.notes,
@@ -107,6 +112,7 @@
       };
       const res = await fetch(CLOUD_SYNC_URL, {
         method: "PUT",
+        keepalive: true,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
@@ -151,39 +157,117 @@
     return merged;
   }
 
+  function mergeCompletedIds(localIds, cloudIds, localUncompleted, cloudUncompleted, localTime, cloudTime) {
+    const mergedUncompleted = { ...(localUncompleted || {}) };
+    Object.entries(cloudUncompleted || {}).forEach(([k, ts]) => {
+      if (!mergedUncompleted[k] || Number(ts) > Number(mergedUncompleted[k])) {
+        mergedUncompleted[k] = Number(ts);
+      }
+    });
+
+    const localSet = new Set(Array.isArray(localIds) ? localIds.map(Number) : []);
+    const cloudSet = new Set(Array.isArray(cloudIds) ? cloudIds.map(Number) : []);
+    const unionSet = new Set([...localSet, ...cloudSet]);
+
+    const finalIds = [];
+    unionSet.forEach((id) => {
+      const inLocal = localSet.has(id);
+      const inCloud = cloudSet.has(id);
+      const uncompTs = Number(mergedUncompleted[id] || 0);
+      if (inLocal && inCloud) {
+        finalIds.push(id);
+      } else if (inCloud && !inLocal) {
+        // Cloud has it completed; keep it unless local explicitly unchecked it AFTER cloudTime
+        if (uncompTs > cloudTime) return;
+        finalIds.push(id);
+      } else if (inLocal && !inCloud) {
+        // Local has it completed; keep it unless cloud explicitly unchecked it AFTER localTime
+        if (uncompTs > localTime) return;
+        finalIds.push(id);
+      }
+    });
+
+    return {
+      completedIds: finalIds.sort((a, b) => a - b),
+      uncompletedAt: mergedUncompleted
+    };
+  }
+
   async function pullFromCloud(silent = true) {
     try {
       if (!silent) setSyncBadgeStatus("🔄 Đang kiểm tra Cloud...", true);
       const res = await fetch(CLOUD_SYNC_URL, { cache: "no-store" });
-      if (!res.ok) return;
+      if (!res.ok) {
+        hasInitialCloudPullDone = true;
+        return;
+      }
       const json = await res.json();
       const cloud = json && json.data;
-      if (!cloud) return;
+      if (!cloud) {
+        hasInitialCloudPullDone = true;
+        return;
+      }
 
       const cloudTime = Number(cloud.updatedAt || 0);
-      if (cloudTime > state.updatedAt) {
-        state.currentSessionId = Number(cloud.currentSessionId || 1);
-        const mergedCompleted = new Set([
-          ...(Array.isArray(state.completedIds) ? state.completedIds : []),
-          ...(Array.isArray(cloud.completedIds) ? cloud.completedIds : [])
-        ]);
-        state.completedIds = Array.from(mergedCompleted).sort((a, b) => a - b);
-        state.srsData = mergeSrsData(state.srsData, cloud.srsData);
-        state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
-        state.notes = { ...state.notes, ...(cloud.notes || {}) };
-        state.updatedAt = cloudTime;
+      const localTime = Number(state.updatedAt || 0);
 
-        saveLocalOnly();
-        buildSrsQueue();
-        renderAll();
-        if (state.activeTab === "srs") renderSrsTab();
-        if (!silent) showToast("☁️ Đã cập nhật tiến độ & lịch ôn SRS mới nhất từ Cloud!");
-      } else if (state.updatedAt > cloudTime && state.updatedAt > 0) {
-        await pushToCloud();
+      // Always union-merge completedIds, srsData, and customCards so no machine ever overwrites progress from the other
+      const prevCompletedStr = JSON.stringify(state.completedIds);
+      const prevSessionId = state.currentSessionId;
+
+      const mergedComp = mergeCompletedIds(
+        state.completedIds,
+        cloud.completedIds,
+        state.uncompletedAt,
+        cloud.uncompletedAt,
+        localTime,
+        cloudTime
+      );
+      state.completedIds = mergedComp.completedIds;
+      state.uncompletedAt = mergedComp.uncompletedAt;
+      state.srsData = mergeSrsData(state.srsData, cloud.srsData);
+      state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
+      state.notes = { ...(cloud.notes || {}), ...state.notes };
+
+      // Determine best currentSessionId:
+      // If cloud is newer, prefer cloud.currentSessionId; also if currentSessionId is already completed, advance to next uncompleted
+      if (cloudTime >= localTime && cloud.currentSessionId) {
+        state.currentSessionId = Number(cloud.currentSessionId);
       }
-      const nowStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
-      setSyncBadgeStatus(`☁️ Auto-Sync: Trực tuyến (${nowStr})`);
+      if (state.completedIds.includes(state.currentSessionId)) {
+        const nextUncompleted = window.STUDY_DATA.sessions.find((s) => !state.completedIds.includes(s.id));
+        if (nextUncompleted) {
+          state.currentSessionId = nextUncompleted.id;
+        }
+      }
+
+      state.updatedAt = Math.max(localTime, cloudTime);
+      hasInitialCloudPullDone = true;
+
+      saveLocalOnly();
+      buildSrsQueue();
+      renderAll();
+      if (state.activeTab === "srs") renderSrsTab();
+
+      const cloudCompletedStr = JSON.stringify(
+        Array.isArray(cloud.completedIds) ? [...cloud.completedIds].map(Number).sort((a, b) => a - b) : []
+      );
+      const mergedCompletedStr = JSON.stringify(state.completedIds);
+
+      if (!silent || prevCompletedStr !== mergedCompletedStr || prevSessionId !== state.currentSessionId) {
+        if (!silent) showToast("☁️ Đã đồng bộ tiến độ & lịch ôn SRS mới nhất từ Cloud!");
+      }
+
+      // If local had newer changes or merged state has more data than cloud, push merged state back to cloud
+      if (pendingPushAfterPull || localTime > cloudTime || cloudCompletedStr !== mergedCompletedStr) {
+        pendingPushAfterPull = false;
+        await pushToCloud();
+      } else {
+        const nowStr = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+        setSyncBadgeStatus(`☁️ Auto-Sync: Trực tuyến (${nowStr})`);
+      }
     } catch (e) {
+      hasInitialCloudPullDone = true;
       console.warn("Cloud pull skipped:", e);
     }
   }
@@ -210,7 +294,7 @@
         if (parsed.s) state.srsData = parsed.s;
         if (Array.isArray(parsed.cc)) state.customCards = parsed.cc;
         if (parsed.n) state.notes = parsed.n;
-        saveState();
+        saveState(true);
         buildSrsQueue();
         renderAll();
         if (state.activeTab === "srs") renderSrsTab();
@@ -252,82 +336,10 @@
     document.getElementById("stat-due-cards").textContent = `${dueCards.length} thẻ`;
   }
 
-  // ================= 60-MIN FLOW TIMER =================
-  function renderFlowTimer() {
-    const step = FLOW_STEPS[state.timer.stepIndex];
-    const mins = String(Math.floor(state.timer.secondsLeft / 60)).padStart(2, "0");
-    const secs = String(state.timer.secondsLeft % 60).padStart(2, "0");
-
-    document.getElementById("timer-clock").textContent = `${mins}:${secs}`;
-    document.getElementById("timer-step-label").textContent = step.title;
-    document.getElementById("btn-timer-toggle").textContent = state.timer.running ? "⏸ Tạm dừng" : "▶️ Bắt đầu đếm";
-
-    const stepsContainer = document.getElementById("flow-steps-list");
-    stepsContainer.innerHTML = FLOW_STEPS.map((s, idx) => `
-      <div class="flow-step ${idx === state.timer.stepIndex ? "active" : ""}" data-step-idx="${idx}">
-        <div class="flow-step-num">${s.num}</div>
-        <div class="flow-step-info">
-          <h4>${s.title}</h4>
-          <p>${s.desc}</p>
-        </div>
-      </div>
-    `).join("");
-
-    stepsContainer.querySelectorAll(".flow-step").forEach((el) => {
-      el.addEventListener("click", () => {
-        const idx = Number(el.getAttribute("data-step-idx"));
-        selectTimerStep(idx);
-      });
-    });
-  }
-
-  function selectTimerStep(idx) {
-    pauseTimer();
-    state.timer.stepIndex = idx;
-    state.timer.secondsLeft = FLOW_STEPS[idx].seconds;
-    renderFlowTimer();
-  }
-
-  function toggleTimer() {
-    if (state.timer.running) {
-      pauseTimer();
-    } else {
-      state.timer.running = true;
-      state.timer.intervalId = setInterval(() => {
-        if (state.timer.secondsLeft > 0) {
-          state.timer.secondsLeft--;
-          renderFlowTimer();
-        } else {
-          pauseTimer();
-          showToast(`⏰ Đã hết giờ ${FLOW_STEPS[state.timer.stepIndex].title}! Chuyển sang bước tiếp theo nhé.`);
-          if (state.timer.stepIndex < FLOW_STEPS.length - 1) {
-            selectTimerStep(state.timer.stepIndex + 1);
-          }
-        }
-      }, 1000);
-      renderFlowTimer();
-    }
-  }
-
-  function pauseTimer() {
-    state.timer.running = false;
-    if (state.timer.intervalId) {
-      clearInterval(state.timer.intervalId);
-      state.timer.intervalId = null;
-    }
-    renderFlowTimer();
-  }
-
-  function resetTimer() {
-    pauseTimer();
-    state.timer.secondsLeft = FLOW_STEPS[state.timer.stepIndex].seconds;
-    renderFlowTimer();
-  }
-
   // ================= RENDER TODAY'S LESSON =================
   function buildAiPromptForSession(session) {
     const cleanPoints = session.corePoints.map((p) => p.replace(/<[^>]+>/g, "")).join("\n- ");
-    return `Tôi là Java Developer (5 năm kinh nghiệm) đang ôn thi chứng chỉ AWS SAA-C03.
+    return `Tôi là Java Developer đang ôn thi chứng chỉ AWS SAA-C03.
 Hôm nay tôi đang học Buổi #${session.id}: "${session.title}" (${session.section}).
 Các ý chính trong bài hôm nay:
 - ${cleanPoints}
@@ -395,7 +407,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
 
       <!-- Góc nhìn Java Developer -->
       <div class="lesson-section-block java-box">
-        <h3>☕ Liên hệ thực tế cho Java Developer (5 năm KN)</h3>
+        <h3>☕ Liên hệ thực tế cho Java Developer</h3>
         <p style="font-size:0.95rem; color:#e2e8f0;">${session.javaAnalogy}</p>
       </div>
 
@@ -478,19 +490,19 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         </div>
       ` : ""}
 
-      <!-- Bước 3: Prompt AI -->
+      <!-- Prompt AI -->
       <div class="lesson-section-block prompt-box">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.6rem;">
-          <h3 style="margin-bottom:0;">🤖 Bước 3 (Tùy chọn): Prompt Hỏi Sâu Thêm Với AI</h3>
+          <h3 style="margin-bottom:0;">🤖 Prompt Hỏi Sâu Thêm Với AI (Tùy chọn)</h3>
           <button class="btn btn-primary btn-sm" id="btn-copy-prompt">📋 Copy Prompt Hỏi AI Ngay</button>
         </div>
         <pre id="session-prompt-text" style="background:var(--bg-primary); border:1px solid var(--border-color); padding:0.85rem; border-radius:8px; font-size:0.84rem; color:#cbd5e1; white-space:pre-wrap; font-family:inherit;">${promptText}</pre>
       </div>
 
-      <!-- Bước 4: Thẻ Flashcards của buổi này -->
+      <!-- Thẻ Flashcards của buổi này -->
       <div class="lesson-section-block">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-          <h3 style="margin-bottom:0;">🗂️ Bước 4 (10 phút): Thẻ Spaced Repetition Của Buổi #${session.id} (Bấm vào thẻ để lật đáp án)</h3>
+          <h3 style="margin-bottom:0;">🗂️ Thẻ Spaced Repetition Của Buổi #${session.id} (Bấm vào thẻ để lật đáp án)</h3>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
             <button class="btn btn-primary btn-sm" id="btn-add-card-lesson">➕ Thêm Thẻ Mới Vào Web</button>
             <button class="btn btn-outline btn-sm" id="btn-export-session-anki">⬇️ Xuất .tsv Anki</button>
@@ -515,12 +527,6 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
             </div>
           `).join("")}
         </div>
-      </div>
-
-      <!-- Ghi chú cá nhân -->
-      <div class="lesson-section-block">
-        <h3>📝 Ghi chú nhanh của bạn cho Buổi #${session.id}</h3>
-        <textarea id="session-note-input" rows="3" placeholder="Ghi lại từ vựng tiếng Anh hoặc điểm bạn hay quên ở buổi này (tự động lưu Cloud)..." style="width:100%; background:var(--bg-primary); color:var(--text-primary); border:1px solid var(--border-color); border-radius:8px; padding:0.75rem; font-family:inherit; font-size:0.9rem;">${state.notes[session.id] || ""}</textarea>
       </div>
     `;
 
@@ -590,16 +596,19 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       const id = session.id;
       if (state.completedIds.includes(id)) {
         state.completedIds = state.completedIds.filter((x) => x !== id);
+        state.uncompletedAt[id] = Date.now();
         showToast(`Đã bỏ đánh dấu hoàn thành Buổi #${id}`);
       } else {
         state.completedIds.push(id);
+        state.completedIds.sort((a, b) => a - b);
+        delete state.uncompletedAt[id];
         const nextUncompleted = window.STUDY_DATA.sessions.find((s) => s.id > id && !state.completedIds.includes(s.id));
         if (nextUncompleted) {
           state.currentSessionId = nextUncompleted.id;
         }
-        showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Thẻ của Buổi #${id} đã được đưa vào lịch Anki!`);
+        showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã lưu tiến độ lên Cloud & đưa thẻ vào Anki!`);
       }
-      saveState();
+      saveState(true);
       buildSrsQueue();
       renderAll();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -632,16 +641,11 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         const cardId = delBtn.getAttribute("data-delete-card");
         state.customCards = state.customCards.filter((c) => c.id !== cardId);
         delete state.srsData[cardId];
-        saveState();
+        saveState(true);
         buildSrsQueue();
         renderAll();
         showToast("🗑️ Đã xóa thẻ tự tạo!");
       });
-    });
-
-    document.getElementById("session-note-input").addEventListener("input", (e) => {
-      state.notes[session.id] = e.target.value;
-      saveState();
     });
   }
 
@@ -1127,7 +1131,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
           reps: prevReps + 1,
           updatedAt: now
         };
-        saveState();
+        saveState(true);
 
         if (rate === "again") {
           // Move forgotten card to the end of today's queue so user reviews it again before finishing
@@ -1183,7 +1187,7 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
       rBtn.addEventListener("click", () => {
         const key = rBtn.getAttribute("data-reset-srs");
         delete state.srsData[key];
-        saveState();
+        saveState(true);
         buildSrsQueue();
         renderProgressBanner();
         renderSrsTab();
@@ -1287,7 +1291,6 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
 
   function renderAll() {
     renderProgressBanner();
-    renderFlowTimer();
     renderTodayLesson();
     renderCurriculumList(document.getElementById("curriculum-search")?.value || "");
     renderComparisonTab();
@@ -1305,10 +1308,6 @@ Hãy đóng vai gia sư AWS thực chiến và giúp tôi:
         switchTab(btn.getAttribute("data-tab"));
       });
     });
-
-    // Timer controls
-    document.getElementById("btn-timer-toggle").addEventListener("click", toggleTimer);
-    document.getElementById("btn-timer-reset").addEventListener("click", resetTimer);
 
     // Search curriculum
     const searchInput = document.getElementById("curriculum-search");
