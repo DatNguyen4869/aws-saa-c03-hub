@@ -349,13 +349,13 @@ Sơ đồ Chuyển tầng tự động (S3 Lifecycle Policy):
         content: "• <strong>Giới hạn Request mỗi Prefix</strong>: S3 tự động đáp ứng <strong>3,500 PUT/COPY/POST/DELETE và 5,500 GET/HEAD mỗi giây trên mỗi Prefix</strong>. Không giới hạn số lượng Prefix trong 1 Bucket.<br>• <strong>S3 Multipart Upload</strong>: Khuyên dùng cho file > 100 MB và <strong>bắt buộc cho file > 5 GB</strong>. Cắt file thành nhiều mảnh nhỏ gửi song song giúp tăng tốc độ upload.<br>• <strong>S3 Transfer Acceleration</strong>: Tăng tốc upload/download đường dài xuyên quốc gia bằng cách đưa file vào trạm <strong>CloudFront Edge Location</strong> gần nhất rồi chạy qua cáp quang nội bộ của AWS.<br>• <strong>S3 Byte-Range Fetches</strong>: Tải song song từng đoạn byte của file (tăng tốc độ Download) hoặc chỉ đọc vài chục byte đầu tiên của file."
       },
       {
-        title: "2. S3 Object Lambda (Tính năng cực kỳ hay xuất hiện trong đề SAA-C03 mới!)",
-        content: "Bài toán thực tế trong đề thi: <em>'Công ty có 1 S3 Bucket chứa dữ liệu khách hàng dùng chung cho nhiều phòng ban. Phòng Nghiên cứu khi tải file về thì phải bị ẩn đi các thông tin cá nhân (PII Redaction), hoặc ứng dụng Mobile tải ảnh về thì cần tự động resize ảnh nhỏ lại, nhưng công ty KHÔNG MUỐN tốn tiền lưu trữ nhiều bản sao của cùng 1 file trên S3.'</em><br>👉 <strong>Giải pháp chuẩn 100%</strong>: Sử dụng <strong>S3 Object Lambda (gắn hàm Lambda vào S3 Object Lambda Access Point)</strong> để tự động biến đổi dữ liệu ngay lúc file đang được tải về (Transform data on the fly during GET requests)!"
+        title: "2. S3 Object Lambda (Tính năng rất hay xuất hiện trong ngân hàng đề SAA-C03)",
+        content: "Bài toán thực tế trong đề thi: <em>'Công ty có 1 S3 Bucket chứa dữ liệu khách hàng dùng chung cho nhiều phòng ban. Phòng Nghiên cứu khi tải file về thì phải bị ẩn đi các thông tin cá nhân (PII Redaction), hoặc ứng dụng Mobile tải ảnh về thì cần tự động resize ảnh nhỏ lại, nhưng công ty KHÔNG MUỐN tốn tiền lưu trữ nhiều bản sao của cùng 1 file trên S3.'</em><br>👉 <strong>Giải pháp chuẩn 100% trong đề thi</strong>: Sử dụng <strong>S3 Object Lambda (gắn hàm Lambda vào S3 Object Lambda Access Point)</strong> để tự động biến đổi dữ liệu ngay lúc file đang được tải về (Transform data on the fly during GET requests)! <span class=\"fact-update\" data-since=\"2025-11\">Lưu ý cập nhật 11/2025: S3 Object Lambda đã chuyển sang chế độ bảo trì (maintenance mode / ngừng mở cho khách hàng mới), nhưng vẫn là đáp án chuẩn trong đề thi SAA-C03</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: S3 Object Lambda cho biến đổi dữ liệu trực tiếp trên lệnh GET</span>."
       }
     ],
     extraCards: [
       { q: "Tính năng nào cho phép tự động chạy code biến đổi nội dung file (ví dụ: che giấu dữ liệu nhạy cảm PII, giải nén, hoặc resize ảnh) ngay khi ứng dụng gọi lệnh GET tải file từ S3 mà không cần lưu trữ nhiều bản sao file?", a: "Amazon S3 Object Lambda." },
-      { q: "Khi cần lọc sự kiện S3 dựa trên nhiều thuộc tính phức tạp (kích thước file, metadata) hoặc gửi sự kiện S3 đồng thời tới AWS Step Functions và Kinesis Data Firehose, ta dùng tính năng gì?", a: "Bật tích hợp S3 Event Notifications với Amazon EventBridge." }
+      { q: "Khi cần lọc sự kiện S3 dựa trên nhiều thuộc tính phức tạp (kích thước file, metadata) hoặc gửi sự kiện S3 đồng thời tới AWS Step Functions và Amazon Data Firehose (Kinesis Data Firehose), ta dùng tính năng gì?", a: "Bật tích hợp S3 Event Notifications với Amazon EventBridge." }
     ],
     quizzes: [
       {
@@ -564,7 +564,7 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
     deepSections: [
       {
         title: "1. Ba vũ khí độc quyền của Amazon Aurora trong đề thi SAA-C03",
-        content: "• <strong>Kiến trúc lưu trữ 6 bản sao trên 3 AZ</strong>: Aurora tự động chia ổ đĩa thành các phân đoạn và lưu <strong>6 bản sao rải đều trên 3 Availability Zones</strong>. Chỉ cần 4/6 bản để Ghi và 3/6 bản để Đọc. Hỗ trợ tối đa <strong>15 Read Replicas</strong> và tất cả đều dùng chung tầng ổ đĩa dưới nên độ trễ nhân bản cực thấp (<10ms).<br>• <strong>Aurora Fast Database Cloning (Copy-on-Write protocol)</strong>: Khi đề bài nói <em>'Đội QA/Dev muốn tạo một bản sao của Database Production nặng 20 TB để chạy kiểm thử tải ngay lập tức với chi phí lưu trữ thấp nhất'</em> → Chọn ngay <strong>Aurora Database Cloning</strong> (nhanh hơn Snapshot Restore rất nhiều và không tốn tiền lưu trữ ban đầu!).<br>• <strong>Aurora Global Database</strong>: Nhân bản sang tới 5 Region phụ với độ trễ <strong>dưới 1 giây (< 1s)</strong> và thời gian khôi phục thảm họa toàn Region <strong>dưới 1 phút (RTO < 1 min)</strong>."
+        content: "• <strong>Kiến trúc lưu trữ 6 bản sao trên 3 AZ</strong>: Aurora tự động chia ổ đĩa thành các phân đoạn và lưu <strong>6 bản sao rải đều trên 3 Availability Zones</strong>. Chỉ cần 4/6 bản để Ghi và 3/6 bản để Đọc. Hỗ trợ tối đa <strong>15 Read Replicas</strong> và tất cả đều dùng chung tầng ổ đĩa dưới nên độ trễ nhân bản cực thấp (<10ms).<br>• <strong>Aurora Fast Database Cloning (Copy-on-Write protocol)</strong>: Khi đề bài nói <em>'Đội QA/Dev muốn tạo một bản sao của Database Production nặng 20 TB để chạy kiểm thử tải ngay lập tức với chi phí lưu trữ thấp nhất'</em> → Chọn ngay <strong>Aurora Database Cloning</strong> (nhanh hơn Snapshot Restore rất nhiều và không tốn tiền lưu trữ ban đầu!).<br>• <strong>Aurora Global Database</strong>: Nhân bản sang <span class=\"fact-update\" data-since=\"2024-05\">tối đa 10 Region phụ</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 5 Region phụ</span> với độ trễ <strong>dưới 1 giây (< 1s)</strong> và thời gian khôi phục thảm họa toàn Region <strong>dưới 1 phút (RTO < 1 min)</strong>."
       },
       {
         title: "2. Khi nào chọn RDS Proxy, RDS Custom và Aurora Serverless v2?",
@@ -665,11 +665,11 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
     diagram: `
 [Ứng dụng Java] ──(Dùng nguyên bộ SDK DynamoDB)──► [Cụm DAX (In-Memory Cache - Microseconds)] ──► [Bảng Amazon DynamoDB (3 AZ)]
    • Tải đều đặn, biết trước lưu lượng ──► Chọn [Provisioned Mode + Auto Scaling] (Tiết kiệm!)
-   • Tải thất thường, tăng vọt đột ngột ──► Chọn [On-Demand Mode (Pay-per-request)] (Không bao giờ bị lỗi Throttling!)`,
+   • Tải thất thường, tăng vọt đột ngột ──► Chọn [On-Demand Mode (Pay-per-request)] (Co giãn tức thì tới 2x đỉnh trước đó + Warm Throughput!)`,
     deepSections: [
       {
         title: "1. Khi nào chọn DynamoDB Provisioned Mode vs On-Demand Mode?",
-        content: "• <strong>Provisioned Mode (Kèm Auto Scaling)</strong>: Dùng khi lưu lượng truy cập <strong>ổn định, dự đoán được hoặc tăng giảm từ từ (Predictable / Steady traffic)</strong>. Có thể mua <em>DynamoDB Reserved Capacity</em> để giảm giá sâu hơn.<br>• <strong>On-Demand Mode</strong>: Dùng khi <strong>tải không thể dự đoán trước, ứng dụng mới ra mắt, hoặc có những đợt tăng vọt gấp hàng chục lần trong vài giây (Unpredictable / Spiky workloads)</strong>. Trả tiền theo từng lệnh đọc/ghi thực tế."
+        content: "• <strong>Provisioned Mode (Kèm Auto Scaling)</strong>: Dùng khi lưu lượng truy cập <strong>ổn định, dự đoán được hoặc tăng giảm từ từ (Predictable / Steady traffic)</strong>. Có thể mua <em>DynamoDB Reserved Capacity</em> để giảm giá sâu hơn.<br>• <strong>On-Demand Mode</strong>: Dùng khi <strong>tải không thể dự đoán trước, ứng dụng mới ra mắt, hoặc có những đợt tăng vọt gấp hàng chục lần trong vài giây (Unpredictable / Spiky workloads)</strong>. Trả tiền theo từng lệnh đọc/ghi thực tế. <span class=\"fact-update\" data-since=\"2024\">Lưu ý kỹ thuật: On-Demand tự động mở rộng tức thì tới <strong>gấp đôi (2×) mức đỉnh lưu lượng trước đó</strong> (nếu tăng vọt vượt quá 2× đỉnh cũ trong tích tắc vẫn có thể bị Throttling tạm thời — có thể chủ động cấu hình trước <strong>Warm Throughput</strong> cho các sự kiện Flash Sale đã biết)</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: On-Demand mở rộng tức thì không bị lỗi Throttling</span>."
       },
       {
         title: "2. Cách xử lý lỗi ProvisionedThroughputExceededException trong đề thi",
@@ -691,7 +691,7 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
           "D. Create a Local Secondary Index (LSI)."
         ],
         correctIdx: 0,
-        explanation: "DynamoDB On-Demand Mode có khả năng mở rộng tức thì (instantly scales) để đón các đợt lưu lượng tăng đột biến (spiky/unpredictable traffic) mà không bị lỗi Throttling và chỉ tính phí theo request thực tế."
+        explanation: "DynamoDB On-Demand Mode có khả năng mở rộng tức thì (instantly scales) để đón các đợt lưu lượng tăng đột biến (spiky/unpredictable traffic) và chỉ tính phí theo request thực tế."
       },
       {
         qEn: "A social media application stores celebrity posts in Amazon DynamoDB. When a celebrity posts an update, millions of users read that single item simultaneously, causing throttling on that specific partition key. How can the architect reduce read latency to microseconds and eliminate the hot key issue without changing application logic?",
@@ -730,7 +730,7 @@ So sánh các chế độ Khóa chống xóa trên S3 (S3 Object Lock):
     ],
     extraCards: [
       { q: "Bảng DynamoDB đã chạy được 6 tháng, nay lập trình viên muốn tạo thêm một chỉ mục phụ (Secondary Index) trên một cột mới để tăng tốc truy vấn mà không muốn tạo lại bảng. Phải dùng LSI hay GSI?", a: "Bắt buộc phải dùng GSI (Global Secondary Index), vì LSI chỉ có thể được tạo ngay lúc khởi tạo bảng mới." },
-      { q: "Làm thế nào để tự động lưu trữ (Archive) các bản ghi đã hết hạn trong bảng DynamoDB sang S3 Glacier với chi phí thấp nhất mà không tốn WCU?", a: "Bật DynamoDB TTL để tự xóa bản ghi hết hạn miễn phí -> Bật DynamoDB Streams để bắt sự kiện xóa của TTL -> Dùng AWS Lambda (hoặc Kinesis Firehose) đẩy bản ghi đó vào S3." },
+      { q: "Làm thế nào để tự động lưu trữ (Archive) các bản ghi đã hết hạn trong bảng DynamoDB sang S3 Glacier với chi phí thấp nhất mà không tốn WCU?", a: "Bật DynamoDB TTL để tự xóa bản ghi hết hạn miễn phí -> Bật DynamoDB Streams để bắt sự kiện xóa của TTL -> Dùng AWS Lambda (hoặc <span class=\"fact-update\" data-since=\"2024\">Amazon Data Firehose</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Kinesis Data Firehose</span>) đẩy bản ghi đó vào S3." },
       { q: "Tính năng nào của DynamoDB cho phép xuất toàn bộ dữ liệu bảng ra Amazon S3 (định dạng Parquet/JSON) để phân tích bằng Athena mà KHÔNG tiêu tốn bất kỳ đơn vị đọc (RCU) nào của bảng chính?", a: "DynamoDB Export to S3 (yêu cầu bật Point-in-Time Recovery - PITR)." }
     ],
     quizzes: [
@@ -781,12 +781,12 @@ Bản đồ Chọn Nhanh Database Chuyên Biệt trên AWS:
       },
       {
         title: "2. Nhận diện các hệ Database chuyên dụng qua từ khóa đề thi",
-        content: "• <strong>Amazon DocumentDB</strong>: Từ khóa <code>MongoDB compatibility, JSON documents</code>.<br>• <strong>Amazon Neptune</strong>: Từ khóa <code>Highly connected datasets, social networking, recommendation engines, fraud detection graphs, Knowledge graphs, Gremlin / SPARQL</code>.<br>• <strong>Amazon Timestream</strong>: Từ khóa <code>Time-series data, IoT sensor telemetry, operational metrics, trillions of events per day</code>.<br>• <strong>Amazon Keyspaces</strong>: Từ khóa <code>Managed Apache Cassandra, CQL (Cassandra Query Language)</code>.<br>• <strong>Amazon QLDB (Quantum Ledger Database)</strong>: Sổ cái bất biến có xác thực mật mã (Cryptographically verifiable transaction log) do 1 cơ quan trung ương quản lý (khác với <em>Amazon Managed Blockchain</em> là phi tập trung nhiều bên dùng Hyperledger Fabric / Ethereum)."
+        content: "• <strong>Amazon DocumentDB</strong>: Từ khóa <code>MongoDB compatibility, JSON documents</code>.<br>• <strong>Amazon Neptune</strong>: Từ khóa <code>Highly connected datasets, social networking, recommendation engines, fraud detection graphs, Knowledge graphs, Gremlin / SPARQL</code>.<br>• <strong>Amazon Timestream</strong>: Từ khóa <code>Time-series data, IoT sensor telemetry, operational metrics, trillions of events per day</code>.<br>• <strong>Amazon Keyspaces</strong>: Từ khóa <code>Managed Apache Cassandra, CQL (Cassandra Query Language)</code>.<br>• <strong>Amazon QLDB (Quantum Ledger Database)</strong>: Sổ cái bất biến có xác thực mật mã (Cryptographically verifiable transaction log) do 1 cơ quan trung ương quản lý (khác với <em>Amazon Managed Blockchain</em> là phi tập trung nhiều bên dùng Hyperledger Fabric / Ethereum). <span class=\"fact-update\" data-since=\"2025-07\">Lưu ý cập nhật: Amazon QLDB đã ngừng hỗ trợ (End of Support) vào 31/07/2025 (khuyến nghị chuyển sang Amazon Aurora PostgreSQL); tuy nhiên từ khóa Ledger database / Cryptographically verifiable journal vẫn có thể xuất hiện trong ngân hàng đề SAA-C03</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: chọn Amazon QLDB cho sổ cái tập trung bất biến</span>."
       }
     ],
     extraCards: [
       { q: "Công ty đang sử dụng Amazon Redshift làm Data Warehouse chính và muốn chạy truy vấn SQL kết hợp dữ liệu trong Redshift với 500 TB dữ liệu lịch sử lưu dưới dạng file Parquet trên S3 mà không cần nạp vào Redshift. Dùng tính năng gì?", a: "Amazon Redshift Spectrum." },
-      { q: "Khi đề bài yêu cầu một cơ sở dữ liệu Sổ cái (Ledger database) lưu lịch sử giao dịch tài chính bất biến, minh bạch và có thể kiểm chứng bằng mật mã học do một tổ chức trung tâm quản lý, ta chọn dịch vụ nào?", a: "Amazon QLDB (Quantum Ledger Database)." }
+      { q: "Khi đề bài yêu cầu một cơ sở dữ liệu Sổ cái (Ledger database) lưu lịch sử giao dịch tài chính bất biến, minh bạch và có thể kiểm chứng bằng mật mã học do một tổ chức trung tâm quản lý, ta chọn dịch vụ nào?", a: "Amazon QLDB (Quantum Ledger Database). <span class=\"fact-update\" data-since=\"2025-07\">(Lưu ý: QLDB hết hỗ trợ từ 31/07/2025 nhưng vẫn giữ trong bộ nhận diện câu hỏi thi SAA-C03)</span>" }
     ],
     quizzes: [
       {
@@ -876,12 +876,13 @@ Bản đồ Chọn Nhanh Database Chuyên Biệt trên AWS:
       { term: "Route 53 Calculated Health Checks", plain: "Gộp tối đa 255 Health Checks con thành 1 Health Check cha (ví dụ: Chỉ cần 2 trên 3 trạm kiểm tra báo sống thì coi như cả hệ thống vẫn đang sống)." }
     ],
     diagram: `
-Mẹo Chọn Nhanh 7 Chính Sách Điều Hướng Route 53:
+Mẹo Chọn Nhanh 8 Chính Sách Điều Hướng Route 53:
  ├── "Lowest latency / Fastest response time for users"         ──► Latency-based Routing
  ├── "Active-Passive Disaster Recovery / Backup static S3 page" ──► Failover Routing
  ├── "Test new version with 10% traffic / Blue-Green split"     ──► Weighted Routing
  ├── "Content licensing by Country / Local language / GDPR"     ──► Geolocation Routing
- └── "Shift traffic between two Regions by expanding radius"    ──► Geoproximity Routing (Bias)`,
+ ├── "Shift traffic between two Regions by expanding radius"    ──► Geoproximity Routing (Bias)
+ └── "Route by client CIDR / ISP network blocks"                ──► IP-based Routing`,
     deepSections: [
       {
         title: "1. Cách phân biệt không bao giờ nhầm giữa Latency, Geolocation và Geoproximity",

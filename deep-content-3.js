@@ -58,13 +58,13 @@ Chọn Nhanh 4 Anh Em Nhà Amazon FSx:
     jargon: [
       { term: "Hybrid Storage", plain: "Mô hình chân trong chân ngoài: Máy chủ vẫn đặt ở dưới tòa nhà công ty (On-premise), nhưng ổ cứng lưu trữ thì vươn lên đám mây S3 của AWS." },
       { term: "Cached Volumes vs Stored Volumes (Volume Gateway)", plain: "Cached = Toàn bộ dữ liệu gốc cất trên S3, dưới công ty chỉ giữ 1 phần nhỏ hay dùng làm bộ đệm. Stored = Toàn bộ dữ liệu gốc nằm ngay dưới ổ cứng công ty, đồng thời chụp EBS Snapshot gửi ngầm lên S3 để dự phòng." },
-      { term: "AWS Snowcone vs Snowball Edge vs Snowmobile", plain: "3 kích cỡ thiết bị chuyển dữ liệu vật lý: Snowcone = Cục ổ cứng nhỏ bỏ vừa balo (8-14 TB). Snowball Edge = Vali chống sốc (80 TB). Snowmobile = Nguyên chiếc xe đầu kéo container (100 PB)!" }
+      { term: "AWS Snowball Edge (và Snowcone / Snowmobile đã ngừng cung cấp)", plain: "Thiết bị chuyển dữ liệu vật lý: Snowball Edge = Vali chống sốc (80 TB Storage Optimized / Compute Optimized, ngừng nhận khách hàng mới từ 07/11/2025). Lưu ý: Snowcone (8–14 TB) và Snowmobile (100 PB) đã ngừng cung cấp (EOL), nhưng vẫn có thể xuất hiện trong câu hỏi đề thi." }
     ],
     diagram: `
 Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
  ├── Muốn máy chủ dưới On-premise mở file trên S3 qua NFS/SMB có Local Cache? ──► [AWS Storage Gateway - S3 File Gateway]
  ├── Muốn đồng bộ/di chuyển dữ liệu qua mạng Internet/DX nhanh gấp 10 lần?   ──► [AWS DataSync] (Giữ nguyên Metadata!)
- ├── Mạng Internet quá yếu mà cần bê 100 TB lên S3 trong 1 tuần?             ──► [AWS Snowball Edge] ──► [S3 Standard] ──(Lifecycle)──► [Glacier]
+ ├── Mạng Internet quá yếu mà cần bê 100 TB lên S3 trong 1 tuần?             ──► [AWS Snowball Edge (legacy/hiện hữu)] ──► [S3 Standard] ──(Lifecycle)──► [Glacier]
  └── Đối tác bên ngoài chỉ biết đẩy file qua giao thức SFTP / FTPS / FTP?    ──► [AWS Transfer Family] (Lưu thẳng vào S3/EFS!)`,
     deepSections: [
       {
@@ -73,13 +73,13 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
       },
       {
         title: "2. AWS DataSync vs Snowball Edge vs AWS Transfer Family",
-        content: "• <strong>AWS DataSync</strong>: Chọn khi công ty <strong>có sẵn đường truyền mạng đủ nhanh (Internet hoặc Direct Connect)</strong> và muốn di chuyển hoặc đồng bộ định kỳ hàng chục TB từ NAS (NFS/SMB) dưới On-premise lên S3, EFS hoặc FSx mà vẫn <strong>giữ nguyên thông tin quyền file (preserve file metadata & permissions)</strong> và kiểm soát giới hạn băng thông (bandwidth throttling).<br>• <strong>AWS Snowball Edge</strong>: Chọn khi <strong>băng thông mạng quá chậm (mất nhiều tháng nếu truyền qua mạng)</strong>. Nhớ bẫy kinh điển: <strong>Snowball KHÔNG chép thẳng vào Glacier được</strong>, phải chép vào S3 trước rồi dùng S3 Lifecycle chuyển xuống Glacier! Ngoài ra <em>Snowball Edge Compute Optimized</em> có thể chạy sẵn <strong>EC2 instances hoặc hàm Lambda ngay trên chiếc hộp</strong> ở những nơi không có mạng (tàu biển, giàn khoan, hầm mỏ).<br>• <strong>AWS Transfer Family</strong>: Dịch vụ quản lý hoàn toàn cho phép khách hàng dùng giao thức cũ <strong>SFTP, FTPS, FTP</strong> upload/download trực tiếp vào <strong>Amazon S3 hoặc Amazon EFS</strong>."
+        content: "• <strong>AWS DataSync</strong>: Chọn khi công ty <strong>có sẵn đường truyền mạng đủ nhanh (Internet hoặc Direct Connect)</strong> và muốn di chuyển hoặc đồng bộ định kỳ hàng chục TB từ NAS (NFS/SMB) dưới On-premise lên S3, EFS hoặc FSx mà vẫn <strong>giữ nguyên thông tin quyền file (preserve file metadata & permissions)</strong> và kiểm soát giới hạn băng thông (bandwidth throttling).<br>• <strong>AWS Snowball Edge</strong> (<span class=\"fact-update\" data-since=\"2025-11\">Snowcone và Snowmobile đã ngừng cung cấp (EOL); Snowball Edge ngừng nhận khách hàng mới từ 07/11/2025</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: chọn Snowcone / Snowball Edge / Snowmobile cho di chuyển dữ liệu ngoại tuyến</span>): Chọn trong đề thi khi <strong>băng thông mạng quá chậm (mất nhiều tháng nếu truyền qua mạng)</strong>. Nhớ bẫy kinh điển: <strong>Snowball KHÔNG chép thẳng vào Glacier được</strong>, phải chép vào S3 trước rồi dùng S3 Lifecycle chuyển xuống Glacier! Ngoài ra <em>Snowball Edge Compute Optimized</em> có thể chạy sẵn <strong>EC2 instances hoặc hàm Lambda ngay trên chiếc hộp</strong> ở những nơi không có mạng (tàu biển, giàn khoan, hầm mỏ).<br>• <strong>AWS Transfer Family</strong>: Dịch vụ quản lý hoàn toàn cho phép khách hàng dùng giao thức cũ <strong>SFTP, FTPS, FTP</strong> upload/download trực tiếp vào <strong>Amazon S3 hoặc Amazon EFS</strong>."
       }
     ],
     extraCards: [
       { q: "Công ty có 80 TB dữ liệu nằm trên máy chủ NAS (NFS) dưới On-premise và có sẵn đường truyền Direct Connect 10 Gbps nhàn rỗi. Công cụ nào giúp chép toàn bộ dữ liệu lên Amazon EFS nhanh nhất mà vẫn giữ nguyên toàn bộ quyền hạn và metadata của file?", a: "AWS DataSync." },
       { q: "Một ngân hàng cần cung cấp máy chủ SFTP có tính sẵn sàng cao để các đối tác tải báo cáo tài chính lên lưu trực tiếp vào Amazon S3 mà không muốn tự cài đặt hay quản lý máy chủ EC2. Chọn dịch vụ nào?", a: "AWS Transfer Family (AWS Transfer for SFTP)." },
-      { q: "Trên tàu nghiên cứu ngoài biển khơi không có kết nối Internet, các nhà khoa học cần một thiết bị phần cứng của AWS vừa lưu trữ được hàng chục TB dữ liệu vừa chạy được máy ảo EC2 tại chỗ (Edge computing) để tiền xử lý dữ liệu trước khi tàu cập cảng. Chọn thiết bị nào?", a: "AWS Snowball Edge Compute Optimized." }
+      { q: "Trên tàu nghiên cứu ngoài biển khơi không có kết nối Internet, các nhà khoa học cần một thiết bị phần cứng của AWS vừa lưu trữ được hàng chục TB dữ liệu vừa chạy được máy ảo EC2 tại chỗ (Edge computing) để tiền xử lý dữ liệu trước khi tàu cập cảng. Chọn thiết bị nào?", a: "AWS Snowball Edge Compute Optimized (lưu ý thực tế dịch vụ đã ngừng nhận khách mới từ 11/2025, nhưng trong đề thi SAA-C03 đây vẫn là đáp án chuẩn cho bài toán Edge computing ngoại tuyến)." }
     ],
     quizzes: [
       {
@@ -92,7 +92,7 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
           "D. Use S3 Transfer Acceleration."
         ],
         correctIdx: 1,
-        explanation: "Vì đường truyền 50 Mbps quá chậm cho 500 TB nên phải dùng thiết bị vật lý Snowball Edge. Tuy nhiên Snowball không thể nạp trực tiếp vào Glacier, mà phải nạp vào S3 trước rồi dùng S3 Lifecycle chuyển xuống Glacier Deep Archive."
+        explanation: "Vì đường truyền 50 Mbps quá chậm cho 500 TB nên trong đề thi chọn thiết bị vật lý Snowball Edge (lưu ý thực tế dòng Snow đã ngừng nhận khách mới từ 11/2025). Snowball không thể nạp trực tiếp vào Glacier, mà phải nạp vào S3 trước rồi dùng S3 Lifecycle chuyển xuống Glacier Deep Archive."
       },
       {
         qEn: "A hospital currently uses physical magnetic tapes and commercial backup software to archive patient records. The hospital wants to eliminate the cost of managing physical tapes by storing virtual tapes in Amazon S3 Glacier while continuing to use its existing tape backup software workflows without modification. Which solution meets this requirement?",
@@ -116,7 +116,7 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
       { term: "SQS Message Group ID (Trong FIFO Queue)", plain: "Giúp phân luồng xử lý song song mà vẫn giữ đúng thứ tự cho từng khách hàng: Ví dụ gán MessageGroupId = CustomerID, thì các đơn hàng của khách A luôn đi đúng thứ tự của khách A, nhưng đơn của khách A và khách B được nhiều máy EC2 xử lý song song cùng lúc!" }
     ],
     diagram: `
-[Tầng Web] ──(SendMessage)──► [Amazon SQS Queue (Lưu tối đa 14 ngày, Max 256KB/tin)]
+[Tầng Web] ──(SendMessage)──► [Amazon SQS Queue (Lưu tối đa 14 ngày, Max 1 MiB / 1,024 KB mỗi tin)]
                                      │
          ┌───────────────────────────┴───────────────────────────┐
          ▼ (Nếu lỗi quá 3 lần -> Đẩy sang rổ cách ly)            ▼ (Bật Long Polling 20s để tiết kiệm tiền)
@@ -124,7 +124,7 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
     deepSections: [
       {
         title: "1. Các con số giới hạn và tính năng cốt lõi của Amazon SQS trong đề thi",
-        content: "• <strong>Thời gian lưu giữ tin nhắn (Message Retention)</strong>: Mặc định 4 ngày, tối thiểu 1 phút, <strong>tối đa 14 ngày</strong>.<br>• <strong>Kích thước tối đa 1 tin nhắn</strong>: <strong>256 KB</strong>. Câu hỏi bẫy: <em>'Làm sao gửi một tin nhắn nặng 50 MB qua SQS?'</em> → Dùng thư viện <strong>SQS Extended Client Library for Java</strong> (nó tự động lưu cục dữ liệu 50 MB đó vào <strong>Amazon S3</strong>, rồi chỉ gửi một tin nhắn nhỏ chứa đường dẫn con trỏ S3 đi qua SQS!).<br>• <strong>SQS FIFO Queue</strong>: Đảm bảo đúng thứ tự (First-In-First-Out) và chống trùng lặp (Deduplication trong cửa sổ 5 phút). Mặc định xử lý 300 msg/s (hoặc 3,000 msg/s nếu gửi theo Batch; lên tới 70,000 msg/s nếu bật <em>High Throughput FIFO</em>). Nhớ: Dùng tham số <strong><code>MessageGroupId</code></strong> để gom nhóm thứ tự theo từng đối tượng!"
+        content: "• <strong>Thời gian lưu giữ tin nhắn (Message Retention)</strong>: Mặc định 4 ngày, tối thiểu 1 phút, <strong>tối đa 14 ngày</strong>.<br>• <strong>Kích thước tối đa 1 tin nhắn</strong>: <span class=\"fact-update\" data-since=\"2025-08\"><strong>1 MiB (1,024 KB)</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: 256 KB</span>. Câu hỏi bẫy: <em>'Làm sao gửi một tin nhắn nặng 50 MB qua SQS?'</em> → Dùng thư viện <strong>SQS Extended Client Library</strong> (nó tự động lưu cục dữ liệu 50 MB đó vào <strong>Amazon S3</strong>, rồi chỉ gửi một tin nhắn nhỏ chứa đường dẫn con trỏ S3 đi qua SQS!).<br>• <strong>SQS FIFO Queue</strong>: Đảm bảo đúng thứ tự (First-In-First-Out) và chống trùng lặp (Deduplication trong cửa sổ 5 phút). Mặc định xử lý 300 msg/s (hoặc 3,000 msg/s nếu gửi theo Batch; lên tới 70,000 msg/s nếu bật <em>High Throughput FIFO</em>). Nhớ: Dùng tham số <strong><code>MessageGroupId</code></strong> để gom nhóm thứ tự theo từng đối tượng!"
       },
       {
         title: "2. Cách cấu hình Auto Scaling cho dàn máy EC2 xử lý hàng đợi SQS (Câu hỏi kinh điển!)",
@@ -132,7 +132,7 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
       }
     ],
     extraCards: [
-      { q: "Giới hạn kích thước tối đa của 1 tin nhắn trên Amazon SQS là bao nhiêu KB? Nếu ứng dụng cần gửi các thông điệp lớn tới 100 MB qua SQS thì giải pháp chuẩn là gì?", a: "Giới hạn của SQS là 256 KB. Để gửi tin nhắn lớn tới 100 MB (tối đa 2 GB), dùng SQS Extended Client Library kết hợp với Amazon S3 (lưu nội dung lớn trên S3 và gửi metadata qua SQS)." },
+      { q: "Giới hạn kích thước tối đa của 1 tin nhắn trên Amazon SQS là bao nhiêu? Nếu ứng dụng cần gửi các thông điệp lớn tới 100 MB qua SQS thì giải pháp chuẩn là gì?", a: "Giới hạn của SQS là 1 MiB / 1,024 KB (<span class=\"exam-legacy\">Đề cũ có thể ghi: 256 KB</span>). Để gửi tin nhắn lớn tới 100 MB (tối đa 2 GB), dùng SQS Extended Client Library kết hợp với Amazon S3 (lưu nội dung lớn trên S3 và gửi metadata qua SQS)." },
       { q: "Khi thiết kế một cụm EC2 Auto Scaling Group chuyên xử lý các tác vụ lấy từ hàng đợi Amazon SQS, ta nên cấu hình ASG co giãn dựa trên chỉ số CloudWatch nào?", a: "Chỉ số 'ApproximateNumberOfMessagesVisible' của SQS (hoặc tỷ lệ Backlog per instance = Số tin nhắn tồn đọng chia cho số máy EC2 đang chạy)." },
       { q: "Trong SQS FIFO Queue, tham số bắt buộc nào được dùng để phân nhóm các tin nhắn cần giữ đúng thứ tự với nhau, đồng thời cho phép nhiều Consumer xử lý song song các nhóm khác nhau?", a: "MessageGroupId." }
     ],
@@ -159,7 +159,7 @@ Bản đồ Di chuyển & Kết nối Dữ liệu Hybrid:
           "D. Store all message payloads in Amazon Route 53."
         ],
         correctIdx: 1,
-        explanation: "Mọi hàng đợi SQS (cả Standard và FIFO) đều giới hạn cứng 256 KB mỗi tin nhắn. Dùng SQS Extended Client Library kết hợp S3 là cách chuẩn để xử lý tin nhắn từ 256 KB lên tới 2 GB."
+        explanation: "Mọi hàng đợi SQS (cả Standard và FIFO) đều giới hạn cứng 1 MiB (1,024 KB) mỗi tin nhắn (<span class=\"exam-legacy\">Đề cũ có thể ghi: 256 KB</span>). Dùng SQS Extended Client Library kết hợp S3 là cách chuẩn để xử lý tin nhắn vượt giới hạn này lên tới 2 GB."
       }
     ]
   },
@@ -197,7 +197,7 @@ Mô hình Fan-Out + Message Filtering chuẩn SAA-C03:
           "A. Create 3 separate SNS topics and modify the publisher application code.",
           "B. Configure an Amazon SNS Subscription Filter Policy (Message Filtering) on the Refund SQS queue subscription to only receive messages with the 'Canceled' attribute.",
           "C. Enable SQS Long Polling.",
-          "D. Switch to Amazon Kinesis Data Firehose."
+          "D. Switch to Amazon Data Firehose (Kinesis Data Firehose)."
         ],
         correctIdx: 1,
         explanation: "SNS Message Filtering (Subscription Filter Policy) cho phép lọc tin nhắn ngay tại tầng SNS dựa trên thuộc tính JSON trước khi đẩy xuống từng SQS Subscriber, không cần sửa code."
@@ -219,19 +219,19 @@ Mô hình Fan-Out + Message Filtering chuẩn SAA-C03:
 
   33: {
     jargon: [
-      { term: "Real-time (~200ms) vs Near Real-time (>= 60s)", plain: "Cặp từ khóa định đoạt 100% điểm số phần Kinesis: Hễ đề bài viết 'Real-time' -> Chọn Kinesis Data Streams. Hễ đề bài viết 'Near real-time' -> Chọn Kinesis Data Firehose!" },
+      { term: "Real-time (~200ms) vs Near Real-time (Buffer 0–900s)", plain: "Cặp từ khóa định đoạt 100% điểm số phần Streaming: Hễ đề bài viết 'Real-time / Replay' -> Chọn Kinesis Data Streams. Hễ đề bài viết 'Near real-time + nạp thẳng vào S3/Redshift/OpenSearch/Splunk' -> Chọn Amazon Data Firehose (trước đây là Kinesis Data Firehose, hỗ trợ buffer từ 0–900 giây; <span class=\"exam-legacy\">Đề cũ có thể ghi: &gt;= 60s</span>)!" },
       { term: "Shard (Trong Kinesis Data Streams)", plain: "Một làn đường cao tốc trong Kinesis: Mỗi Shard nhận vào tối đa 1 MB/giây (1,000 bản ghi/s) và cho đọc ra tối đa 2 MB/giây." },
       { term: "Apache Flink (Kinesis Data Analytics)", plain: "Công cụ chạy câu lệnh SQL hoặc code Java trực tiếp trên dòng nước dữ liệu đang chảy trong Kinesis (ví dụ: Tính trung bình nhiệt độ của cảm biến trong mỗi cửa sổ 5 phút vừa qua theo thời gian thực)." }
     ],
     diagram: `
-Phân biệt Bộ Ba Streaming của Amazon Kinesis:
+Phân biệt Bộ Ba Streaming của AWS:
  1. [Kinesis Data Streams]  ──► Real-time (~200ms), Lưu giữ dữ liệu 1 -> 365 ngày, Cho phép Tua lại (Replay)!
- 2. [Kinesis Data Firehose] ──► Near Real-time (>= 60s), Serverless, Đổ thẳng vào 4 đích: [S3] / [Redshift] / [OpenSearch] / [Splunk]
+ 2. [Amazon Data Firehose]  ──► Near Real-time (buffer 0–900s), Serverless, Đổ thẳng vào 4 đích: [S3] / [Redshift] / [OpenSearch] / [Splunk]
  3. [Managed Apache Flink]  ──► Phân tích thời gian thực (Real-time Analytics / Anomaly Detection) ngay trên dòng dữ liệu đang chảy!`,
     deepSections: [
       {
-        title: "1. So sánh chi tiết Kinesis Data Streams vs Kinesis Data Firehose",
-        content: "• <strong>Kinesis Data Streams</strong>:<br>  - Dành cho xử lý <strong>Thời gian thực (Real-time)</strong>.<br>  - Lưu trữ dữ liệu từ <strong>1 ngày đến 365 ngày</strong> → Có khả năng <strong>Replay (Phát lại dữ liệu cũ)</strong>.<br>  - Mỗi Shard có tốc độ Ghi <strong>1 MB/s (1,000 records/s)</strong> và tốc độ Đọc chia sẻ <strong>2 MB/s</strong> (hoặc bật <em>Enhanced Fan-Out</em> để mỗi ứng dụng đọc có riêng một đường ống 2 MB/s độc lập với độ trễ 70ms). Nếu bị lỗi <code>ProvisionedThroughputExceededException</code> do 1 khóa bị gửi quá nhiều → Dùng <em>Shard Splitting</em> hoặc đổi sang chế độ <em>On-Demand Mode</em>.<br>• <strong>Kinesis Data Firehose</strong>:<br>  - Dịch vụ nạp dữ liệu (Ingestion) hoàn toàn <strong>Serverless, tự động co giãn</strong>.<br>  - Độ trễ <strong>Near Real-time (gom buffer tối thiểu 60 giây hoặc tối thiểu 1 MB)</strong>.<br>  - Có thể gọi hàm <strong>AWS Lambda</strong> để biến đổi/làm sạch dữ liệu hoặc đổi định dạng JSON sang <strong>Apache Parquet / ORC</strong> trước khi đổ thẳng vào <strong>Amazon S3, Amazon Redshift, Amazon OpenSearch, hoặc HTTP Endpoints bên thứ 3 (Splunk, Datadog, New Relic)</strong>. <strong>KHÔNG lưu trữ để Replay!</strong>"
+        title: "1. So sánh chi tiết Kinesis Data Streams vs Amazon Data Firehose (Kinesis Data Firehose)",
+        content: "• <strong>Kinesis Data Streams</strong>:<br>  - Dành cho xử lý <strong>Thời gian thực (Real-time)</strong>.<br>  - Lưu trữ dữ liệu từ <strong>1 ngày đến 365 ngày</strong> → Có khả năng <strong>Replay (Phát lại dữ liệu cũ)</strong>.<br>  - Mỗi Shard có tốc độ Ghi <strong>1 MB/s (1,000 records/s)</strong> và tốc độ Đọc chia sẻ <strong>2 MB/s</strong> (hoặc bật <em>Enhanced Fan-Out</em> để mỗi ứng dụng đọc có riêng một đường ống 2 MB/s độc lập với độ trễ 70ms). Nếu bị lỗi <code>ProvisionedThroughputExceededException</code> do <strong>Hot Partition Key</strong> (1 khóa duy nhất nhận quá nhiều dữ liệu): vì một partition key luôn đi vào đúng một shard nên <strong>phải đổi sang partition key có độ phân tán cao (high cardinality) hoặc thêm hậu tố ngẫu nhiên (random suffix/prefix)</strong>; còn <em>Shard Splitting</em> hoặc <em>On-Demand Mode</em> chỉ giúp tăng tổng năng lực khi có nhiều partition key khác nhau cùng vượt tải.<br>• <span class=\"fact-update\" data-since=\"2024-02\"><strong>Amazon Data Firehose (trước đây là Kinesis Data Firehose)</strong></span>:<br>  - Dịch vụ nạp dữ liệu (Ingestion) hoàn toàn <strong>Serverless, tự động co giãn</strong>.<br>  - Độ trễ <strong>Near Real-time (<span class=\"fact-update\" data-since=\"2024-02\">buffer tùy chỉnh từ 0 đến 900 giây</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: gom buffer tối thiểu 60 giây hoặc tối thiểu 1 MB</span>)</strong>.<br>  - Có thể gọi hàm <strong>AWS Lambda</strong> để biến đổi/làm sạch dữ liệu hoặc đổi định dạng JSON sang <strong>Apache Parquet / ORC</strong> trước khi đổ thẳng vào <strong>Amazon S3, Amazon Redshift, Amazon OpenSearch, Apache Iceberg tables, hoặc HTTP Endpoints bên thứ 3 (Splunk, Datadog, New Relic)</strong>. <strong>KHÔNG lưu trữ để Replay!</strong>"
       },
       {
         title: "2. Khi nào chọn Amazon Managed Service for Apache Flink và khi nào chọn Amazon MQ?",
@@ -239,7 +239,7 @@ Phân biệt Bộ Ba Streaming của Amazon Kinesis:
       }
     ],
     extraCards: [
-      { q: "Kinesis Data Firehose có thể đẩy dữ liệu trực tiếp vào những dịch vụ đích (Destinations) nào của AWS?", a: "Amazon S3, Amazon Redshift (thông qua S3), Amazon OpenSearch Service, và các HTTP Endpoints tùy chỉnh/bên thứ 3 (Splunk, Datadog, MongoDB...)." },
+      { q: "Amazon Data Firehose (Kinesis Data Firehose) có thể đẩy dữ liệu trực tiếp vào những dịch vụ đích (Destinations) nào của AWS?", a: "Amazon S3, Amazon Redshift (thông qua S3), Amazon OpenSearch Service, Apache Iceberg tables (S3), và các HTTP Endpoints tùy chỉnh/bên thứ 3 (Splunk, Datadog, MongoDB...)." },
       { q: "Một Shard trong Kinesis Data Streams ở chế độ Provisioned hỗ trợ băng thông Ghi (Ingestion) và băng thông Đọc (Consumption) tối đa là bao nhiêu MB mỗi giây?", a: "Ghi tối đa 1 MB/giây (hoặc 1,000 bản ghi/giây) và Đọc chia sẻ tối đa 2 MB/giây trên mỗi Shard." },
       { q: "Dịch vụ nào cho phép chạy các câu lệnh phân tích thời gian thực (Real-time analytics) hoặc thuật toán phát hiện bất thường trực tiếp trên dòng dữ liệu đang chảy trong Kinesis Data Streams?", a: "Amazon Managed Service for Apache Flink (tiền thân là Amazon Kinesis Data Analytics)." }
     ],
@@ -249,12 +249,12 @@ Phân biệt Bộ Ba Streaming của Amazon Kinesis:
         qVi: "Công ty muốn thu thập dữ liệu click chuột từ website và nạp thẳng vào S3 Data Lake dưới định dạng Apache Parquet. Độ trễ từ 1 đến 2 phút (gần thời gian thực) là hoàn toàn chấp nhận được và công ty muốn giải pháp Serverless tốn ít công vận hành nhất. Chọn dịch vụ nào?",
         options: [
           "A. Amazon Kinesis Data Streams",
-          "B. Amazon Kinesis Data Firehose (with dynamic record format conversion to Parquet enabled)",
+          "B. Amazon Data Firehose (Kinesis Data Firehose) with dynamic record format conversion to Parquet enabled",
           "C. Amazon SQS FIFO",
           "D. Amazon MQ"
         ],
         correctIdx: 1,
-        explanation: "Từ khóa 'Near real-time (1-2 minutes) + Serverless + Load directly into S3 + Convert to Parquet' chỉ thẳng tới Amazon Kinesis Data Firehose."
+        explanation: "Từ khóa 'Near real-time (1-2 minutes) + Serverless + Load directly into S3 + Convert to Parquet' chỉ thẳng tới Amazon Data Firehose (trước đây là Amazon Kinesis Data Firehose)."
       },
       {
         qEn: "An enterprise is migrating a legacy Java application from on-premises to AWS. The application uses the Java Message Service (JMS) API and AMQP protocol to communicate with an on-premises ActiveMQ message broker. The company wants to migrate the message broker to a managed AWS service without rewriting the application code. Which service should be used?",
@@ -630,7 +630,7 @@ Luồng đi của Gói tin qua 2 lớp Tường lửa (NACL vs Security Group):
       },
       {
         title: "2. Ba công cụ Chẩn đoán & Giám sát Mạng VPC: Flow Logs, Reachability Analyzer & Traffic Mirroring",
-        content: "• <strong>VPC Flow Logs</strong>: Ghi lại metadata của các kết nối mạng (IP nguồn, IP đích, Cổng, Giao thức, và trạng thái <strong><code>ACCEPT</code> hay <code>REJECT</code></strong>) ở cấp độ VPC, Subnet hoặc ENI. Có thể đẩy thẳng vào <strong>S3 (phân tích bằng Athena)</strong>, <strong>CloudWatch Logs</strong>, hoặc <strong>Kinesis Data Firehose</strong>.<br>• <strong>VPC Reachability Analyzer</strong>: Khi đề bài nói <em>'Hai máy EC2 không kết nối được với nhau, kỹ sư muốn kiểm tra tự động toàn bộ cấu hình Route Tables, Security Groups và NACLs dọc đường đi để chỉ ra chính xác chỗ nào bị cấu hình sai mà không cần gửi gói tin thực tế'</em> → Chọn <strong>VPC Reachability Analyzer</strong>!<br>• <strong>VPC Traffic Mirroring</strong>: Sao chép nguyên vẹn nội dung gói tin mạng (Full packet capture) từ card mạng ENI của máy EC2 đẩy sang một thiết bị phân tích bảo mật hoặc <em>Gateway Load Balancer</em> để dò tìm mã độc."
+        content: "• <strong>VPC Flow Logs</strong>: Ghi lại metadata của các kết nối mạng (IP nguồn, IP đích, Cổng, Giao thức, và trạng thái <strong><code>ACCEPT</code> hay <code>REJECT</code></strong>) ở cấp độ VPC, Subnet hoặc ENI. Có thể đẩy thẳng vào <strong>S3 (phân tích bằng Athena)</strong>, <strong>CloudWatch Logs</strong>, hoặc <strong>Amazon Data Firehose (trước đây là Kinesis Data Firehose)</strong>.<br>• <strong>VPC Reachability Analyzer</strong>: Khi đề bài nói <em>'Hai máy EC2 không kết nối được với nhau, kỹ sư muốn kiểm tra tự động toàn bộ cấu hình Route Tables, Security Groups và NACLs dọc đường đi để chỉ ra chính xác chỗ nào bị cấu hình sai mà không cần gửi gói tin thực tế'</em> → Chọn <strong>VPC Reachability Analyzer</strong>!<br>• <strong>VPC Traffic Mirroring</strong>: Sao chép nguyên vẹn nội dung gói tin mạng (Full packet capture) từ card mạng ENI của máy EC2 đẩy sang một thiết bị phân tích bảo mật hoặc <em>Gateway Load Balancer</em> để dò tìm mã độc."
       }
     ],
     extraCards: [
@@ -733,7 +733,7 @@ Kiến trúc Kết nối Hybrid Đỉnh Cao (Direct Connect + Transit Gateway + 
     deepSections: [
       {
         title: "1. Ba câu hỏi bẫy kinh điển về AWS Direct Connect (DX) trong đề thi",
-        content: "• <strong>Bẫy 1 - Thời gian triển khai</strong>: Nếu đề bài nói <em>'Công ty cần chuyển 50 TB dữ liệu lên AWS ngay trong tuần này (hoặc cần kết nối Hybrid hoạt động ngay ngày mai)'</em> → <strong>LOẠI NGAY Direct Connect</strong> (vì kéo cáp vật lý mất tối thiểu vài tuần!). Hãy chọn <strong>AWS Site-to-Site VPN</strong> (hoặc <em>Snowball Edge</em>).<br>• <strong>Bẫy 2 - Mã hóa dữ liệu (Encryption in transit)</strong>: Direct Connect là đường cáp riêng tư nhưng <strong>mặc định KHÔNG ĐƯỢC MÃ HÓA</strong>. Để mã hóa dữ liệu đi trên Direct Connect → Thiết lập một đường hầm <strong>AWS Site-to-Site VPN (IPsec) chạy bên trên kết nối Direct Connect ( عبر Transit VIF hoặc Public VIF)</strong> (hoặc dùng <em>MACsec</em> ở Layer 2 cho kết nối Dedicated 10G/100G).<br>• <strong>Bẫy 3 - Tính sẵn sàng cao (Resiliency) của Direct Connect</strong>:<br>  - Muốn đạt độ tin cậy <strong>99.9% (High Resiliency)</strong>: Cần <strong>2 kết nối Direct Connect ở 2 địa điểm (Locations) khác nhau</strong>.<br>  - Muốn đạt độ tin cậy tối đa <strong>99.99% (Maximum Resiliency)</strong>: Cần <strong>4 kết nối Direct Connect đặt tại 2 địa điểm khác nhau (mỗi địa điểm 2 sợi cáp độc lập)</strong>.<br>  - Còn nếu đề bài hỏi phương án <strong>Dự phòng (Backup failover) tiết kiệm chi phí nhất (Most cost-effective)</strong> cho 1 đường Direct Connect → Luôn chọn <strong>AWS Site-to-Site VPN làm đường dự phòng</strong>!"
+        content: "• <strong>Bẫy 1 - Thời gian triển khai</strong>: Nếu đề bài nói <em>'Công ty cần chuyển 50 TB dữ liệu lên AWS ngay trong tuần này (hoặc cần kết nối Hybrid hoạt động ngay ngày mai)'</em> → <strong>LOẠI NGAY Direct Connect</strong> (vì kéo cáp vật lý mất tối thiểu vài tuần!). Hãy chọn <strong>AWS Site-to-Site VPN</strong> (hoặc <em>Snowball Edge</em> trong câu hỏi đề thi — <span class=\"fact-update\" data-since=\"2025-11\">Snowball Edge ngừng nhận khách mới từ 07/11/2025</span>).<br>• <strong>Bẫy 2 - Mã hóa dữ liệu (Encryption in transit)</strong>: Direct Connect là đường cáp riêng tư nhưng <strong>mặc định KHÔNG ĐƯỢC MÃ HÓA</strong>. Để mã hóa dữ liệu đi trên Direct Connect → Thiết lập một đường hầm <strong>AWS Site-to-Site VPN (IPsec) chạy bên trên kết nối Direct Connect (qua Transit VIF hoặc Public VIF)</strong> (hoặc dùng <em>MACsec</em> ở Layer 2 cho kết nối Dedicated 10G/100G).<br>• <strong>Bẫy 3 - Tính sẵn sàng cao (Resiliency) của Direct Connect</strong>:<br>  - Muốn đạt độ tin cậy <strong>99.9% (High Resiliency)</strong>: Cần <strong>2 kết nối Direct Connect ở 2 địa điểm (Locations) khác nhau</strong>.<br>  - Muốn đạt độ tin cậy tối đa <strong>99.99% (Maximum Resiliency)</strong>: Cần <strong>4 kết nối Direct Connect đặt tại 2 địa điểm khác nhau (mỗi địa điểm 2 sợi cáp độc lập)</strong>.<br>  - Còn nếu đề bài hỏi phương án <strong>Dự phòng (Backup failover) tiết kiệm chi phí nhất (Most cost-effective)</strong> cho 1 đường Direct Connect → Luôn chọn <strong>AWS Site-to-Site VPN làm đường dự phòng</strong>!"
       },
       {
         title: "2. AWS Transit Gateway (TGW) & Tăng gấp đôi băng thông VPN bằng ECMP",

@@ -81,7 +81,7 @@ Bảng Ghép Cặp Nhanh 10 Dịch Vụ AI/ML Trong Đề Thi SAA-C03:
       },
       {
         title: "2. Các dịch vụ AI chuyên biệt: Kendra, Personalize, Forecast & Fraud Detector",
-        content: "• <strong>Amazon Kendra</strong>: Công cụ tìm kiếm thông minh trong doanh nghiệp (Enterprise Search) dùng ML kết nối vào S3, SharePoint, Salesforce, Confluence để nhân viên gõ câu hỏi tự nhiên như <em>'Quy định nghỉ phép thai sản của công ty là gì?'</em> và nhận ngay đoạn trả lời chính xác.<br>• <strong>Amazon Personalize</strong>: Xây dựng hệ thống <strong>Gợi ý sản phẩm thời gian thực (Real-time personalized recommendations)</strong>.<br>• <strong>Amazon Forecast</strong>: Dự báo chuỗi thời gian (dự báo nhu cầu hàng tồn kho, doanh số, tài nguyên).<br>• <strong>Amazon Fraud Detector</strong>: Phát hiện gian lận trực tuyến (tạo tài khoản ảo, thanh toán thẻ chùa)."
+        content: "• <strong>Amazon Kendra</strong>: Công cụ tìm kiếm thông minh trong doanh nghiệp (Enterprise Search) dùng ML kết nối vào S3, SharePoint, Salesforce, Confluence để nhân viên gõ câu hỏi tự nhiên như <em>'Quy định nghỉ phép thai sản của công ty là gì?'</em> và nhận ngay đoạn trả lời chính xác.<br>• <strong>Amazon Personalize</strong>: Xây dựng hệ thống <strong>Gợi ý sản phẩm thời gian thực (Real-time personalized recommendations)</strong>.<br>• <strong>Amazon Forecast</strong> (<span class=\"fact-update\" data-since=\"2024-07\">đã đóng đăng ký với khách hàng mới từ 29/07/2024 — dùng SageMaker Canvas / Amazon Chronos</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: chọn Amazon Forecast cho bài toán dự báo chuỗi thời gian</span>): Dự báo chuỗi thời gian (dự báo nhu cầu hàng tồn kho, doanh số, tài nguyên).<br>• <strong>Amazon Fraud Detector</strong> (<span class=\"fact-update\" data-since=\"2025-11\">đã đóng đăng ký với khách hàng mới từ 07/11/2025</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: chọn Amazon Fraud Detector cho phát hiện gian lận trực tuyến</span>): Phát hiện gian lận trực tuyến (tạo tài khoản ảo, thanh toán thẻ chùa)."
       }
     ],
     extraCards: [
@@ -456,7 +456,7 @@ Tự Động Hóa Hạ Tầng & Tối Ưu Hóa Chi Phí:
     diagram: `
 Sơ đồ Phản Xạ 5 Giây Nhóm Storage & Database:
  [Storage]
-  ├── 1 máy EC2 + Cần > 16,000 IOPS hoặc Multi-Attach cùng 1 AZ? ──► EBS io1/io2
+  ├── 1 máy EC2 + Cần <= 80,000 IOPS / 2,000 MiB/s?              ──► EBS gp3 (Nếu > 80,000 IOPS hoặc Multi-Attach cùng 1 AZ ──► EBS io1/io2)
   ├── Nhiều máy Linux + Đa AZ (Multi-AZ) + POSIX?                ──► Amazon EFS (+ EFS-IA tiết kiệm 90%)
   ├── Nhiều máy Windows + SMB + Active Directory?                ──► FSx for Windows File Server
   ├── Siêu máy tính HPC + Machine Learning + Gắn liền S3?        ──► FSx for Lustre
@@ -464,7 +464,7 @@ Sơ đồ Phản Xạ 5 Giây Nhóm Storage & Database:
     deepSections: [
       {
         title: "1. Tổng hợp các bẫy kinh điển nhất giữa các dịch vụ Lưu trữ (Storage)",
-        content: "• <strong>Bẫy EBS vs EFS</strong>: Nếu đề bài có từ <em>'Multiple EC2 instances across multiple Availability Zones sharing files'</em> → <strong>Gạch bỏ ngay mọi đáp án có chữ EBS</strong> (kể cả EBS Multi-Attach vì EBS Multi-Attach chỉ chạy trong <strong>1 AZ duy nhất</strong>!). Hãy chọn <strong>Amazon EFS</strong> (cho Linux) hoặc <strong>FSx for Windows</strong>.<br>• <strong>Bẫy S3 Storage Classes</strong>:<br>  - Tần suất truy cập không biết trước / thay đổi thất thường → <strong>S3 Intelligent-Tiering</strong>.<br>  - Ít truy cập + Có thể tạo lại dễ dàng (Thumbnails) → <strong>S3 One Zone-IA</strong>.<br>  - Lưu trữ lạnh hiếm khi đọc nhưng khi cần phải lấy ra trong <strong>mili-giây</strong> → <strong>S3 Glacier Instant Retrieval</strong>.<br>  - Lưu trữ lạnh lấy ra trong <strong>1–5 phút</strong> → <strong>S3 Glacier Flexible Retrieval (Expedited)</strong>."
+        content: "• <strong>Bẫy EBS vs EFS</strong>: Nếu đề bài có từ <em>'Multiple EC2 instances across multiple Availability Zones sharing files'</em> → <strong>Gạch bỏ ngay mọi đáp án có chữ EBS</strong> (kể cả EBS Multi-Attach vì EBS Multi-Attach chỉ chạy trong <strong>1 AZ duy nhất</strong>!). Hãy chọn <strong>Amazon EFS</strong> (cho Linux) hoặc <strong>FSx for Windows</strong>.<br>• <strong>Bẫy EBS gp3 vs io1/io2</strong>: <span class=\"fact-update\" data-since=\"2024-01\">EBS gp3 hỗ trợ tối đa 80,000 IOPS và 2,000 MiB/s</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: gp3 tối đa 16,000 IOPS / 1,000 MB/s; &gt; 16,000 IOPS chọn io1/io2</span>.<br>• <strong>Bẫy S3 Storage Classes</strong>:<br>  - Tần suất truy cập không biết trước / thay đổi thất thường → <strong>S3 Intelligent-Tiering</strong>.<br>  - Ít truy cập + Có thể tạo lại dễ dàng (Thumbnails) → <strong>S3 One Zone-IA</strong>.<br>  - Lưu trữ lạnh hiếm khi đọc nhưng khi cần phải lấy ra trong <strong>mili-giây</strong> → <strong>S3 Glacier Instant Retrieval</strong>.<br>  - Lưu trữ lạnh lấy ra trong <strong>1–5 phút</strong> → <strong>S3 Glacier Flexible Retrieval (Expedited)</strong>."
       },
       {
         title: "2. Tổng hợp các bẫy kinh điển nhất giữa các dịch vụ Database",
@@ -498,7 +498,7 @@ Sơ đồ Phản Xạ 5 Giây Nhóm Storage & Database:
           "D. Amazon Redshift"
         ],
         correctIdx: 1,
-        explanation: "Amazon Aurora Global Database nhân bản dữ liệu sang tối đa 5 Regions phụ với độ trễ dưới 1 giây (<1s) và hỗ trợ khôi phục thảm họa toàn Region với RTO dưới 1 phút."
+        explanation: "Amazon Aurora Global Database nhân bản dữ liệu sang <span class=\"fact-update\" data-since=\"2024-05\">tối đa 10 Regions phụ</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 5 Regions phụ</span> với độ trễ dưới 1 giây (<1s) và hỗ trợ khôi phục thảm họa toàn Region với RTO dưới 1 phút."
       }
     ]
   },
@@ -567,7 +567,7 @@ Bảng Chọn Nhanh Công Cụ Tính Toán & Bất Đồng Bộ:
  ├── Tác vụ chạy Docker Container dài hạn (> 15 phút), Serverless?  ──► [ECS với AWS Fargate] (Hoặc [AWS Batch] cho xử lý lô)
  ├── Điều phối chuỗi nhiều bước, tự động Retry, chờ duyệt 1 năm?    ──► [AWS Step Functions]
  ├── Gửi 1 sự kiện cho 5 dịch vụ xử lý độc lập không mất tin?       ──► [1 SNS Topic + 5 SQS Queues (Fan-out)]
- └── Thu thập dòng dữ liệu đổ thẳng vào S3/Redshift/OpenSearch?     ──► [Kinesis Data Firehose]`,
+ └── Thu thập dòng dữ liệu đổ thẳng vào S3/Redshift/OpenSearch?     ──► [Amazon Data Firehose (Kinesis Data Firehose)]`,
     deepSections: [
       {
         title: "1. Tổng duyệt các câu hỏi So sánh nhóm Decoupling & Messaging",
@@ -613,13 +613,13 @@ Bảng Chọn Nhanh Công Cụ Tính Toán & Bất Đồng Bộ:
     ],
     diagram: `
 Tổng Kết Sơ Đồ Bảo Mật & Quản Trị Toàn Diện:
- [Quản trị Đa tài khoản] : AWS Organizations + SCP (Cấm vượt rào) + Control Tower + AWS RAM (Chia sẻ Subnet/TGW)
- [Mã hóa & Mật khẩu]     : KMS (FIPS 140-2 L2, Xoay vòng 1 năm) vs CloudHSM (Dedicated L3) | Secrets Manager (Xoay vòng mật khẩu DB)
+ [Quản trị Đa tài khoản] : AWS Organizations + SCP/RCP + Control Tower + AWS RAM (Chia sẻ Subnet/TGW)
+ [Mã hóa & Mật khẩu]     : KMS (FIPS 140-3 L3, Xoay vòng 90–2,560 ngày) vs CloudHSM (Single-tenant Dedicated HSM) | Secrets Manager (Xoay vòng mật khẩu DB)
  [Giám sát & Phát hiện]  : CloudWatch (RAM/Disk qua Agent) | CloudTrail (Ai gọi API?) | Config (Tuân thủ) | GuardDuty (AI bắt hacker)`,
     deepSections: [
       {
         title: "1. Tổng duyệt các câu hỏi Bẫy Bảo mật dễ mất điểm nhất",
-        content: "• <strong>KMS vs CloudHSM</strong>: 99% câu hỏi chọn <strong>AWS KMS</strong>. Chỉ chọn <strong>CloudHSM</strong> khi đề bài nói rõ <em>'Dedicated single-tenant hardware security module, FIPS 140-2 Level 3, full customer control over keys where AWS has zero access'</em>.<br>• <strong>Secrets Manager vs Parameter Store</strong>: Cần <strong>tự động xoay vòng mật khẩu DB</strong> → Chọn <strong>Secrets Manager</strong>. Cần lưu tham số cấu hình <strong>miễn phí</strong> → Chọn <strong>SSM Parameter Store</strong>.<br>• <strong>Macie vs GuardDuty vs Inspector</strong>: Tìm dữ liệu nhạy cảm PII trên S3 → <strong>Macie</strong>. Phân tích log tìm hacker/đào coin → <strong>GuardDuty</strong>. Quét lỗ hổng CVE trên EC2/ECR/Lambda → <strong>Inspector</strong>."
+        content: "• <strong>KMS vs CloudHSM</strong>: 99% câu hỏi chọn <strong>AWS KMS</strong> (<span class=\"fact-update\" data-since=\"2024-06\">KMS HSM đạt chuẩn FIPS 140-3 Level 3 và hỗ trợ xoay vòng khóa tùy chỉnh 90–2,560 ngày</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: KMS là FIPS 140-2 Level 2 hoặc chọn CloudHSM chỉ vì chữ FIPS 140-2 Level 3</span>). Chỉ chọn <strong>CloudHSM</strong> khi đề bài nói rõ <em>'Dedicated single-tenant hardware security module (HSM), full customer control over keys where AWS has zero access, PKCS#11 / JCE / CNG, or custom Oracle TDE / SSL offload'</em>.<br>• <strong>Secrets Manager vs Parameter Store</strong>: Cần <strong>tự động xoay vòng mật khẩu DB</strong> → Chọn <strong>Secrets Manager</strong>. Cần lưu tham số cấu hình <strong>miễn phí</strong> → Chọn <strong>SSM Parameter Store</strong>.<br>• <strong>Macie vs GuardDuty vs Inspector</strong>: Tìm dữ liệu nhạy cảm PII trên S3 → <strong>Macie</strong>. Phân tích log tìm hacker/đào coin → <strong>GuardDuty</strong>. Quét lỗ hổng CVE trên EC2/ECR/Lambda → <strong>Inspector</strong>."
       }
     ],
     extraCards: [
@@ -757,7 +757,7 @@ Chiến Thuật 3 Bước Giải Quyết Mọi Câu Hỏi Dài Trong Đề Thi S
       s.deepSections = s.deepSections || [
         {
           title: "Hướng dẫn thực hành 60 phút cho Buổi Luyện Đề hôm nay",
-          content: "1. Mở kho đề miễn phí tại tab <strong>🎁 Kho Đề & Tài Liệu Free</strong> (DevCloudly / ಕಾಣ ExamTopics / Dumps) và làm đúng <strong>16 câu tiếp theo</strong> theo tiến độ của buổi này.<br>2. Áp dụng kỹ thuật <strong>Đọc câu hỏi cuối cùng trước</strong> để bắt từ khóa (<em>Most cost-effective, Least operational overhead, Highest availability</em>).<br>3. Với bất kỳ câu nào bạn chọn sai hoặc phân vân giữa 2 đáp án: Hãy bấm nút <strong>➕ Thêm Thẻ Mới Vào Web</strong> ngay bên dưới để biến kiến thức đó thành thẻ Spaced Repetition!"
+          content: "1. Mở kho đề miễn phí tại tab <strong>🎁 Kho Đề & Tài Liệu Free</strong> (Tutorials Dojo / AWS Skill Builder Official Practice Question Set / Cloud Exam Pro / DevCloudly) và làm đúng <strong>16 câu tiếp theo</strong> theo tiến độ của buổi này.<br>2. Áp dụng kỹ thuật <strong>Đọc câu hỏi cuối cùng trước</strong> để bắt từ khóa (<em>Most cost-effective, Least operational overhead, Highest availability</em>).<br>3. Với bất kỳ câu nào bạn chọn sai hoặc phân vân giữa 2 đáp án: Hãy bấm nút <strong>➕ Thêm Thẻ Mới Vào Web</strong> ngay bên dưới để biến kiến thức đó thành thẻ Spaced Repetition!"
         }
       ];
     }

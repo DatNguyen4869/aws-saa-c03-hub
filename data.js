@@ -103,11 +103,11 @@ window.STUDY_DATA = {
       id: 5, phase: 1, section: "Section 6 • Bài 50 → 55",
       title: "Các hình thức mua EC2 (EC2 Purchasing Options)",
       mode: "Đọc Slide + Hỏi AI",
-      javaAnalogy: "Giống như thuê phòng khách sạn: On-Demand là thuê theo giờ giá cao; Reserved/Savings Plans là ký hợp đồng thuê nhà 1-3 năm giá rẻ; Spot là đấu giá phòng trống giờ chót giá siêu rẻ nhưng chủ nhà có thể đuổi ra nếu có khách trả giá cao hơn.",
+      javaAnalogy: "Giống như thuê phòng khách sạn: On-Demand là thuê theo giờ giá cao; Reserved/Savings Plans là ký hợp đồng thuê nhà 1-3 năm giá rẻ; Spot là thuê phòng trống giờ chót giá siêu rẻ (giảm tới 90%) nhưng chủ nhà có thể thu hồi lại phòng bất cứ lúc nào (báo trước 2 phút) khi khách sạn cần lại phòng cho khách chính thức.",
       corePoints: [
         "<strong>On-Demand</strong>: Không cam kết, trả tiền theo giây (Linux/Windows). Dùng cho workload ngắn hạn, chưa đoán được tải.",
         "<strong>Reserved Instances (RI) & Savings Plans</strong>: Cam kết 1 hoặc 3 năm (tiết kiệm tới 72%). Dùng cho tải <strong>Steady-state (chạy ổn định 24/7)</strong> như Database chính. <em>Convertible RI</em> cho phép đổi loại máy; <em>Savings Plans</em> cam kết theo số tiền $/giờ linh hoạt nhất.",
-        "<strong>Spot Instances</strong>: Rẻ nhất (giảm tới 90%), nhưng <strong>bị thu hồi bất cứ lúc nào (báo trước 2 phút)</strong> nếu giá thị trường vượt mức trần. Dùng cho: Batch jobs, xử lý dữ liệu phụ, CI/CD, stateless workers.",
+        "<strong>Spot Instances</strong>: Rẻ nhất (giảm tới 90%), <span class=\"fact-update\" data-since=\"2018\">không còn cơ chế đấu giá (bidding) — bị thu hồi (báo trước 2 phút) khi AWS cần lấy lại dung lượng tính toán (capacity) hoặc khi giá vượt mức max price tùy chọn</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: đấu giá / bị thu hồi khi người khác trả giá cao hơn</span>. Dùng cho: Batch jobs, xử lý dữ liệu phụ, CI/CD, stateless workers.",
         "<strong>Dedicated Hosts</strong>: Thuê nguyên cả tủ server vật lý. Dùng cho bài toán <strong>BYOL (Bring Your Own License - bản quyền Windows/Oracle tính theo số lõi CPU vật lý)</strong> hoặc yêu cầu Compliance nghiêm ngặt.",
         "<strong>Capacity Reservations</strong>: Giữ chỗ trước số lượng máy ở 1 AZ cụ thể để đảm bảo luôn bật được máy khi cần (dù máy đang tắt vẫn trả tiền giữ chỗ)."
       ],
@@ -128,7 +128,7 @@ window.STUDY_DATA = {
       mode: "Đọc Slide + Hỏi AI",
       javaAnalogy: "Placement Groups giúp bạn chỉ định cho AWS biết nên xếp các máy chủ ảo nằm chung 1 tủ rack để truyền mạng siêu tốc, hay xếp cách xa nhau ra nhiều tủ rack để tránh chết chùm khi chập điện.",
       corePoints: [
-        "<strong>Elastic IP (EIP)</strong>: Địa chỉ IPv4 công cộng cố định. Miễn phí nếu đang gắn vào 1 máy EC2 đang chạy; nhưng <strong>BỊ TÍNH PHÍ nếu giữ EIP mà không gắn vào máy nào hoặc gắn vào máy đang Stop</strong> (mặc định mỗi Region chỉ cho tối đa 5 EIP).",
+        "<strong>Elastic IP (EIP)</strong>: Địa chỉ IPv4 công cộng cố định (mặc định mỗi Region tối đa 5 EIP). <span class=\"fact-update\" data-since=\"2024-02\">Từ 02/2024, AWS tính phí ~$0.005/giờ cho MỌI địa chỉ Public IPv4 (kể cả EIP đang gắn vào EC2 đang chạy lẫn EIP chưa gắn hoặc gắn vào máy Stopped)</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Miễn phí nếu đang gắn vào 1 máy EC2 đang chạy; chỉ bị tính phí nếu không gắn hoặc gắn vào máy đang Stop</span>.",
         "<strong>3 loại EC2 Placement Groups</strong>:",
         "1. <strong>Cluster</strong>: Gom toàn bộ máy vào chung 1 Rack trong 1 AZ → Mạng nội bộ cực nhanh (10 Gbps, Low-latency, <strong>HPC - High Performance Computing</strong>). Rủi ro: Sập rack là chết hết.",
         "2. <strong>Spread</strong>: Mỗi máy nằm trên 1 phần cứng tách biệt hoàn toàn. Giới hạn cứng: <strong>Tối đa 7 instances / mỗi AZ</strong>. Dùng cho các máy cực kỳ quan trọng (Critical instances).",
@@ -142,7 +142,7 @@ window.STUDY_DATA = {
       freeDocUrl: "https://tutorialsdojo.com/amazon-elastic-compute-cloud-amazon-ec2/",
       cards: [
         { q: "Phân biệt 3 loại EC2 Placement Groups: Cluster, Spread và Partition?", a: "Cluster: Chung 1 AZ, mạng 10Gbps cực nhanh cho HPC. Spread: Khác phần cứng, tối đa 7 máy/AZ cho app tối quan trọng. Partition: Chia theo rack cho Big Data (Kafka, Hadoop, Cassandra)." },
-        { q: "Khi nào bạn bị AWS tính phí cho một địa chỉ Elastic IP (EIP)?", a: "Khi Elastic IP đó được cấp phát nhưng không gắn vào máy EC2 nào, hoặc gắn vào một máy EC2 đang ở trạng thái Stopped." }
+        { q: "Chính sách tính phí đối với địa chỉ Public IPv4 và Elastic IP (EIP) trên AWS là gì?", a: "<span class=\"fact-update\" data-since=\"2024-02\">Từ 02/2024, mọi địa chỉ Public IPv4 (bao gồm EIP đang gắn vào EC2 đang chạy và EIP nhàn rỗi) đều bị tính phí $0.005/giờ.</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Miễn phí nếu gắn vào 1 máy EC2 đang chạy; chỉ tính phí khi không gắn vào máy nào hoặc gắn vào máy đang Stopped.</span>" }
       ]
     },
     {
@@ -192,19 +192,19 @@ window.STUDY_DATA = {
       javaAnalogy: "Chọn ổ cứng cho server: Cần nhanh vừa rẻ thì chọn SSD gp3; chạy DB ngân hàng cần tốc độ bàn thờ thì chọn SSD io2; lưu log tuần tự giá rẻ thì chọn HDD st1; còn cần nháp dữ liệu siêu tốc xong xóa luôn thì dùng ổ cứng vật lý Instance Store.",
       corePoints: [
         "<strong>EC2 Instance Store</strong>: Ổ cứng gắn chết vào máy chủ vật lý → <strong>IOPS cực đại (hàng triệu IOPS)</strong>, nhưng <strong>MẤT DỮ LIỆU KHI STOP MÁY (Ephemeral)</strong>. Dùng cho: Bộ nhớ đệm (buffer, cache, scratch data).",
-        "<strong>EBS gp3 / gp2 (General Purpose SSD)</strong>: Tối đa 16,000 IOPS. <code>gp3</code> rẻ hơn 20% so với gp2 và cho phép tăng IOPS/Throughput độc lập mà không cần tăng dung lượng GB.",
-        "<strong>EBS io1 / io2 Block Express (Provisioned IOPS SSD)</strong>: Dành cho Database критический yêu cầu <strong>IOPS > 16,000</strong> (lên tới 64,000 - 256,000 IOPS). Hỗ trợ tính năng <strong>EBS Multi-Attach</strong> (gắn 1 ổ io1/io2 cho tối đa 16 máy EC2 trong <strong>cùng 1 AZ</strong>).",
+        "<strong>EBS gp3 / gp2 (General Purpose SSD)</strong>: <span class=\"fact-update\" data-since=\"2024\">Ổ <code>gp3</code> đạt tối đa <strong>80,000 IOPS</strong>, băng thông <strong>2,000 MiB/s (2,000 MB/s)</strong> và dung lượng <strong>64 TiB</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: gp3 tối đa 16,000 IOPS và 1,000 MB/s (gp2 vẫn giữ trần 16,000 IOPS)</span>. <code>gp3</code> rẻ hơn 20% so với gp2 và cho phép tăng IOPS/Throughput độc lập mà không cần tăng dung lượng GB.",
+        "<strong>EBS io1 / io2 Block Express (Provisioned IOPS SSD)</strong>: Dành cho Database <strong>quan trọng (mission-critical)</strong> yêu cầu <span class=\"fact-update\" data-since=\"2024\"><strong>IOPS &gt; 80,000</strong> (lên tới 256,000 IOPS với io2 Block Express), độ bền <strong>99.999%</strong> (chỉ có trên <code>io2</code>, còn <code>io1</code> đạt 99.8%–99.9%)</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: yêu cầu IOPS &gt; 16,000</span>. Hỗ trợ tính năng <strong>EBS Multi-Attach</strong> (gắn 1 ổ io1/io2 cho tối đa 16 máy EC2 trong <strong>cùng 1 AZ</strong>).",
         "<strong>EBS st1 (Throughput Optimized HDD)</strong> & <strong>sc1 (Cold HDD)</strong>: Ổ đĩa cơ học giá rẻ cho Big Data, Log tuần tự (<strong>Không thể dùng làm ổ Boot chứa hệ điều hành!</strong>)."
       ],
       examTraps: [
-        "Đề bài có con số <strong>IOPS > 16,000 (ví dụ: cần 32,000 IOPS hoặc 50,000 IOPS)</strong> → Bắt buộc chọn <strong>EBS io1 / io2</strong>.",
+        "Đề bài yêu cầu <strong>IOPS cực cao (&gt; 80,000 IOPS, tới 256,000 IOPS), độ bền 99.999% (sub-millisecond latency) hoặc EBS Multi-Attach</strong> <span class=\"exam-legacy\">Đề cũ có thể ghi: IOPS &gt; 16,000 (ví dụ 32,000 hoặc 50,000 IOPS)</span> → Chọn <strong>EBS io1 / io2 Block Express</strong>.",
         "Đề bài hỏi 'Tối ưu chi phí cho ổ EBS SSD hiện tại mà vẫn điều chỉnh được IOPS độc lập với dung lượng' → Chuyển từ <code>gp2</code> sang <strong><code>gp3</code></strong>.",
         "Khi dùng <strong>EBS Multi-Attach (io1/io2)</strong>, ứng dụng phải dùng hệ thống quản lý file nhận biết cụm (Cluster-aware file system như GFS2), không dùng ext4/XFS thông thường được vì sẽ hỏng dữ liệu khi ghi đè."
       ],
       freeDocTitle: "Tutorials Dojo - EBS Volume Types Comparison",
       freeDocUrl: "https://tutorialsdojo.com/amazon-ebs/",
       cards: [
-        { q: "Khi nào bắt buộc phải chọn ổ đĩa EBS loại io1 / io2 thay vì gp3?", a: "Khi ứng dụng Database yêu cầu hiệu năng trên 16,000 IOPS hoặc cần tính năng EBS Multi-Attach (gắn 1 ổ vào nhiều EC2 trong cùng 1 AZ)." },
+        { q: "Khi nào bắt buộc phải chọn ổ đĩa EBS loại io1 / io2 Block Express thay vì gp3?", a: "Khi Database quan trọng (mission-critical) cần &gt; 80,000 IOPS (tới 256,000 IOPS), cần độ bền 99.999% (trên io2) hoặc cần tính năng EBS Multi-Attach trong cùng 1 AZ. <span class=\"exam-legacy\">Đề cũ có thể ghi: khi cần trên 16,000 IOPS.</span>" },
         { q: "Sự khác biệt lớn nhất về an toàn dữ liệu giữa EC2 Instance Store và EBS là gì?", a: "Instance Store sẽ mất sạch dữ liệu nếu máy EC2 bị Stop hoặc lỗi phần cứng vật lý; còn EBS vẫn giữ nguyên dữ liệu." }
       ]
     },
@@ -309,7 +309,7 @@ window.STUDY_DATA = {
         "2. <strong>Step Scaling</strong>: Co giãn theo từng nấc thang của CloudWatch Alarm (CPU > 70% thêm 2 máy, > 90% thêm 4 máy).",
         "3. <strong>Scheduled Scaling</strong>: Tăng/giảm máy theo lịch giờ biết trước (Vd: 9h sáng mỗi thứ Hai tăng lên 10 máy).",
         "4. <strong>Predictive Scaling</strong>: Dùng Machine Learning phân tích dữ liệu lịch sử để tự động bật máy đón đầu trước khi giờ cao điểm diễn ra.",
-        "<strong>Cooldown Period</strong>: Thời gian nghỉ (mặc định 300 giây = 5 phút) sau mỗi lần vừa thêm/bớt máy để chờ hệ thống ổn định, tránh đẻ máy liên tục."
+        "<strong>Cooldown Period vs Instance Warmup</strong>: <span class=\"fact-update\" data-since=\"2022\"><strong>Default Cooldown (mặc định 300 giây)</strong> chỉ áp dụng cho chính sách <em>Simple Scaling</em>; còn các chính sách hiện đại (<em>Target Tracking Scaling</em> và <em>Step Scaling</em>) sử dụng <strong>Default Instance Warmup</strong> (thời gian chờ máy mới khởi động xong trước khi tính chỉ số vào trung bình cụm và mở rộng tiếp)</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Cooldown 300 giây áp dụng chung sau mọi lần scaling</span>."
       ],
       examTraps: [
         "Nếu ASG phát hiện một máy EC2 bị lỗi phần cứng (Unhealthy), nó sẽ <strong>Terminate (xóa bỏ máy đó và tạo máy mới thay thế)</strong> chứ không sửa hay khởi động lại máy cũ!",
@@ -319,7 +319,7 @@ window.STUDY_DATA = {
       freeDocUrl: "https://tutorialsdojo.com/amazon-ec2-auto-scaling/",
       cards: [
         { q: "Trong Auto Scaling Group, khi muốn giữ cho chỉ số CPU trung bình của toàn cụm luôn duy trì quanh mốc 50% một cách đơn giản nhất, ta chọn chính sách co giãn nào?", a: "Target Tracking Scaling Policy." },
-        { q: "Khoảng thời gian mặc định 300 giây mà Auto Scaling Group tạm dừng không tạo thêm hoặc xóa bớt máy ngay sau khi vừa thực hiện 1 hành động scaling gọi là gì?", a: "Cooldown Period (Thời gian chờ ổn định)." }
+        { q: "Khoảng thời gian mặc định 300 giây mà Auto Scaling Group tạm dừng sau một hành động Simple Scaling gọi là gì, và khác gì với Target Tracking / Step Scaling?", a: "Gọi là Default Cooldown Period (300 giây, chỉ áp dụng cho Simple Scaling). Với Target Tracking và Step Scaling, ASG dùng Default Instance Warmup để chờ máy mới khởi động xong trước khi tính metric." }
       ]
     },
     {
@@ -328,7 +328,7 @@ window.STUDY_DATA = {
       mode: "Xem Video + Thực hành tạo Bucket",
       javaAnalogy: "S3 không phải là ổ cứng gắn vào máy chủ, mà là một kho lưu trữ file khổng lồ qua giao thức HTTP REST API (Object Storage). Mỗi file lưu kèm một đường dẫn Key và có độ bền 11 số 9 (99.999999999%).",
       corePoints: [
-        "<strong>Quy tắc S3</strong>: Tên Bucket phải là duy nhất toàn cầu (Globally Unique), tạo ở 1 Region cụ thể. Kích thước tối đa 1 file là <strong>5 TB</strong>, nhưng một lần PUT đơn lẻ tối đa chỉ 5 GB (<strong>File > 5 GB bắt buộc phải dùng Multipart Upload!</strong>).",
+        "<strong>Quy tắc S3</strong>: Tên Bucket phải là duy nhất toàn cầu (Globally Unique), tạo ở 1 Region cụ thể. Kích thước tối đa 1 file là <span class=\"fact-update\" data-since=\"2025\"><strong>50 TB</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 1 file là 5 TB</span>, nhưng một lần PUT đơn lẻ tối đa chỉ 5 GB (<strong>File &gt; 5 GB bắt buộc phải dùng Multipart Upload!</strong>).",
         "<strong>S3 Versioning</strong>: Bảo vệ chống xóa/ghi đè nhầm. Khi xóa 1 file có bật Versioning, S3 chỉ gắn thêm một <code>Delete Marker</code> lên trên; muốn khôi phục file chỉ cần xóa cái <code>Delete Marker</code> đó đi.",
         "<strong>S3 Replication</strong>: Tự động chép file bất đồng bộ sang bucket khác trong cùng Region (<strong>SRR - Same-Region Replication</strong>) hoặc khác Region (<strong>CRR - Cross-Region Replication</strong>). <strong>Bắt buộc phải bật Versioning ở cả Bucket nguồn và đích!</strong>"
       ],
@@ -340,7 +340,7 @@ window.STUDY_DATA = {
       freeDocUrl: "https://tutorialsdojo.com/amazon-s3/",
       cards: [
         { q: "Hai điều kiện/lưu ý sống còn khi cấu hình S3 Cross-Region Replication (CRR) là gì?", a: "1) Phải bật Versioning ở cả Bucket nguồn và đích. 2) CRR chỉ tự động chép các file mới từ lúc bật; muốn chép các file cũ đã có sẵn phải dùng S3 Batch Operations." },
-        { q: "Kích thước tối đa của 1 file trên S3 là bao nhiêu, và khi file lớn hơn bao nhiêu GB thì bắt buộc phải dùng S3 Multipart Upload?", a: "Tối đa 5 TB cho 1 file. Khi file lớn hơn 5 GB thì bắt buộc phải dùng Multipart Upload (khuyên dùng từ > 100 MB)." }
+        { q: "Kích thước tối đa của 1 file trên S3 là bao nhiêu, và khi file lớn hơn bao nhiêu GB thì bắt buộc phải dùng S3 Multipart Upload?", a: "<span class=\"fact-update\" data-since=\"2025\">Tối đa 50 TB cho 1 file</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 5 TB</span>. Một lệnh PUT đơn lẻ tối đa 5 GB; khi file lớn hơn 5 GB thì bắt buộc phải dùng Multipart Upload (khuyên dùng từ &gt; 100 MB)." }
       ]
     },
     {
@@ -476,7 +476,7 @@ window.STUDY_DATA = {
         "<strong>RDS Custom (cho Oracle & SQL Server)</strong>: Cho phép Admin quyền <strong>SSH/RDP trực tiếp vào hệ điều hành bên dưới</strong> để cài đặt các bản vá hoặc phần mềm bên thứ 3 mà RDS thường khóa lại.",
         "<strong>Amazon Aurora</strong>: Đứa con cưng của AWS (tương thích MySQL & PostgreSQL). Tự động lưu <strong>6 bản sao dữ liệu trên 3 AZ</strong>, tự chữa lành ổ đĩa lỗi, hỗ trợ tối đa 15 Read Replicas qua 1 <em>Reader Endpoint</em> tự cân bằng tải.",
         "<strong>Aurora Serverless v2</strong>: Tự động co giãn năng lực tính toán theo từng giây → Hoàn hảo cho <strong>tải thất thường, không dự đoán được (Unpredictable / Intermittent workloads)</strong>.",
-        "<strong>Aurora Global Database</strong>: Sao chép sang tối đa 5 Regions phụ với độ trễ <strong>dưới 1 giây</strong>; phục hồi thảm họa toàn Region trong <strong>dưới 1 phút</strong>."
+        "<strong>Aurora Global Database</strong>: Sao chép sang <span class=\"fact-update\" data-since=\"2024\">tối đa 10 Regions phụ</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 5 Regions phụ</span> với độ trễ <strong>dưới 1 giây</strong>; phục hồi thảm họa toàn Region trong <strong>dưới 1 phút</strong>."
       ],
       examTraps: [
         "Đề bài có chữ <strong>'Lambda functions exhausting database connections / Too many connections error on RDS'</strong> → Chọn ngay <strong>RDS Proxy</strong>.",
@@ -593,9 +593,9 @@ window.STUDY_DATA = {
     },
     {
       id: 27, phase: 3, section: "Section 10 • Bài 132 → 134",
-      title: "7 Chính sách Điều hướng (Routing Policies) của Route 53",
+      title: "8 Chính sách Điều hướng (Routing Policies) của Route 53",
       mode: "Đọc Slide + Hỏi AI",
-      javaAnalogy: "Khi người dùng gõ tên miền web của bạn, Route 53 có 7 cách thông minh để quyết định xem nên trả về địa chỉ IP của server ở Singapore, ở Mỹ hay ở Châu Âu.",
+      javaAnalogy: "Khi người dùng gõ tên miền web của bạn, Route 53 có <span class=\"fact-update\" data-since=\"2022\">8 cách thông minh (bao gồm cả IP-based Routing)</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: 7 chính sách</span> để quyết định xem nên trả về địa chỉ IP của server ở Singapore, ở Mỹ hay ở Châu Âu.",
       corePoints: [
         "1. <strong>Simple Routing</strong>: Trả về 1 hoặc nhiều IP ngẫu nhiên, không gắn được Health Check.",
         "2. <strong>Weighted Routing</strong>: Chia lưu lượng theo trọng số % (Vd: Gửi 10% user sang server phiên bản mới để test <strong>Canary / Blue-Green Deployment</strong>, 90% giữ ở bản cũ).",
@@ -674,7 +674,7 @@ window.STUDY_DATA = {
         "• <strong>Volume Gateway</strong>: Sao lưu ổ cứng máy chủ nội bộ qua giao thức <strong>iSCSI</strong> lên EBS Snapshot.",
         "• <strong>Tape Gateway</strong>: Thay thế các cuộn băng từ vật lý (Backup Tapes) bằng băng từ ảo lưu trên S3 Glacier.",
         "<strong>AWS DataSync</strong>: Công cụ chép dữ liệu tự động qua đường truyền mạng từ On-premise lên S3/EFS/FSx (nhanh gấp 10 lần công cụ mã nguồn mở, giữ nguyên quyền file metadata, đặt lịch chạy định kỳ hàng ngày/tuần).",
-        "<strong>AWS Snowball Edge</strong>: Hộp ổ cứng vật lý chống sốc (80 TB) do AWS chở bằng xe tải/bưu điện tới công ty bạn để chép dữ liệu khi đường truyền Internet quá chậm.",
+        "<strong>AWS Snowball Edge</strong>: Thiết bị vật lý chống sốc (Storage Optimized ~80 TB / 210 TB NVMe) để chuyển dữ liệu offline khi đường truyền Internet quá chậm. <span class=\"fact-update\" data-since=\"2025-11\">Lưu ý cập nhật: AWS Snowcone và Snowmobile đã ngừng cung cấp; Snowball Edge ngừng nhận khách hàng mới từ 07/11/2025 (AWS khuyến nghị dùng AWS DataSync hoặc AWS Data Transfer Terminal), nhưng trong đề thi SAA-C03 vẫn chọn Snowball Edge cho bài toán di chuyển hàng chục/trăm TB khi băng thông mạng quá yếu</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Snowcone (8–14 TB), Snowball Edge (80 TB), Snowmobile (100 PB)</span>.",
         "<strong>AWS Transfer Family</strong>: Dịch vụ quản lý sẵn máy chủ <strong>SFTP / FTPS / FTP</strong> đọc ghi trực tiếp vào S3 hoặc EFS."
       ],
       examTraps: [
@@ -693,7 +693,7 @@ window.STUDY_DATA = {
       mode: "Đọc Slide + Hỏi AI",
       javaAnalogy: "Bạn đã biết RabbitMQ hay Kafka để tách rời (Decouple) các module trong Java. SQS là hàng đợi tin nhắn hoàn toàn Serverless của AWS: Web server chỉ việc quăng yêu cầu đặt hàng vào SQS rồi báo thành công ngay cho khách, còn dàn máy EC2 phía sau cứ thong thả bốc từng tin nhắn ra xử lý!",
       corePoints: [
-        "<strong>SQS Standard Queue</strong>: Thông lượng không giới hạn, gửi ít nhất 1 lần (có thể bị trùng lặp nhẹ) và thứ tự tương đối. Thời gian lưu tin nhắn: Mặc định 4 ngày, <strong>tối đa 14 ngày</strong>.",
+        "<strong>SQS Standard Queue</strong>: Thông lượng không giới hạn, gửi ít nhất 1 lần (có thể bị trùng lặp nhẹ) và thứ tự tương đối. Thời gian lưu tin nhắn: Mặc định 4 ngày, <strong>tối đa 14 ngày</strong>. Kích thước tối đa 1 tin nhắn: <span class=\"fact-update\" data-since=\"2025-08\"><strong>1 MiB (1,024 KB)</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: 256 KB</span>.",
         "<strong>SQS FIFO Queue</strong>: Đảm bảo <strong>Đúng thứ tự tuyệt đối (First-In-First-Out)</strong> và <strong>Chỉ xử lý đúng 1 lần (Exactly-once)</strong>. Tên queue bắt buộc có đuôi <code>.fifo</code>.",
         "<strong>Visibility Timeout (Thời gian tàng hình - mặc định 30 giây)</strong>: Khi EC2 A lấy 1 tin nhắn ra xử lý, tin nhắn đó ẩn đi 30s để EC2 B không lấy trùng. Nếu EC2 A xử lý mất 2 phút mà để Visibility Timeout có 30s → Hết 30s tin nhắn sẽ hiện lại và bị EC2 B bốc ra xử lý lần 2!",
         "<strong>Dead Letter Queue (DLQ)</strong>: Hàng đợi phụ dùng để hứng các tin nhắn bị lỗi xử lý thất bại quá $N$ lần để tránh làm tắc nghẽn hàng đợi chính.",
@@ -716,7 +716,7 @@ window.STUDY_DATA = {
       mode: "Đọc Slide + Hỏi AI",
       javaAnalogy: "Nếu SQS là hòm thư (1 thông điệp chỉ có 1 người lấy ra xử lý), thì SNS là cái loa phóng thanh (Pub/Sub): Bạn hét lên 1 tiếng 'Có đơn hàng mới!', lập tức cả phòng Kho, phòng Kế toán và phòng Chăm sóc khách hàng đều nhận được bản sao của thông báo đó cùng lúc.",
       corePoints: [
-        "<strong>Amazon SNS</strong>: Mô hình <strong>Publish / Subscribe (Đẩy tin nhắn - Push)</strong> từ 1 Topic ra hàng triệu người nhận (Email, SMS, HTTP Endpoint, AWS Lambda, hoặc hàng đợi SQS).",
+        "<strong>Amazon SNS</strong>: Mô hình <strong>Publish / Subscribe (Đẩy tin nhắn - Push)</strong> từ 1 Topic ra hàng triệu người nhận (Email, SMS, HTTP Endpoint, AWS Lambda, hoặc hàng đợi SQS; hoặc đẩy sang <span class=\"fact-update\" data-since=\"2024\">Amazon Data Firehose</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Kinesis Data Firehose</span>).",
         "<strong>Mô hình kinh điển nhất trong đề thi: Fan-Out Pattern (<code>1 SNS Topic + Nhiều SQS Queues</code>)</strong>:",
         "• Khi cần gửi 1 sự kiện duy nhất (ví dụ: người dùng vừa upload ảnh hoặc vừa thanh toán) tới <strong>nhiều dịch vụ xử lý độc lập nhau</strong> (1 bên đóng dấu watermark, 1 bên tạo thumbnail, 1 bên lưu hóa đơn) mà <strong>đảm bảo không bị mất gói tin nếu 1 bên bị sập tạm thời</strong> → Gửi sự kiện vào <strong>SNS Topic</strong>, rồi cho các <strong>SQS Queues</strong> đăng ký nhận tin từ SNS Topic đó!",
         "<strong>SNS FIFO + SQS FIFO</strong>: Nếu bài toán vừa cần Fan-out ra nhiều dịch vụ vừa bắt buộc giữ đúng thứ tự nghiêm ngặt."
@@ -734,23 +734,23 @@ window.STUDY_DATA = {
       id: 33, phase: 4, section: "Section 18 • Bài 225 → 231",
       title: "Amazon Kinesis (Data Streams vs Data Firehose) & Amazon MQ",
       mode: "Đọc Slide + Hỏi AI",
-      javaAnalogy: "Kinesis chính là phiên bản Apache Kafka được quản lý sẵn trên AWS dùng để hứng dòng chảy dữ liệu thời gian thực (IoT, Clickstream, Log) hàng gigabyte mỗi giây.",
+      javaAnalogy: "<span class=\"fact-update\" data-since=\"2024\">Kinesis Data Streams có kiến trúc tương tự Apache Kafka nhưng là dịch vụ độc quyền của AWS (còn dịch vụ Apache Kafka được quản lý thực sự trên AWS là <strong>Amazon MSK - Managed Streaming for Apache Kafka</strong>)</span> <span class=\"exam-legacy\">Đề cũ có thể ví von: Kinesis như Kafka của AWS</span>, dùng để hứng dòng chảy dữ liệu thời gian thực (IoT, Clickstream, Log) hàng gigabyte mỗi giây.",
       corePoints: [
         "<strong>1. Kinesis Data Streams (Real-time)</strong>:",
         "• Thu thập và xử lý dữ liệu <strong>Thời gian thực (Real-time ~200ms)</strong>.",
         "• Chia thành các <code>Shards</code> (bạn phải quản lý số lượng Shards hoặc dùng On-demand), <strong>lưu trữ lại dữ liệu từ 1 đến 365 ngày</strong> và cho phép <strong>tua lại (Replay)</strong> để nhiều ứng dụng cùng đọc.",
-        "<strong>2. Kinesis Data Firehose (Near Real-time)</strong>:",
-        "• Dịch vụ vận chuyển dữ liệu hoàn toàn <strong>Serverless</strong>, có độ trễ <strong>Gần thời gian thực (Near real-time: tối thiểu 60 giây hoặc khi gom đủ 1 MB buffer)</strong>.",
-        "• Có thể gọi Lambda để chuyển đổi định dạng dữ liệu rồi <strong>đổ thẳng vào 4 đích: Amazon S3, Amazon Redshift, Amazon OpenSearch, hoặc HTTP Endpoint (Splunk/Datadog)</strong>. <strong>KHÔNG lưu trữ dữ liệu để Replay!</strong>",
+        "<strong>2. Amazon Data Firehose (trước đây là Kinesis Data Firehose - Near Real-time)</strong>:",
+        "• Dịch vụ vận chuyển dữ liệu hoàn toàn <strong>Serverless</strong>, có độ trễ <strong>Gần thời gian thực</strong> (<span class=\"fact-update\" data-since=\"2024\">cho phép chỉnh thời gian gom buffer từ <strong>0 đến 900 giây</strong> và hỗ trợ đổ vào bảng <strong>Apache Iceberg</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Kinesis Data Firehose, gom buffer tối thiểu 60 giây hoặc 1 MB</span>).",
+        "• Có thể gọi Lambda để chuyển đổi định dạng dữ liệu rồi <strong>đổ thẳng vào các đích: Amazon S3, Amazon Redshift, Amazon OpenSearch, bảng Apache Iceberg, hoặc HTTP Endpoint (Splunk/Datadog)</strong>. <strong>KHÔNG lưu trữ dữ liệu để Replay!</strong>",
         "<strong>3. Amazon MQ</strong>: Dịch vụ quản lý <strong>ActiveMQ và RabbitMQ</strong> → Chỉ dùng khi đề bài nói: <strong>'Di chuyển ứng dụng cũ từ On-premise lên AWS đang dùng giao thức chuẩn mở (MQTT, AMQP, STOMP, JMS) mà không muốn viết lại code'</strong>."
       ],
       examTraps: [
-        "Phân biệt cực nhanh: Thấy chữ <strong>'Real-time + Custom processing / Replay data'</strong> → <strong>Kinesis Data Streams</strong>. Thấy chữ <strong>'Near real-time + Load directly into S3 / Redshift / OpenSearch with least operational overhead'</strong> → <strong>Kinesis Data Firehose</strong>."
+        "Phân biệt cực nhanh: Thấy chữ <strong>'Real-time + Custom processing / Replay data'</strong> → <strong>Kinesis Data Streams</strong>. Thấy chữ <strong>'Near real-time + Load directly into S3 / Redshift / OpenSearch with least operational overhead'</strong> → <strong>Amazon Data Firehose (trước đây là Kinesis Data Firehose)</strong>."
       ],
       freeDocTitle: "Tutorials Dojo - Amazon Kinesis Cheat Sheet",
       freeDocUrl: "https://tutorialsdojo.com/amazon-kinesis/",
       cards: [
-        { q: "Phân biệt khi nào chọn Kinesis Data Streams và khi nào chọn Kinesis Data Firehose?", a: "Data Streams: Xử lý Real-time tức thì, lưu dữ liệu 1-365 ngày, hỗ trợ Replay. Data Firehose: Near real-time (>= 60s), Serverless, tự động đẩy thẳng dữ liệu vào S3, Redshift hoặc OpenSearch mà không cần viết code." },
+        { q: "Phân biệt khi nào chọn Kinesis Data Streams và khi nào chọn Amazon Data Firehose (trước đây là Kinesis Data Firehose)?", a: "Data Streams: Xử lý Real-time tức thì, lưu dữ liệu 1-365 ngày, hỗ trợ Replay. Amazon Data Firehose: Near real-time (buffer 0–900 giây, <span class=\"exam-legacy\">Đề cũ có thể ghi: &gt;= 60s</span>), Serverless, tự động đẩy thẳng dữ liệu vào S3, Redshift, OpenSearch hoặc Apache Iceberg mà không cần viết code." },
         { q: "Khi migrate một hệ thống Java từ On-premise lên AWS đang sử dụng RabbitMQ/ActiveMQ qua giao thức AMQP/JMS và yêu cầu không sửa đổi code ứng dụng, ta chọn dịch vụ nào?", a: "Amazon MQ (không chọn SQS vì SQS dùng giao thức API riêng của AWS, phải sửa code)." }
       ]
     },
@@ -1074,8 +1074,8 @@ window.STUDY_DATA = {
       mode: "Đọc Slide + Hỏi AI",
       javaAnalogy: "Nơi cất giữ khóa mã hóa và mật khẩu Database của ứng dụng Java. Cặp đấu kinh điển nhất trong đề thi là `AWS Secrets Manager` và `SSM Parameter Store`!",
       corePoints: [
-        "<strong>AWS KMS (Key Management Service)</strong>: Dịch vụ quản lý khóa mã hóa (chuẩn FIPS 140-2 Level 2). Với khóa do khách hàng tạo (<strong>Customer Managed Key - CMK</strong>), bạn có thể bật <strong>Automatic Key Rotation (Tự động xoay vòng khóa mỗi 1 năm)</strong>.",
-        "<strong>AWS CloudHSM</strong>: AWS cung cấp cho bạn một thiết bị phần cứng mã hóa chuyên dụng riêng biệt (<strong>Dedicated Hardware - chuẩn FIPS 140-2 Level 3</strong>), bạn tự giữ toàn quyền kiểm soát khóa (AWS không có quyền truy cập).",
+        "<strong>AWS KMS (Key Management Service)</strong>: Dịch vụ quản lý khóa mã hóa đa người thuê (Multi-tenant HSM, <span class=\"fact-update\" data-since=\"2024\">đạt chuẩn <strong>FIPS 140-3 Level 3</strong> và cho phép cấu hình <strong>Automatic Key Rotation tùy chỉnh từ 90 đến 2,560 ngày</strong> hoặc xoay vòng theo yêu cầu On-demand</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: KMS chuẩn FIPS 140-2 Level 2, xoay vòng cố định mỗi 1 năm / 365 ngày</span>).",
+        "<strong>AWS CloudHSM</strong>: AWS cung cấp thiết bị phần cứng mã hóa chuyên dụng đơn lẻ (<strong>Single-tenant Dedicated Hardware - chuẩn FIPS 140-3 Level 3</strong>), khách hàng tự giữ toàn quyền kiểm soát khóa (AWS không có quyền truy cập), hỗ trợ chuẩn công nghiệp <strong>PKCS#11, JCE, Microsoft CNG</strong> và tăng tốc SSL/TLS hoặc <strong>Oracle TDE</strong>.",
         "<strong>AWS Secrets Manager vs SSM Parameter Store</strong>:",
         "• <strong>Secrets Manager</strong>: Có phí ($0.40/secret/tháng), sinh ra chuyên để lưu mật khẩu DB. Tính năng ăn tiền nhất: <strong>Tự động xoay vòng mật khẩu định kỳ (Automatic Rotation of Credentials) tích hợp sẵn cho RDS, Aurora, Redshift, DocumentDB</strong>!",
         "• <strong>SSM Parameter Store</strong>: Lưu cấu hình và biến môi trường theo dạng cây thư mục (<code>/prod/app/db-url</code>). Bản Standard <strong>MIỄN PHÍ</strong>, hỗ trợ mã hóa bằng KMS (SecureString), nhưng <strong>không có sẵn tính năng tự động xoay vòng mật khẩu DB</strong>."
@@ -1088,7 +1088,7 @@ window.STUDY_DATA = {
       freeDocUrl: "https://tutorialsdojo.com/aws-key-management-service-aws-kms/",
       cards: [
         { q: "Phân biệt khi nào chọn AWS Secrets Manager và khi nào chọn SSM Parameter Store?", a: "Chọn Secrets Manager khi cần tự động xoay vòng mật khẩu định kỳ (Automatic Rotation) cho RDS/Aurora. Chọn SSM Parameter Store khi cần lưu biến cấu hình phân cấp miễn phí (Cost-effective)." },
-        { q: "Khi yêu cầu tuân thủ bắt buộc thiết bị lưu khóa mã hóa đạt chuẩn FIPS 140-2 Level 3 và khách hàng toàn quyền quản lý phần cứng chuyên dụng đơn lẻ (Single-tenant hardware), ta chọn dịch vụ nào?", a: "AWS CloudHSM (thay vì AWS KMS dùng chung chuẩn Level 2)." }
+        { q: "Khi yêu cầu tuân thủ bắt buộc khách hàng toàn quyền kiểm soát phần cứng HSM chuyên dụng đơn lẻ (Single-tenant Dedicated Hardware), dùng thư viện chuẩn PKCS#11/JCE/CNG và AWS hoàn toàn không có quyền truy cập vào khóa, ta chọn dịch vụ nào?", a: "AWS CloudHSM (Single-tenant dedicated hardware). <span class=\"fact-update\" data-since=\"2024\">Lưu ý: Hiện cả KMS và CloudHSM đều đạt FIPS 140-3 Level 3; điểm khác biệt cốt lõi là CloudHSM cung cấp phần cứng đơn thuê bao do khách hàng tự quản lý hoàn toàn.</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: KMS là FIPS 140-2 Level 2 còn CloudHSM là FIPS 140-2 Level 3.</span>" }
       ]
     },
     {
@@ -1167,7 +1167,7 @@ window.STUDY_DATA = {
       javaAnalogy: "Giống như tác giả bài viết tại Nhật đã chia sẻ: Trước khi bước vào làm đề, dành 5 buổi để đặt các dịch vụ giống nhau lên bàn cân sẽ giúp bạn loại ngay 2 đáp án sai chỉ trong 5 giây!",
       corePoints: [
         "Chuyển sang tab <strong>📊 Bảng So Sánh Dịch Vụ</strong> ngay trên thanh menu của trang web này.",
-        "Đọc kỹ và đối chiếu: <strong>S3 Storage Classes</strong>, <strong>EBS vs EFS vs FSx vs Instance Store</strong>, và <strong>RDS Multi-AZ vs Read Replicas vs Aurora vs DynamoDB</strong>.",
+        "Đọc kỹ và đối chiếu: <strong>S3 Storage Classes</strong>, <strong>EBS vs EFS vs FSx vs Instance Store</strong> (<span class=\"fact-update\" data-since=\"2024\">nhớ cập nhật: EBS gp3 nay đạt tới 80,000 IOPS / 2,000 MiB/s; Aurora Global Database hỗ trợ tới 10 Regions phụ</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: gp3 tối đa 16,000 IOPS; Aurora Global DB tối đa 5 Regions phụ</span>), và <strong>RDS Multi-AZ vs Read Replicas vs Aurora vs DynamoDB</strong>.",
         "Bấm sang tab <strong>🗂️ Luyện Thẻ Anki (SRS)</strong> để ôn lại toàn bộ các thẻ của Chặng 1, 2, 3."
       ],
       examTraps: [
@@ -1203,7 +1203,7 @@ window.STUDY_DATA = {
       mode: "Mở Tab 'Bảng So Sánh' + Quẹt Anki",
       javaAnalogy: "Ôn lại các công cụ xử lý bất đồng bộ và tính toán không máy chủ.",
       corePoints: [
-        "Đọc kỹ bảng so sánh: <strong>SQS Standard vs SQS FIFO vs SNS vs Kinesis Data Streams vs Kinesis Firehose vs Amazon MQ</strong>.",
+        "Đọc kỹ bảng so sánh: <strong>SQS Standard vs SQS FIFO vs SNS vs Kinesis Data Streams vs Amazon Data Firehose (trước đây là Kinesis Data Firehose) vs Amazon MQ</strong>.",
         "Ôn lại giới hạn của <strong>AWS Lambda</strong> (15 phút, 10GB RAM) và khi nào chuyển sang <strong>ECS Fargate</strong> hoặc <strong>AWS Batch</strong>."
       ],
       examTraps: [
@@ -1212,7 +1212,7 @@ window.STUDY_DATA = {
       freeDocTitle: "Tutorials Dojo - SQS vs SNS vs Kinesis vs EventBridge",
       freeDocUrl: "https://tutorialsdojo.com/amazon-sqs-vs-sns-vs-kinesis-vs-eventbridge/",
       cards: [
-        { q: "Tổng kết Streaming: Cần thu thập log và đẩy thẳng vào S3 hoặc OpenSearch với độ trễ khoảng 1 phút mà không muốn viết code quản lý chọn dịch vụ gì?", a: "Amazon Kinesis Data Firehose." }
+        { q: "Tổng kết Streaming: Cần thu thập log và đẩy thẳng vào S3 hoặc OpenSearch với độ trễ gần thời gian thực mà không muốn viết code quản lý chọn dịch vụ gì?", a: "<span class=\"fact-update\" data-since=\"2024\">Amazon Data Firehose (trước đây là Amazon Kinesis Data Firehose, hỗ trợ buffer 0–900s).</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Kinesis Data Firehose (&gt;= 60s).</span>" }
       ]
     },
     {
@@ -1270,12 +1270,12 @@ window.STUDY_DATA = {
       title: "2. So sánh các dịch vụ Lưu trữ (EBS vs EFS vs FSx vs S3)",
       headers: ["Dịch vụ", "Loại lưu trữ & Phạm vi", "Đặc điểm kỹ thuật cốt lõi", "Từ khóa chọn trong đề thi (Keywords)"],
       rows: [
-        ["<strong>Amazon EBS</strong>", "Block Storage • <strong>Khóa trong 1 AZ</strong>", "Gắn cho 1 máy EC2 (trừ io1/io2 Multi-Attach gắn tối đa 16 máy trong cùng 1 AZ). Có gp3 (đa dụng) và io2 (>16,000 IOPS).", "<em>Boot volume, low-latency block storage for single EC2, database storage on EC2</em>"],
+        ["<strong>Amazon EBS</strong>", "Block Storage • <strong>Khóa trong 1 AZ</strong>", "Gắn cho 1 máy EC2 (trừ io1/io2 Multi-Attach gắn tối đa 16 máy trong cùng 1 AZ). Có gp3 (đa dụng, <span class=\"fact-update\" data-since=\"2024\">tối đa 80,000 IOPS / 2,000 MiB/s</span>) và io2 Block Express (tới 256,000 IOPS, độ bền 99.999%) <span class=\"exam-legacy\">Đề cũ có thể ghi: gp3 tối đa 16,000 IOPS, &gt;16,000 IOPS dùng io1/io2</span>.", "<em>Boot volume, low-latency block storage for single EC2, database storage on EC2</em>"],
         ["<strong>EC2 Instance Store</strong>", "Block Storage Vật lý • Nằm trên Host", "IOPS cao nhất (hàng triệu IOPS), nhưng <strong>mất sạch dữ liệu nếu Stop máy (Ephemeral)</strong>.", "<em>Temporary cache, buffer, scratch data, highest IOPS, data can be lost if instance stops</em>"],
         ["<strong>Amazon EFS</strong>", "File Storage (NFS) • <strong>Multi-AZ</strong>", "Gắn đồng thời cho hàng trăm máy <strong>Linux EC2 / ECS / Lambda</strong> qua nhiều AZ. Tự động co giãn. Có tầng EFS-IA tiết kiệm 90%.", "<em>Shared file storage across multiple AZs, Linux instances, POSIX-compliant, Content Management System</em>"],
         ["<strong>FSx for Windows</strong>", "File Storage (SMB/NTFS) • Multi-AZ", "Hệ thống file chia sẻ dành riêng cho <strong>Windows</strong>, tích hợp sẵn Microsoft Active Directory.", "<em>Windows File Server, SMB protocol, NTFS, Microsoft Active Directory integration</em>"],
         ["<strong>FSx for Lustre</strong>", "File Storage cho Siêu máy tính • HPC", "Tốc độ hàng trăm GB/s, độ trễ dưới mili-giây, tích hợp 2 chiều trực tiếp với <strong>Amazon S3</strong>.", "<em>High Performance Computing (HPC), Machine Learning, financial modeling, seamless S3 integration</em>"],
-        ["<strong>Amazon S3</strong>", "Object Storage • Toàn Region (≥ 3 AZ)", "Truy cập qua HTTP REST API (không mount như ổ đĩa thường). Dung lượng vô hạn, tối đa 5TB/file.", "<em>Static website hosting, media/backup/archive, Data Lake, Presigned URL, Lifecycle policies</em>"]
+        ["<strong>Amazon S3</strong>", "Object Storage • Toàn Region (≥ 3 AZ)", "Truy cập qua HTTP REST API (không mount như ổ đĩa thường). Dung lượng vô hạn, <span class=\"fact-update\" data-since=\"2025\">tối đa 50 TB/file</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: 5 TB/file</span>.", "<em>Static website hosting, media/backup/archive, Data Lake, Presigned URL, Lifecycle policies</em>"]
       ]
     },
     {
@@ -1308,10 +1308,10 @@ window.STUDY_DATA = {
       title: "5. So sánh Decoupling & Streaming (SQS vs SNS vs Kinesis vs Amazon MQ)",
       headers: ["Dịch vụ", "Mô hình hoạt động", "Lưu trữ & Thứ tự", "Khi nào chọn trong đề thi?"],
       rows: [
-        ["<strong>Amazon SQS</strong>", "Queue • <strong>Pull (Kéo)</strong> (Consumer chủ động bốc tin)", "Lưu tối đa 14 ngày. Bản <code>FIFO</code> đảm bảo đúng thứ tự 100% và không trùng lặp.", "Gỡ rối (Decouple) giữa tầng Web và tầng Worker EC2/Lambda. Nhớ tăng <em>Visibility Timeout</em> nếu xử lý lâu và bật <em>Long Polling</em> để tiết kiệm tiền."],
+        ["<strong>Amazon SQS</strong>", "Queue • <strong>Pull (Kéo)</strong> (Consumer chủ động bốc tin)", "Lưu tối đa 14 ngày (<span class=\"fact-update\" data-since=\"2025-08\">tối đa 1 MiB/tin</span> <span class=\"exam-legacy\">Đề cũ: 256 KB</span>). Bản <code>FIFO</code> đảm bảo đúng thứ tự 100% và không trùng lặp.", "Gỡ rối (Decouple) giữa tầng Web và tầng Worker EC2/Lambda. Nhớ tăng <em>Visibility Timeout</em> nếu xử lý lâu và bật <em>Long Polling</em> để tiết kiệm tiền."],
         ["<strong>Amazon SNS</strong>", "Pub/Sub • <strong>Push (Đẩy)</strong> ra nhiều người nhận cùng lúc", "Không lưu giữ tin nhắn lâu dài.", "Gửi thông báo Email/SMS, hoặc kết hợp <strong>SNS + nhiều SQS (Fan-out Pattern)</strong> để gửi 1 sự kiện cho nhiều hệ thống xử lý độc lập."],
         ["<strong>Kinesis Data Streams</strong>", "Real-time Streaming (~200ms)", "Lưu trữ từ <strong>1 đến 365 ngày</strong>, cho phép <strong>Replay (đọc lại)</strong>.", "Thu thập và xử lý dữ liệu <strong>Thời gian thực (Real-time)</strong> từ IoT, Clickstream, Log cần viết code xử lý riêng hoặc cần Replay."],
-        ["<strong>Kinesis Data Firehose</strong>", "Near Real-time Ingestion (≥ 60 giây)", "<strong>Không lưu trữ</strong>, hoàn toàn Serverless.", "Đề bài cần nạp thẳng luồng dữ liệu vào <strong>S3, Redshift, hoặc OpenSearch</strong> với ít công sức vận hành nhất (Least operational overhead)."],
+        ["<strong>Amazon Data Firehose (Kinesis Data Firehose)</strong>", "Near Real-time Ingestion (buffer 0–900 giây, <span class=\"exam-legacy\">Đề cũ: ≥ 60 giây</span>)", "<strong>Không lưu trữ</strong>, hoàn toàn Serverless.", "Đề bài cần nạp thẳng luồng dữ liệu vào <strong>S3, Redshift, OpenSearch hoặc Apache Iceberg</strong> với ít công sức vận hành nhất (Least operational overhead)."],
         ["<strong>Amazon MQ</strong>", "Managed RabbitMQ / ActiveMQ", "Hỗ trợ giao thức chuẩn mở: <strong>AMQP, MQTT, STOMP, JMS</strong>.", "Khi <strong>migrate ứng dụng cũ từ On-premise lên AWS mà không muốn viết lại code</strong> gọi hàng đợi."]
       ]
     },
@@ -1370,6 +1370,20 @@ window.STUDY_DATA = {
       desc: "Tài liệu đề cương chính thức từ Amazon Web Services quy định rõ 4 Domains, tỷ trọng điểm số và danh sách dịch vụ nằm trong/ngoài phạm vi thi.",
       url: "https://docs.aws.amazon.com/aws-certification/latest/solutions-architect-associate-03/solutions-architect-associate-03.html",
       badge: "AWS Official"
+    },
+    {
+      category: "Đề Mẫu Chính Thức Từ AWS",
+      title: "AWS Skill Builder - Official Practice Question Set: SAA-C03 (English)",
+      desc: "Bộ 20 câu hỏi mẫu chính thức miễn phí do chính đội ngũ AWS Certification biên soạn, phản ánh đúng văn phong và cấu trúc câu hỏi SAA-C03.",
+      url: "https://skillbuilder.aws/search?searchText=SAA-C03+Official+Practice+Question+Set",
+      badge: "AWS Official Free"
+    },
+    {
+      category: "Lộ Trình Ôn Thi Chính Thức",
+      title: "AWS Skill Builder - Exam Prep Standard Course: AWS Certified Solutions Architect - Associate",
+      desc: "Khóa ôn tập chuẩn chính thức trên AWS Skill Builder giúp rà soát 4 Domains và chiến thuật phân tích tình huống.",
+      url: "https://skillbuilder.aws/exam-prep/solutions-architect-associate",
+      badge: "AWS Skill Builder"
     }
   ]
 };

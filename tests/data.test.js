@@ -73,8 +73,11 @@ describe("Dữ liệu khóa học – từng buổi", () => {
           s.quizzes.forEach((q, i) => {
             assert.ok(q.qEn && q.qVi, `câu ${i + 1} thiếu đề EN/VI`);
             assert.ok(Array.isArray(q.options) && q.options.length >= 3, `câu ${i + 1} quá ít lựa chọn`);
-            assert.ok(Number.isInteger(q.correctIdx) && q.correctIdx >= 0 && q.correctIdx < q.options.length,
-              `câu ${i + 1} correctIdx=${q.correctIdx} ngoài khoảng`);
+            const validSingle = Number.isInteger(q.correctIdx) && q.correctIdx >= 0 && q.correctIdx < q.options.length;
+            const validMulti = Array.isArray(q.correctIdxs) && q.correctIdxs.length === 2 &&
+              q.correctIdxs.every((idx) => Number.isInteger(idx) && idx >= 0 && idx < q.options.length);
+            assert.ok(validSingle || validMulti,
+              `câu ${i + 1} correctIdx=${q.correctIdx}/correctIdxs=${JSON.stringify(q.correctIdxs)} ngoài khoảng`);
             assert.strictEqual(new Set(q.options).size, q.options.length, `câu ${i + 1} có lựa chọn trùng nhau`);
             assert.ok(q.explanation && q.explanation.length > 20, `câu ${i + 1} thiếu giải thích`);
           });
@@ -188,3 +191,45 @@ describe("Nội dung hiển thị an toàn trên trình duyệt", () => {
     assert.deepStrictEqual(bad, []);
   });
 });
+
+describe("Liêm chính thi cử (không quảng bá exam dumps)", () => {
+  it("không có tham chiếu tới ExamTopics, braindump hoặc ký tự rác Kannada", () => {
+    const banned = /examtopics|braindump|[\u0C80-\u0CFF]/i;
+    const dumpWord = /\bdumps?\b/i; // cho phép "database dump", "heap dump", "memory dump"
+    const allowedDumpContext = /\b(database|db|sql|mysql|pg_dump|mysqldump|heap|memory|core|thread|crash|log)\s+dumps?\b/i;
+
+    const bad = [];
+    sessions.forEach((s) => {
+      const blobs = [
+        s.title, s.section, s.javaAnalogy, s.diagram || "",
+        ...s.corePoints, ...s.examTraps,
+        ...(s.jargon || []).map((j) => `${j.term} ${j.plain}`),
+        ...(s.deepSections || []).map((d) => `${d.title} ${d.content}`),
+        ...s.cards.map((c) => `${c.q} ${c.a}`),
+        ...(s.quizzes || []).map((q) => [q.qEn, q.qVi, ...q.options, q.explanation].join(" "))
+      ];
+      blobs.forEach((t) => {
+        const str = String(t || "");
+        if (banned.test(str)) bad.push(`Buổi #${s.id}: "${str.slice(0, 80)}"`);
+        if (dumpWord.test(str) && !allowedDumpContext.test(str)) {
+          bad.push(`Buổi #${s.id} chứa từ "dump" ngoài ngữ cảnh kỹ thuật: "${str.slice(0, 80)}"`);
+        }
+      });
+    });
+
+    STUDY_DATA.freeResources.forEach((r) => {
+      const str = `${r.category} ${r.title} ${r.desc} ${r.url}`;
+      if (banned.test(str) || dumpWord.test(str)) bad.push(`Resource: ${r.title}`);
+    });
+
+    assert.deepStrictEqual(bad, []);
+  });
+
+  it("có tài nguyên chính thức từ AWS Skill Builder", () => {
+    const hasSkillBuilder = STUDY_DATA.freeResources.some((r) =>
+      /skillbuilder\.aws/i.test(r.url)
+    );
+    assert.ok(hasSkillBuilder, "Chưa có link tới AWS Skill Builder trong freeResources");
+  });
+});
+

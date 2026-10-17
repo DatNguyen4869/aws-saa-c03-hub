@@ -375,7 +375,7 @@ Bài toán Chi phí EC2 trong đề thi:
     deepSections: [
       {
         title: "1. Chuyện gì xảy ra với địa chỉ IP khi bạn Stop, Start hay Reboot máy EC2?",
-        content: "• <strong>Private IPv4</strong>: Được gắn vĩnh viễn cho máy EC2 đó từ lúc tạo cho đến khi bạn xóa bỏ (Terminate) máy.<br>• <strong>Public IPv4 mặc định</strong>: Khi bấm <strong><code>Reboot</code></strong> thì Public IP vẫn giữ nguyên. Nhưng nếu bấm <strong><code>Stop</code> rồi <code>Start</code> lại</strong>, máy EC2 sẽ nhả Public IP cũ ra và nhận một Public IP mới tinh!<br>• <strong>Elastic IP (EIP)</strong>: Địa chỉ Public IPv4 tĩnh cố định (mặc định giới hạn <strong>tối đa 5 EIP mỗi Region</strong>). Miễn phí khi gắn vào máy EC2 đang chạy, nhưng bị tính phí nếu để không hoặc gắn vào máy đang Stopped."
+        content: "• <strong>Private IPv4</strong>: Được gắn vĩnh viễn cho máy EC2 đó từ lúc tạo cho đến khi bạn xóa bỏ (Terminate) máy.<br>• <strong>Public IPv4 mặc định</strong>: Khi bấm <strong><code>Reboot</code></strong> thì Public IP vẫn giữ nguyên. Nhưng nếu bấm <strong><code>Stop</code> rồi <code>Start</code> lại</strong>, máy EC2 sẽ nhả Public IP cũ ra và nhận một Public IP mới tinh!<br>• <strong>Elastic IP (EIP)</strong>: Địa chỉ Public IPv4 tĩnh cố định (mặc định giới hạn <strong>tối đa 5 EIP mỗi Region</strong>). <span class=\"fact-update\" data-since=\"2024-02\">Từ 02/2024, mọi địa chỉ Public IPv4 (kể cả EIP đang gắn vào máy EC2 đang chạy lẫn EIP để không) đều bị tính phí ~$0.005/giờ</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: Miễn phí khi gắn vào máy EC2 đang chạy, nhưng bị tính phí nếu để không hoặc gắn vào máy đang Stopped</span>."
       },
       {
         title: "2. Phân biệt sâu 3 loại Placement Groups (Đề thi rất chuộng hỏi phần này)",
@@ -535,15 +535,15 @@ Bài toán Chi phí EC2 trong đề thi:
     ],
     diagram: `
 Chọn loại ổ cứng cho EC2:
- ├── Cần > 16,000 IOPS (hoặc tới 256,000 IOPS cho DB khủng)? ──► EBS io1 / io2 Block Express
- ├── Cần gắn 1 ổ EBS vào nhiều máy EC2 trong CÙNG 1 AZ?      ──► EBS io1 / io2 (Bật Multi-Attach + Cluster File System)
- ├── Cần SSD đa dụng giá rẻ, chỉnh IOPS độc lập dung lượng?   ──► EBS gp3 (Tối đa 16,000 IOPS)
- ├── Cần đọc dữ liệu tuần tự Big Data / Log giá rẻ (HDD)?    ──► EBS st1 (Throughput) / sc1 (Cold) [Không làm ổ Boot!]
- └── Cần hàng triệu IOPS làm Cache/Buffer tạm thời?          ──► EC2 Instance Store (NVMe vật lý - Stop máy là mất!)`,
+ ├── Cần > 80,000 IOPS (tới 256,000 IOPS) hoặc độ bền 99.999%? ──► EBS io1 / io2 Block Express
+ ├── Cần gắn 1 ổ EBS vào nhiều máy EC2 trong CÙNG 1 AZ?        ──► EBS io1 / io2 (Bật Multi-Attach + Cluster File System)
+ ├── Cần SSD đa dụng giá rẻ, chỉnh IOPS độc lập dung lượng?     ──► EBS gp3 (Tối đa 80,000 IOPS / 2,000 MiB/s)
+ ├── Cần đọc dữ liệu tuần tự Big Data / Log giá rẻ (HDD)?      ──► EBS st1 (Throughput) / sc1 (Cold) [Không làm ổ Boot!]
+ └── Cần hàng triệu IOPS làm Cache/Buffer tạm thời?            ──► EC2 Instance Store (NVMe vật lý - Stop máy là mất!)`,
     deepSections: [
       {
-        title: "1. So sánh chi tiết gp2 vs gp3 và io1 vs io2 (Đề thi rất hay hỏi con số 16,000 IOPS)",
-        content: "• <strong>EBS gp2 (Thế hệ cũ)</strong>: Dung lượng ổ càng to thì IOPS mới càng cao (3 IOPS/GB, tối đa <strong>16,000 IOPS</strong>).<br>• <strong>EBS gp3 (Thế hệ mới - Mặc định khuyên dùng)</strong>: Rẻ hơn gp2 20%, mặc định có sẵn 3,000 IOPS và 125 MB/s. Bạn có thể <strong>tăng IOPS lên tối đa 16,000 IOPS và Throughput lên 1,000 MB/s hoàn toàn độc lập với dung lượng ổ đĩa</strong>.<br>• <strong>EBS io1 / io2 Block Express (Provisioned IOPS SSD)</strong>: Khi đề bài yêu cầu hiệu năng <strong>trên 16,000 IOPS</strong> (ví dụ: 30,000 IOPS hoặc 64,000 IOPS, lên tới 256,000 IOPS với io2 Block Express) hoặc yêu cầu độ bền 99.999% → Bắt buộc phải chọn <strong>io1 / io2</strong>!"
+        title: "1. So sánh chi tiết gp2 vs gp3 và io1 vs io2 Block Express",
+        content: "• <strong>EBS gp2 (Thế hệ cũ)</strong>: Dung lượng ổ càng to thì IOPS mới càng cao (3 IOPS/GB, tối đa <strong>16,000 IOPS</strong>).<br>• <strong>EBS gp3 (Thế hệ mới - Mặc định khuyên dùng)</strong>: Rẻ hơn gp2 20%, mặc định có sẵn 3,000 IOPS và 125 MB/s. <span class=\"fact-update\" data-since=\"2024\">Bạn có thể <strong>tăng IOPS lên tối đa 80,000 IOPS, Throughput lên 2,000 MiB/s (2,000 MB/s) và dung lượng tới 64 TiB hoàn toàn độc lập với dung lượng ổ đĩa</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: gp3 tối đa 16,000 IOPS và 1,000 MB/s</span>.<br>• <strong>EBS io1 / io2 Block Express (Provisioned IOPS SSD)</strong>: Khi đề bài yêu cầu hiệu năng <span class=\"fact-update\" data-since=\"2024\"><strong>trên 80,000 IOPS</strong> (lên tới 256,000 IOPS với io2 Block Express), độ bền <strong>99.999%</strong> (chỉ có trên <code>io2</code>, còn <code>io1</code> là 99.8%–99.9%) hoặc tính năng <strong>EBS Multi-Attach</strong></span> <span class=\"exam-legacy\">Đề cũ có thể ghi: trên 16,000 IOPS → bắt buộc chọn io1/io2</span> → Bắt buộc phải chọn <strong>io1 / io2 Block Express</strong>!"
       },
       {
         title: "2. Tính năng EBS Multi-Attach & Ghép ổ RAID 0",
@@ -565,7 +565,7 @@ Chọn loại ổ cứng cho EC2:
           "D. Migrate the data to an st1 Throughput Optimized HDD volume."
         ],
         correctIdx: 1,
-        explanation: "Vì mức 12,000 IOPS vẫn nằm dưới ngưỡng tối đa 16,000 IOPS của gp3, việc chuyển từ gp2 sang gp3 cho phép tăng riêng chỉ số IOPS lên 12,000 mà không cần mua thừa dung lượng hay trả giá đắt cho io2."
+        explanation: "Vì mức 12,000 IOPS nằm trong khả năng của gp3 (<span class=\"fact-update\" data-since=\"2024\">tối đa 80,000 IOPS</span> <span class=\"exam-legacy\">Đề cũ có thể ghi: tối đa 16,000 IOPS</span>), việc chuyển từ gp2 sang gp3 cho phép tăng riêng chỉ số IOPS lên 12,000 mà không cần mua thừa dung lượng hay trả giá đắt cho io2."
       },
       {
         qEn: "A company is deploying a mission-critical clustered application across 4 Linux EC2 instances in a single Availability Zone (us-east-1a). The application uses a cluster-aware file system (GFS2) and requires all 4 instances to concurrently read and write to the same raw block storage volume with 40,000 IOPS. Which storage solution should be used?",
@@ -577,7 +577,7 @@ Chọn loại ổ cứng cho EC2:
           "D. EC2 Instance Store"
         ],
         correctIdx: 2,
-        explanation: "Bài toán yêu cầu Block storage dùng chung trong CÙNG 1 AZ với GFS2 và 40,000 IOPS (>16,000 IOPS) -> Chỉ có EBS io1/io2 hỗ trợ tính năng Multi-Attach và đạt mức 40,000 IOPS."
+        explanation: "Bài toán yêu cầu Block storage dùng chung trong CÙNG 1 AZ với GFS2 (Multi-Attach) và 40,000 IOPS -> Chỉ có EBS io1/io2 hỗ trợ tính năng Multi-Attach (<span class=\"exam-legacy\">Đề cũ có thể ghi: &gt;16,000 IOPS bắt buộc chọn io1/io2</span>)."
       }
     ]
   },
