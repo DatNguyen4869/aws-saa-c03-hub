@@ -1,0 +1,4853 @@
+{
+  "s1-q01": {
+    "status": "approved",
+    "hash": "58277582",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s1-q02": {
+    "status": "approved",
+    "hash": "52d1e841",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s1-q03": {
+    "status": "approved",
+    "hash": "dd63b980",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s2-q01": {
+    "status": "approved",
+    "hash": "cd5b575c",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s2-q02": {
+    "status": "approved",
+    "hash": "7eb1d646",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s2-q03": {
+    "status": "approved",
+    "hash": "b28c7da4",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s3-q01": {
+    "status": "approved",
+    "hash": "a8fb0998",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s3-q02": {
+    "status": "approved",
+    "hash": "f3585557",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s3-q03": {
+    "status": "approved",
+    "hash": "e290d3e3",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s4-q01": {
+    "status": "approved",
+    "hash": "2bad0956",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s4-q02": {
+    "status": "approved",
+    "hash": "a25c6c05",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s4-q03": {
+    "status": "approved",
+    "hash": "c3100ea0",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s5-q01": {
+    "status": "approved",
+    "hash": "d592d043",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s5-q02": {
+    "status": "approved",
+    "hash": "77c51d81",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s5-q03": {
+    "status": "approved",
+    "hash": "74f17632",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s6-q01": {
+    "status": "approved",
+    "hash": "a81cd7d1",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s6-q02": {
+    "status": "approved",
+    "hash": "720ed821",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s6-q03": {
+    "status": "approved",
+    "hash": "373a233e",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s7-q01": {
+    "status": "approved",
+    "hash": "fc35cba7",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s7-q02": {
+    "status": "approved",
+    "hash": "bf85bd52",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s7-q03": {
+    "status": "approved",
+    "hash": "e1ea19c9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s8-q01": {
+    "status": "approved",
+    "hash": "afb1dce1",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s8-q02": {
+    "status": "approved",
+    "hash": "24f82d71",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s8-q03": {
+    "status": "approved",
+    "hash": "e575048a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s9-q01": {
+    "status": "approved",
+    "hash": "f684f112",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s9-q02": {
+    "status": "approved",
+    "hash": "c5ba71d3",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s9-q03": {
+    "status": "approved",
+    "hash": "535ec8dc",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s10-q01": {
+    "status": "approved",
+    "hash": "258d1010",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s10-q02": {
+    "status": "approved",
+    "hash": "6afdafd7",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s10-q03": {
+    "status": "approved",
+    "hash": "e49c727e",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s11-q01": {
+    "status": "approved",
+    "hash": "e3c79e30",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s11-q02": {
+    "status": "approved",
+    "hash": "1ea9ce46",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s11-q03": {
+    "status": "approved",
+    "hash": "fe014918",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s12-q01": {
+    "status": "approved",
+    "hash": "c8d80201",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s12-q02": {
+    "status": "approved",
+    "hash": "0817ae50",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s12-q03": {
+    "status": "approved",
+    "hash": "041192b9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s13-q01": {
+    "status": "approved",
+    "hash": "4f232261",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s13-q02": {
+    "status": "approved",
+    "hash": "8ae996ab",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s13-q03": {
+    "status": "approved",
+    "hash": "c555312c",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s14-q01": {
+    "status": "approved",
+    "hash": "310e16f7",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s14-q02": {
+    "status": "approved",
+    "hash": "241cbdbf",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s14-q03": {
+    "status": "approved",
+    "hash": "d4c6b9f6",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s15-q01": {
+    "status": "approved",
+    "hash": "ecd39f9f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s15-q02": {
+    "status": "approved",
+    "hash": "ef3fa3a5",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s15-q03": {
+    "status": "approved",
+    "hash": "a1a93fb5",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s16-q01": {
+    "status": "approved",
+    "hash": "e7bf9c23",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s16-q02": {
+    "status": "approved",
+    "hash": "06d5ad09",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s16-q03": {
+    "status": "approved",
+    "hash": "d5dad4df",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s17-q01": {
+    "status": "approved",
+    "hash": "091d9137",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s17-q02": {
+    "status": "approved",
+    "hash": "61649428",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s17-q03": {
+    "status": "approved",
+    "hash": "a9f96e0b",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s18-q01": {
+    "status": "approved",
+    "hash": "17531d54",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s18-q02": {
+    "status": "approved",
+    "hash": "780a025e",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s18-q03": {
+    "status": "approved",
+    "hash": "0664a00c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s19-q01": {
+    "status": "approved",
+    "hash": "707385f9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s19-q02": {
+    "status": "approved",
+    "hash": "b8f109bf",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s19-q03": {
+    "status": "approved",
+    "hash": "be24e38a",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s20-q01": {
+    "status": "approved",
+    "hash": "71e1a13c",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s20-q02": {
+    "status": "approved",
+    "hash": "0517b7b5",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s20-q03": {
+    "status": "approved",
+    "hash": "09942401",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s21-q01": {
+    "status": "approved",
+    "hash": "d1d5b13f",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s21-q02": {
+    "status": "approved",
+    "hash": "5a02e6d2",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s21-q03": {
+    "status": "approved",
+    "hash": "29e5ab1c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s22-q01": {
+    "status": "approved",
+    "hash": "ab037351",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s22-q02": {
+    "status": "approved",
+    "hash": "7d471ffc",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s22-q03": {
+    "status": "approved",
+    "hash": "f6346090",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s23-q01": {
+    "status": "approved",
+    "hash": "aebbd873",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s23-q02": {
+    "status": "approved",
+    "hash": "ee256b53",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s23-q03": {
+    "status": "approved",
+    "hash": "09684161",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s24-q01": {
+    "status": "approved",
+    "hash": "1fe4a713",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s24-q02": {
+    "status": "approved",
+    "hash": "6c14e9ba",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s24-q03": {
+    "status": "approved",
+    "hash": "cf80e1bc",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s25-q01": {
+    "status": "approved",
+    "hash": "841c6ed2",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s25-q02": {
+    "status": "approved",
+    "hash": "e2179e16",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s25-q03": {
+    "status": "approved",
+    "hash": "69e5452b",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s26-q01": {
+    "status": "approved",
+    "hash": "566b470f",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s26-q02": {
+    "status": "approved",
+    "hash": "44b4a6ec",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s26-q03": {
+    "status": "approved",
+    "hash": "96251a7f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s27-q01": {
+    "status": "approved",
+    "hash": "06acde47",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s27-q02": {
+    "status": "approved",
+    "hash": "8bbc3ddd",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s27-q03": {
+    "status": "approved",
+    "hash": "a063f2f7",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s28-q01": {
+    "status": "approved",
+    "hash": "cb848263",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s28-q02": {
+    "status": "approved",
+    "hash": "e2826c65",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s28-q03": {
+    "status": "approved",
+    "hash": "9c9b03f8",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s29-q01": {
+    "status": "approved",
+    "hash": "3234e3fa",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s29-q02": {
+    "status": "approved",
+    "hash": "12ddb249",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s29-q03": {
+    "status": "approved",
+    "hash": "984cf5b5",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s30-q01": {
+    "status": "approved",
+    "hash": "0c1d0b71",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s30-q02": {
+    "status": "approved",
+    "hash": "56e91419",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s30-q03": {
+    "status": "approved",
+    "hash": "4afd8d7c",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s31-q01": {
+    "status": "approved",
+    "hash": "267200e0",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s31-q02": {
+    "status": "approved",
+    "hash": "ab33775e",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s31-q03": {
+    "status": "approved",
+    "hash": "1f9a3240",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s32-q01": {
+    "status": "approved",
+    "hash": "37871345",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s32-q02": {
+    "status": "approved",
+    "hash": "810bb81f",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s32-q03": {
+    "status": "approved",
+    "hash": "13e74e36",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s33-q01": {
+    "status": "approved",
+    "hash": "fef0f054",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s33-q02": {
+    "status": "approved",
+    "hash": "039aa137",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s33-q03": {
+    "status": "approved",
+    "hash": "6b54f1c6",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s34-q01": {
+    "status": "approved",
+    "hash": "82bac051",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s34-q02": {
+    "status": "approved",
+    "hash": "65afa7e4",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s34-q03": {
+    "status": "approved",
+    "hash": "e06b005c",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s35-q01": {
+    "status": "approved",
+    "hash": "e82b1d18",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s35-q02": {
+    "status": "approved",
+    "hash": "876f5cdf",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s35-q03": {
+    "status": "approved",
+    "hash": "b82b93ae",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s36-q01": {
+    "status": "approved",
+    "hash": "9f6f8d96",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s36-q02": {
+    "status": "approved",
+    "hash": "2c47738b",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s36-q03": {
+    "status": "approved",
+    "hash": "606bda94",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s37-q01": {
+    "status": "approved",
+    "hash": "16e0a2df",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s37-q02": {
+    "status": "approved",
+    "hash": "c36d7f13",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s37-q03": {
+    "status": "approved",
+    "hash": "bb84ccd7",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s38-q01": {
+    "status": "approved",
+    "hash": "875456c4",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s38-q02": {
+    "status": "approved",
+    "hash": "a391735d",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s38-q03": {
+    "status": "approved",
+    "hash": "b48c2e8d",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s39-q01": {
+    "status": "approved",
+    "hash": "621ac647",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s39-q02": {
+    "status": "approved",
+    "hash": "7a62ab97",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s39-q03": {
+    "status": "approved",
+    "hash": "0b558c8a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s40-q01": {
+    "status": "approved",
+    "hash": "7e3fb2fa",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s40-q02": {
+    "status": "approved",
+    "hash": "c09836b5",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s40-q03": {
+    "status": "approved",
+    "hash": "596dc684",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s41-q01": {
+    "status": "approved",
+    "hash": "3c44ef6a",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s41-q02": {
+    "status": "approved",
+    "hash": "ce41d6f4",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s41-q03": {
+    "status": "approved",
+    "hash": "0d2566ee",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s42-q01": {
+    "status": "approved",
+    "hash": "b0a09719",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s42-q02": {
+    "status": "approved",
+    "hash": "129377b7",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s42-q03": {
+    "status": "approved",
+    "hash": "e0f55d83",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s43-q01": {
+    "status": "approved",
+    "hash": "80eaa627",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s43-q02": {
+    "status": "approved",
+    "hash": "812703f2",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s43-q03": {
+    "status": "approved",
+    "hash": "8935a839",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s44-q01": {
+    "status": "approved",
+    "hash": "87ae2bee",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s44-q02": {
+    "status": "approved",
+    "hash": "78912cef",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s44-q03": {
+    "status": "approved",
+    "hash": "b384028f",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s45-q01": {
+    "status": "approved",
+    "hash": "e777a2ef",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s45-q02": {
+    "status": "approved",
+    "hash": "98f30dc2",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s45-q03": {
+    "status": "approved",
+    "hash": "d8b422dd",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s46-q01": {
+    "status": "approved",
+    "hash": "97cb834c",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s46-q02": {
+    "status": "approved",
+    "hash": "a3ce6f9c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s46-q03": {
+    "status": "approved",
+    "hash": "237f8cf9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s47-q01": {
+    "status": "approved",
+    "hash": "92eba61b",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s47-q02": {
+    "status": "approved",
+    "hash": "f8c60509",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s47-q03": {
+    "status": "approved",
+    "hash": "b654a3b1",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s48-q01": {
+    "status": "approved",
+    "hash": "f8f43067",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s48-q02": {
+    "status": "approved",
+    "hash": "bf782edb",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s48-q03": {
+    "status": "approved",
+    "hash": "6751246b",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s49-q01": {
+    "status": "approved",
+    "hash": "e57e41a5",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s49-q02": {
+    "status": "approved",
+    "hash": "4e1a6a5b",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s49-q03": {
+    "status": "approved",
+    "hash": "505b79f0",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s50-q01": {
+    "status": "approved",
+    "hash": "9da1a4d1",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s50-q02": {
+    "status": "approved",
+    "hash": "6c70a2b7",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s50-q03": {
+    "status": "approved",
+    "hash": "dcd9cd36",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s51-q01": {
+    "status": "approved",
+    "hash": "873f93cb",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s51-q02": {
+    "status": "approved",
+    "hash": "69028cfd",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s51-q03": {
+    "status": "approved",
+    "hash": "0265b0d4",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s52-q01": {
+    "status": "approved",
+    "hash": "9b9ed6d8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s52-q02": {
+    "status": "approved",
+    "hash": "147bb865",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s52-q03": {
+    "status": "approved",
+    "hash": "3d897702",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s53-q01": {
+    "status": "approved",
+    "hash": "ec2ba549",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s53-q02": {
+    "status": "approved",
+    "hash": "453c75fc",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s53-q03": {
+    "status": "approved",
+    "hash": "ce7793ad",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s54-q01": {
+    "status": "approved",
+    "hash": "2a5dabd4",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s54-q02": {
+    "status": "approved",
+    "hash": "8e091968",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s54-q03": {
+    "status": "approved",
+    "hash": "95e8b019",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s55-q01": {
+    "status": "approved",
+    "hash": "404056ce",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s55-q02": {
+    "status": "approved",
+    "hash": "1f52cff0",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s55-q03": {
+    "status": "approved",
+    "hash": "fea43104",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s56-q01": {
+    "status": "approved",
+    "hash": "73ec76ed",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s56-q02": {
+    "status": "approved",
+    "hash": "231f65e6",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "s56-q03": {
+    "status": "approved",
+    "hash": "d2420455",
+    "blindAnswer": [
+      0,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-001": {
+    "status": "approved",
+    "hash": "12ad9f7d",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-002": {
+    "status": "approved",
+    "hash": "bb4cdaad",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-003": {
+    "status": "approved",
+    "hash": "a0d33553",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-004": {
+    "status": "approved",
+    "hash": "9a26e45b",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-005": {
+    "status": "approved",
+    "hash": "01a97785",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-006": {
+    "status": "approved",
+    "hash": "581a968f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-007": {
+    "status": "approved",
+    "hash": "a70fb62d",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-008": {
+    "status": "approved",
+    "hash": "2d777b08",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-009": {
+    "status": "approved",
+    "hash": "87d01484",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-010": {
+    "status": "approved",
+    "hash": "9f373475",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-011": {
+    "status": "approved",
+    "hash": "bbbb3644",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-012": {
+    "status": "approved",
+    "hash": "216a6f08",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-013": {
+    "status": "approved",
+    "hash": "75b24ac8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-014": {
+    "status": "approved",
+    "hash": "52adba14",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-015": {
+    "status": "approved",
+    "hash": "47079c75",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-016": {
+    "status": "approved",
+    "hash": "ed189586",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-017": {
+    "status": "approved",
+    "hash": "caf7d4b8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-018": {
+    "status": "approved",
+    "hash": "4c18b8cd",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-019": {
+    "status": "approved",
+    "hash": "359b3c3b",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-020": {
+    "status": "approved",
+    "hash": "cabe4c94",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-021": {
+    "status": "approved",
+    "hash": "f6f79d99",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-022": {
+    "status": "approved",
+    "hash": "ed478976",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-023": {
+    "status": "approved",
+    "hash": "48de98a7",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-024": {
+    "status": "approved",
+    "hash": "01392f77",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-025": {
+    "status": "approved",
+    "hash": "34270e1f",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-026": {
+    "status": "approved",
+    "hash": "db951970",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-027": {
+    "status": "approved",
+    "hash": "fddeb821",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-028": {
+    "status": "approved",
+    "hash": "61408d1b",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-029": {
+    "status": "approved",
+    "hash": "ced56ae9",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-030": {
+    "status": "approved",
+    "hash": "45a3433b",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-031": {
+    "status": "approved",
+    "hash": "2ed4fb9c",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-032": {
+    "status": "approved",
+    "hash": "6970be75",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-033": {
+    "status": "approved",
+    "hash": "29ec3573",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-034": {
+    "status": "approved",
+    "hash": "af0ffe66",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-035": {
+    "status": "approved",
+    "hash": "dc29dd06",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-036": {
+    "status": "approved",
+    "hash": "46774fcb",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-037": {
+    "status": "approved",
+    "hash": "18927a2e",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-038": {
+    "status": "approved",
+    "hash": "6ab67b2c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-039": {
+    "status": "approved",
+    "hash": "1058edba",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-040": {
+    "status": "approved",
+    "hash": "d94933f4",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-041": {
+    "status": "approved",
+    "hash": "4d8f899a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-042": {
+    "status": "approved",
+    "hash": "b474314a",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-043": {
+    "status": "approved",
+    "hash": "4cfdd1cd",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-044": {
+    "status": "approved",
+    "hash": "b1682bd6",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-045": {
+    "status": "approved",
+    "hash": "166d4db0",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-046": {
+    "status": "approved",
+    "hash": "6714347c",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-047": {
+    "status": "approved",
+    "hash": "df6a275e",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-048": {
+    "status": "approved",
+    "hash": "10ac3856",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-049": {
+    "status": "approved",
+    "hash": "8528b57e",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-050": {
+    "status": "approved",
+    "hash": "05878bf4",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-051": {
+    "status": "approved",
+    "hash": "8b90d69c",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p1-052": {
+    "status": "approved",
+    "hash": "8058ecd6",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-001": {
+    "status": "approved",
+    "hash": "d9fd6f3e",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-002": {
+    "status": "approved",
+    "hash": "420a2125",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-003": {
+    "status": "approved",
+    "hash": "fd53eebd",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-004": {
+    "status": "approved",
+    "hash": "3c951951",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-005": {
+    "status": "approved",
+    "hash": "e5b67c72",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-006": {
+    "status": "approved",
+    "hash": "8d15df91",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-007": {
+    "status": "approved",
+    "hash": "a47224e1",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-008": {
+    "status": "approved",
+    "hash": "4347323c",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-009": {
+    "status": "approved",
+    "hash": "81841723",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-010": {
+    "status": "approved",
+    "hash": "b30e31a5",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-011": {
+    "status": "approved",
+    "hash": "055ca23d",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-012": {
+    "status": "approved",
+    "hash": "4aa3fa5d",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-013": {
+    "status": "approved",
+    "hash": "1bd33907",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-014": {
+    "status": "approved",
+    "hash": "f7146d64",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-015": {
+    "status": "approved",
+    "hash": "dc97dc73",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-016": {
+    "status": "approved",
+    "hash": "85b3889d",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-017": {
+    "status": "approved",
+    "hash": "d52091c9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-018": {
+    "status": "approved",
+    "hash": "845db036",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-019": {
+    "status": "approved",
+    "hash": "2a00f978",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-020": {
+    "status": "approved",
+    "hash": "2a26e2e2",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-021": {
+    "status": "approved",
+    "hash": "c4a3ca40",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-022": {
+    "status": "approved",
+    "hash": "b843ef06",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-023": {
+    "status": "approved",
+    "hash": "c8498874",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-024": {
+    "status": "approved",
+    "hash": "70a8f319",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-025": {
+    "status": "approved",
+    "hash": "7596a5c2",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-026": {
+    "status": "approved",
+    "hash": "3448ae53",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-027": {
+    "status": "approved",
+    "hash": "f7c88e7f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-028": {
+    "status": "approved",
+    "hash": "3ae5efa8",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-029": {
+    "status": "approved",
+    "hash": "edd73525",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-030": {
+    "status": "approved",
+    "hash": "b6f73d59",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-031": {
+    "status": "approved",
+    "hash": "ebf84dfb",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-032": {
+    "status": "approved",
+    "hash": "aa59cb74",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-033": {
+    "status": "approved",
+    "hash": "947ae64f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-034": {
+    "status": "approved",
+    "hash": "9a1f3014",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-035": {
+    "status": "approved",
+    "hash": "64954449",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-036": {
+    "status": "approved",
+    "hash": "f6db9a98",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-037": {
+    "status": "approved",
+    "hash": "b48a8727",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-038": {
+    "status": "approved",
+    "hash": "b974b2cc",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-039": {
+    "status": "approved",
+    "hash": "a2c65984",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-040": {
+    "status": "approved",
+    "hash": "4b1482c0",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-041": {
+    "status": "approved",
+    "hash": "3f65be2d",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-042": {
+    "status": "approved",
+    "hash": "2518a5ee",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-043": {
+    "status": "approved",
+    "hash": "0ca7cd5b",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-044": {
+    "status": "approved",
+    "hash": "198b037d",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-045": {
+    "status": "approved",
+    "hash": "c04a25da",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-046": {
+    "status": "approved",
+    "hash": "8643faf9",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-047": {
+    "status": "approved",
+    "hash": "1586c081",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-048": {
+    "status": "approved",
+    "hash": "e00c8b50",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-049": {
+    "status": "approved",
+    "hash": "0212a2da",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-050": {
+    "status": "approved",
+    "hash": "da84ee0f",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-051": {
+    "status": "approved",
+    "hash": "f9e47995",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-052": {
+    "status": "approved",
+    "hash": "71791982",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-001": {
+    "status": "approved",
+    "hash": "a95f8fcd",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-002": {
+    "status": "approved",
+    "hash": "6c7596e6",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-003": {
+    "status": "approved",
+    "hash": "57b216b1",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-004": {
+    "status": "approved",
+    "hash": "e2e9d589",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-005": {
+    "status": "approved",
+    "hash": "49d8840b",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-006": {
+    "status": "approved",
+    "hash": "ad1b455b",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-007": {
+    "status": "approved",
+    "hash": "b938a8d8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-008": {
+    "status": "approved",
+    "hash": "5f2221f4",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-009": {
+    "status": "approved",
+    "hash": "643ed881",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-010": {
+    "status": "approved",
+    "hash": "7ceb7cd5",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-011": {
+    "status": "approved",
+    "hash": "64d2bda1",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-012": {
+    "status": "approved",
+    "hash": "eb3184bf",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-013": {
+    "status": "approved",
+    "hash": "556104fc",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-014": {
+    "status": "approved",
+    "hash": "fdaa04c8",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-015": {
+    "status": "approved",
+    "hash": "44bd0903",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-016": {
+    "status": "approved",
+    "hash": "fab67f18",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-017": {
+    "status": "approved",
+    "hash": "6f4963aa",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-018": {
+    "status": "approved",
+    "hash": "cac9f717",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-019": {
+    "status": "approved",
+    "hash": "2fdfc6c1",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-020": {
+    "status": "approved",
+    "hash": "3a37a91f",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-021": {
+    "status": "approved",
+    "hash": "6e290120",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-022": {
+    "status": "approved",
+    "hash": "d4613ccd",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-023": {
+    "status": "approved",
+    "hash": "661b8e38",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-024": {
+    "status": "approved",
+    "hash": "9647ac9c",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-025": {
+    "status": "approved",
+    "hash": "7e6b62a5",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-026": {
+    "status": "approved",
+    "hash": "ba0a40b7",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-027": {
+    "status": "approved",
+    "hash": "052a0b4f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-028": {
+    "status": "approved",
+    "hash": "f4bc97b6",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-029": {
+    "status": "approved",
+    "hash": "c4349d09",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-030": {
+    "status": "approved",
+    "hash": "2574ae38",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-031": {
+    "status": "approved",
+    "hash": "9dd0e54e",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-032": {
+    "status": "approved",
+    "hash": "f1d42d6a",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-033": {
+    "status": "approved",
+    "hash": "d42def51",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-034": {
+    "status": "approved",
+    "hash": "0ec93a7c",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-035": {
+    "status": "approved",
+    "hash": "81ae8716",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-036": {
+    "status": "approved",
+    "hash": "d6c65c8f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-037": {
+    "status": "approved",
+    "hash": "2129b0a8",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-038": {
+    "status": "approved",
+    "hash": "2ca1fa1f",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-039": {
+    "status": "approved",
+    "hash": "3f1e06c9",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-040": {
+    "status": "approved",
+    "hash": "19784836",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-041": {
+    "status": "approved",
+    "hash": "6559440f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-042": {
+    "status": "approved",
+    "hash": "641b76db",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-043": {
+    "status": "approved",
+    "hash": "93fca6c8",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-044": {
+    "status": "approved",
+    "hash": "a58f77ed",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-045": {
+    "status": "approved",
+    "hash": "f27e1e36",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-046": {
+    "status": "approved",
+    "hash": "49375a89",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-047": {
+    "status": "approved",
+    "hash": "5d1fd438",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-048": {
+    "status": "approved",
+    "hash": "48774ddd",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-049": {
+    "status": "approved",
+    "hash": "cea4d5a2",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-050": {
+    "status": "approved",
+    "hash": "e1a95a17",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-051": {
+    "status": "approved",
+    "hash": "6517091c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-052": {
+    "status": "approved",
+    "hash": "96e1837a",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-053": {
+    "status": "approved",
+    "hash": "82fad598",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-054": {
+    "status": "approved",
+    "hash": "b2e34f70",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-055": {
+    "status": "approved",
+    "hash": "8322e2b2",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p3-056": {
+    "status": "approved",
+    "hash": "434f4ee1",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-001": {
+    "status": "approved",
+    "hash": "6d09f86b",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-002": {
+    "status": "approved",
+    "hash": "03ed6a73",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-003": {
+    "status": "approved",
+    "hash": "9ca7b270",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-004": {
+    "status": "approved",
+    "hash": "dce52a30",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-005": {
+    "status": "approved",
+    "hash": "03dd12c7",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-006": {
+    "status": "approved",
+    "hash": "6c020b2d",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-007": {
+    "status": "approved",
+    "hash": "0c206e92",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-008": {
+    "status": "approved",
+    "hash": "ebc14551",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-009": {
+    "status": "approved",
+    "hash": "ba1c7b8f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-010": {
+    "status": "approved",
+    "hash": "2bf54056",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-011": {
+    "status": "approved",
+    "hash": "3a5e6eee",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-012": {
+    "status": "approved",
+    "hash": "73bf5281",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-013": {
+    "status": "approved",
+    "hash": "7383c9c6",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-014": {
+    "status": "approved",
+    "hash": "06421754",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-015": {
+    "status": "approved",
+    "hash": "47de5da3",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-016": {
+    "status": "approved",
+    "hash": "e86fc3e8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-017": {
+    "status": "approved",
+    "hash": "e5772a60",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-018": {
+    "status": "approved",
+    "hash": "61d7dea1",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-019": {
+    "status": "approved",
+    "hash": "87c91021",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-020": {
+    "status": "approved",
+    "hash": "9149539f",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-021": {
+    "status": "approved",
+    "hash": "9a83f037",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-022": {
+    "status": "approved",
+    "hash": "96daa639",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-023": {
+    "status": "approved",
+    "hash": "05bda3ae",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-024": {
+    "status": "approved",
+    "hash": "5060c4a3",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-025": {
+    "status": "approved",
+    "hash": "fb72135e",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-026": {
+    "status": "approved",
+    "hash": "4a409d10",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-027": {
+    "status": "approved",
+    "hash": "f15fc888",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-028": {
+    "status": "approved",
+    "hash": "391bc95f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-029": {
+    "status": "approved",
+    "hash": "180f9ca7",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-030": {
+    "status": "approved",
+    "hash": "e1eef75b",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-031": {
+    "status": "approved",
+    "hash": "20194d4a",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-032": {
+    "status": "approved",
+    "hash": "1e0fdbe5",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-033": {
+    "status": "approved",
+    "hash": "0c5049de",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-034": {
+    "status": "approved",
+    "hash": "60471623",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-035": {
+    "status": "approved",
+    "hash": "ad698f98",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-036": {
+    "status": "approved",
+    "hash": "93f6f2e3",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-037": {
+    "status": "approved",
+    "hash": "3989201d",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-038": {
+    "status": "approved",
+    "hash": "9632a2fa",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-039": {
+    "status": "approved",
+    "hash": "0009d05d",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-040": {
+    "status": "approved",
+    "hash": "e98d9e66",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-041": {
+    "status": "approved",
+    "hash": "70338158",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-042": {
+    "status": "approved",
+    "hash": "6251bff3",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-043": {
+    "status": "approved",
+    "hash": "10a53c76",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-044": {
+    "status": "approved",
+    "hash": "174cfaee",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-045": {
+    "status": "approved",
+    "hash": "9eb80045",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-046": {
+    "status": "approved",
+    "hash": "21e9bc87",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-047": {
+    "status": "approved",
+    "hash": "b35a9329",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-048": {
+    "status": "approved",
+    "hash": "a6c5df49",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-049": {
+    "status": "approved",
+    "hash": "42dbc544",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-050": {
+    "status": "approved",
+    "hash": "c3778cd8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-051": {
+    "status": "approved",
+    "hash": "c49159d5",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p4-052": {
+    "status": "approved",
+    "hash": "3453a1cc",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-001": {
+    "status": "approved",
+    "hash": "0d99dc52",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-002": {
+    "status": "approved",
+    "hash": "816fa710",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-003": {
+    "status": "approved",
+    "hash": "f866421b",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-004": {
+    "status": "approved",
+    "hash": "f2b1d8fc",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-005": {
+    "status": "approved",
+    "hash": "9776cf63",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-006": {
+    "status": "approved",
+    "hash": "db0028e0",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-007": {
+    "status": "approved",
+    "hash": "2c84a7d0",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-008": {
+    "status": "approved",
+    "hash": "65a99ea8",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-009": {
+    "status": "approved",
+    "hash": "8d18d5be",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-010": {
+    "status": "approved",
+    "hash": "6fe18992",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-011": {
+    "status": "approved",
+    "hash": "ef520538",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-012": {
+    "status": "approved",
+    "hash": "f5798cff",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-013": {
+    "status": "approved",
+    "hash": "721a4d89",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-014": {
+    "status": "approved",
+    "hash": "34a54f33",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-015": {
+    "status": "approved",
+    "hash": "883ce8f1",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-016": {
+    "status": "approved",
+    "hash": "b80129ef",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-017": {
+    "status": "approved",
+    "hash": "eeda8a43",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-018": {
+    "status": "approved",
+    "hash": "acad6afa",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-019": {
+    "status": "approved",
+    "hash": "78a853c2",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-020": {
+    "status": "approved",
+    "hash": "3c1cd0e5",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-021": {
+    "status": "approved",
+    "hash": "5a6b6835",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-022": {
+    "status": "approved",
+    "hash": "e47ce4e9",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-023": {
+    "status": "approved",
+    "hash": "5efc56b0",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-024": {
+    "status": "approved",
+    "hash": "a380b7ce",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-025": {
+    "status": "approved",
+    "hash": "38bcffae",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-026": {
+    "status": "approved",
+    "hash": "9499393a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-027": {
+    "status": "approved",
+    "hash": "1e00711f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-028": {
+    "status": "approved",
+    "hash": "7301277f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-029": {
+    "status": "approved",
+    "hash": "0f69e7b9",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-030": {
+    "status": "approved",
+    "hash": "00d21465",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-031": {
+    "status": "approved",
+    "hash": "b647534b",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-032": {
+    "status": "approved",
+    "hash": "13699e44",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-033": {
+    "status": "approved",
+    "hash": "785da37c",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-034": {
+    "status": "approved",
+    "hash": "9bfa747b",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-035": {
+    "status": "approved",
+    "hash": "ef0dfac6",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-036": {
+    "status": "approved",
+    "hash": "0382100f",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-037": {
+    "status": "approved",
+    "hash": "512bfe53",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-038": {
+    "status": "approved",
+    "hash": "283db36b",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-039": {
+    "status": "approved",
+    "hash": "7e0bbfac",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-040": {
+    "status": "approved",
+    "hash": "d811f15d",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-041": {
+    "status": "approved",
+    "hash": "9bfa22bf",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-042": {
+    "status": "approved",
+    "hash": "f7fd980a",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-043": {
+    "status": "approved",
+    "hash": "7f1389a9",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-044": {
+    "status": "approved",
+    "hash": "bf4d0fa5",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-045": {
+    "status": "approved",
+    "hash": "f5a8a938",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p5-046": {
+    "status": "approved",
+    "hash": "282207f3",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-001": {
+    "status": "approved",
+    "hash": "b258404f",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-002": {
+    "status": "approved",
+    "hash": "dac51350",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-003": {
+    "status": "approved",
+    "hash": "4706f675",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-004": {
+    "status": "approved",
+    "hash": "7404f58a",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-005": {
+    "status": "approved",
+    "hash": "1cb2ba55",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-006": {
+    "status": "approved",
+    "hash": "ac5cddd6",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-007": {
+    "status": "approved",
+    "hash": "36662a44",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-008": {
+    "status": "approved",
+    "hash": "6b98ba5c",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-009": {
+    "status": "approved",
+    "hash": "d49a0e94",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-010": {
+    "status": "approved",
+    "hash": "07d64d57",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-011": {
+    "status": "approved",
+    "hash": "480e47f4",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-012": {
+    "status": "approved",
+    "hash": "c46d53e6",
+    "blindAnswer": [
+      0,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-013": {
+    "status": "approved",
+    "hash": "8a7b170a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-014": {
+    "status": "approved",
+    "hash": "624a0b2d",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-015": {
+    "status": "approved",
+    "hash": "6bd3ed02",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-016": {
+    "status": "approved",
+    "hash": "ead60728",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-017": {
+    "status": "approved",
+    "hash": "04ba43fb",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-018": {
+    "status": "approved",
+    "hash": "e9a15899",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-019": {
+    "status": "approved",
+    "hash": "c4f1f48b",
+    "blindAnswer": [
+      1,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-020": {
+    "status": "approved",
+    "hash": "ccc5d371",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-021": {
+    "status": "approved",
+    "hash": "cdb030e8",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-022": {
+    "status": "approved",
+    "hash": "2fc3d7b7",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-023": {
+    "status": "approved",
+    "hash": "d0460998",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-024": {
+    "status": "approved",
+    "hash": "0b1ae145",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-025": {
+    "status": "approved",
+    "hash": "02a16a9b",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-026": {
+    "status": "approved",
+    "hash": "8aae6f1b",
+    "blindAnswer": [
+      2,
+      4
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-027": {
+    "status": "approved",
+    "hash": "b33d748f",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-028": {
+    "status": "approved",
+    "hash": "7f4375fa",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-029": {
+    "status": "approved",
+    "hash": "5dfb35e1",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-030": {
+    "status": "approved",
+    "hash": "517eeea1",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-031": {
+    "status": "approved",
+    "hash": "ac13db72",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-032": {
+    "status": "approved",
+    "hash": "28622c48",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-033": {
+    "status": "approved",
+    "hash": "29d2affb",
+    "blindAnswer": [
+      0,
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-034": {
+    "status": "approved",
+    "hash": "89c76f90",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-035": {
+    "status": "approved",
+    "hash": "b13d4f81",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-036": {
+    "status": "approved",
+    "hash": "b915db21",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-037": {
+    "status": "approved",
+    "hash": "1096a131",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-038": {
+    "status": "approved",
+    "hash": "2ae9fb7e",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-039": {
+    "status": "approved",
+    "hash": "a096ab6c",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-040": {
+    "status": "approved",
+    "hash": "b4ac7420",
+    "blindAnswer": [
+      1,
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-041": {
+    "status": "approved",
+    "hash": "23ea3ee8",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-042": {
+    "status": "approved",
+    "hash": "f4d3562a",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-043": {
+    "status": "approved",
+    "hash": "4faed005",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-044": {
+    "status": "approved",
+    "hash": "f2cbc893",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-045": {
+    "status": "approved",
+    "hash": "ff829f3a",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-046": {
+    "status": "approved",
+    "hash": "d78c78a4",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-047": {
+    "status": "approved",
+    "hash": "bb8c4cde",
+    "blindAnswer": [
+      2,
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-048": {
+    "status": "approved",
+    "hash": "b31d48b1",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-049": {
+    "status": "approved",
+    "hash": "f3abf530",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-050": {
+    "status": "approved",
+    "hash": "bc22b1f7",
+    "blindAnswer": [
+      2
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-051": {
+    "status": "approved",
+    "hash": "bfdb24ff",
+    "blindAnswer": [
+      3
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p6-052": {
+    "status": "approved",
+    "hash": "1c066428",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 5,
+    "rounds": 1,
+    "notes": "Independent blind solve & technical review passed (2025-2026 SAA-C03 limits verified)."
+  },
+  "x-p2-099": {
+    "status": "needs-human",
+    "hash": "7c4e91a2",
+    "blindAnswer": [
+      0
+    ],
+    "blindConfidence": 2,
+    "rounds": 2,
+    "notes": "Câu hỏi so sánh thời gian chuyển tầng S3 Lifecycle dưới 30 ngày có 2 cách diễn giải nếu object nhỏ hơn 128 KB; đã loại khỏi exam-bank-1.js để chờ quyết định của người dùng."
+  },
+  "x-p4-099": {
+    "status": "needs-human",
+    "hash": "9b12d0e4",
+    "blindAnswer": [
+      1
+    ],
+    "blindConfidence": 3,
+    "rounds": 2,
+    "notes": "Câu hỏi giới hạn kích thước tin nhắn SQS giữa chuẩn cũ 256 KB và chuẩn mới 1 MiB (8/2025) có thể gây nhầm lẫn nếu không nêu rõ SDK; đã loại khỏi exam-bank-3.js."
+  }
+}

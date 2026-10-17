@@ -1,0 +1,698 @@
+[
+  {
+    "id": "s1-l0",
+    "sessionId": 1,
+    "idx": 0,
+    "qEn": "An IAM user belongs to two IAM groups: 'Developers' and 'Contractors'. The 'Developers' group has a policy that allows all Amazon S3 actions (s3:*). The 'Contractors' group has a policy that explicitly denies s3:DeleteBucket. What happens when this user tries to delete an S3 bucket?"
+  },
+  {
+    "id": "s1-l1",
+    "sessionId": 1,
+    "idx": 1,
+    "qEn": "A company hires 50 new developers. Each developer needs read/write access ONLY to their own personal folder (s3://company-bucket/users/&lt;username&gt;/*) in a shared S3 bucket. How can the solutions architect implement this with the LEAST administrative effort?"
+  },
+  {
+    "id": "s1-l2",
+    "sessionId": 1,
+    "idx": 2,
+    "qEn": "A security team wants to allow senior developers to create IAM roles for Lambda functions, but must ensure they cannot create roles with Administrator privileges (privilege escalation). Which IAM feature solves this?"
+  },
+  {
+    "id": "s2-l0",
+    "sessionId": 2,
+    "idx": 0,
+    "qEn": "A Java application running on an Amazon EC2 instance needs to read and write items to an Amazon DynamoDB table. What is the MOST secure way to grant the application access to the DynamoDB table?"
+  },
+  {
+    "id": "s2-l1",
+    "sessionId": 2,
+    "idx": 1,
+    "qEn": "A security engineer wants to identify which IAM users in the company's AWS account have not rotated their access keys in the last 180 days and do not have MFA enabled. Which feature should the engineer use with the LEAST operational effort?"
+  },
+  {
+    "id": "s2-l2",
+    "sessionId": 2,
+    "idx": 2,
+    "qEn": "A company wants to continuously monitor its AWS environment to identify any S3 buckets, KMS keys, or IAM roles that are shared with external principals outside its AWS Organization. Which service should be used?"
+  },
+  {
+    "id": "s3-l0",
+    "sessionId": 3,
+    "idx": 0,
+    "qEn": "An Auto Scaling group launches new EC2 instances during traffic spikes, but the instances take 15 minutes to become healthy because the EC2 User Data script downloads and compiles large software packages. How can a solutions architect reduce the launch time to under 2 minutes?"
+  },
+  {
+    "id": "s3-l1",
+    "sessionId": 3,
+    "idx": 1,
+    "qEn": "A hospital requires that patient medical imaging data must remain physically inside the hospital's on-premises data center for strict data residency compliance, while allowing developers to deploy applications using standard AWS APIs (EC2, EBS, S3). Which solution meets this requirement?"
+  },
+  {
+    "id": "s3-l2",
+    "sessionId": 3,
+    "idx": 2,
+    "qEn": "A security audit revealed that an application running on EC2 is vulnerable to Server-Side Request Forgery (SSRF) attacks that could steal temporary IAM credentials from http://169.254.169.254. How should the architect mitigate this risk?"
+  },
+  {
+    "id": "s4-l0",
+    "sessionId": 4,
+    "idx": 0,
+    "qEn": "A 3-tier web application consists of an Application Load Balancer (ALB), a fleet of EC2 instances in an Auto Scaling group, and an Amazon RDS MySQL database. How should the solutions architect configure the security groups to ensure that the EC2 instances only accept traffic from the ALB?"
+  },
+  {
+    "id": "s4-l1",
+    "sessionId": 4,
+    "idx": 1,
+    "qEn": "A developer launched a Linux EC2 instance and wants to allow HTTP (port 80) traffic from the internet. The developer added an Inbound rule allowing port 80 from 0.0.0.0/0 and removed all Outbound rules from the Security Group. What happens when a user requests a web page over port 80?"
+  },
+  {
+    "id": "s5-l0",
+    "sessionId": 5,
+    "idx": 0,
+    "qEn": "A company runs a nightly batch processing job that takes 3 hours to complete. The job is stateless, can be interrupted and restarted without data loss, and must run at the lowest possible compute cost. Which EC2 purchasing option should the solutions architect recommend?"
+  },
+  {
+    "id": "s5-l1",
+    "sessionId": 5,
+    "idx": 1,
+    "qEn": "An enterprise needs to migrate an on-premises database to Amazon EC2. The database software has a strict Bring Your Own License (BYOL) policy that is licensed based on the number of physical CPU sockets and cores on the underlying server. Which EC2 option meets this requirement?"
+  },
+  {
+    "id": "s5-l2",
+    "sessionId": 5,
+    "idx": 2,
+    "qEn": "A company currently runs workloads on Amazon EC2 in us-east-1, but plans to modernize its architecture by migrating half of these workloads to AWS Fargate and AWS Lambda in eu-west-1 over the next 8 months. Which pricing model provides the highest savings while accommodating this migration?"
+  },
+  {
+    "id": "s6-l0",
+    "sessionId": 6,
+    "idx": 0,
+    "qEn": "A company is deploying a large distributed Apache Kafka cluster of 60 EC2 instances across 3 Availability Zones. To prevent simultaneous data loss from a single hardware rack failure, the architecture requires that groups of instances are isolated on separate racks with independent power and network. Which placement group should be used?"
+  },
+  {
+    "id": "s6-l1",
+    "sessionId": 6,
+    "idx": 1,
+    "qEn": "A research team runs a weather forecasting High Performance Computing (HPC) application on Linux EC2 instances using Message Passing Interface (MPI). The application requires tightly coupled inter-node communication with the lowest possible latency and highest packet-per-second performance. Which configuration should the architect choose?"
+  },
+  {
+    "id": "s7-l0",
+    "sessionId": 7,
+    "idx": 0,
+    "qEn": "A legacy Java application running on an EC2 instance takes 12 minutes to initialize its in-memory cache upon startup. The instance is only needed during business hours. How can the solutions architect minimize the startup time each morning while saving compute costs overnight?"
+  },
+  {
+    "id": "s7-l1",
+    "sessionId": 7,
+    "idx": 1,
+    "qEn": "A financial company processes highly sensitive credit card data on Amazon EC2 instances. Compliance requires that the decryption and processing of this data occur in a hardened, isolated compute environment on the EC2 instance with no persistent storage, no external networking, and no administrative SSH access. Which feature meets this requirement?"
+  },
+  {
+    "id": "s8-l0",
+    "sessionId": 8,
+    "idx": 0,
+    "qEn": "A solutions architect needs to automate the creation and retention of daily Amazon EBS snapshots for a fleet of EC2 instances, deleting snapshots older than 30 days with minimal operational overhead. Which AWS service or feature should be used?"
+  },
+  {
+    "id": "s8-l1",
+    "sessionId": 8,
+    "idx": 1,
+    "qEn": "A company regularly restores large production databases from Amazon EBS snapshots onto new EBS volumes for testing. However, the team notices severe I/O latency during the first few hours after each volume is created because data blocks are lazily loaded from Amazon S3. Which feature eliminates this initial latency?"
+  },
+  {
+    "id": "s9-l0",
+    "sessionId": 9,
+    "idx": 0,
+    "qEn": "A production relational database runs on an EC2 instance using a 1 TB gp2 EBS volume. The database is experiencing I/O bottlenecks and requires 12,000 IOPS consistently, but does not need additional storage capacity. What is the MOST cost-effective way to meet the performance requirement?"
+  },
+  {
+    "id": "s9-l1",
+    "sessionId": 9,
+    "idx": 1,
+    "qEn": "A company is deploying a mission-critical clustered application across 4 Linux EC2 instances in a single Availability Zone (us-east-1a). The application uses a cluster-aware file system (GFS2) and requires all 4 instances to concurrently read and write to the same raw block storage volume with 40,000 IOPS. Which storage solution should be used?"
+  },
+  {
+    "id": "s10-l0",
+    "sessionId": 10,
+    "idx": 0,
+    "qEn": "A company hosts a content management system (CMS) on a fleet of Linux EC2 instances distributed across three Availability Zones behind an Application Load Balancer. All instances must read and write user-uploaded documents to a shared POSIX-compliant file system concurrently. Which storage solution should be used?"
+  },
+  {
+    "id": "s10-l1",
+    "sessionId": 10,
+    "idx": 1,
+    "qEn": "An engineer created an Amazon EFS file system and mount targets in each Availability Zone. However, when running the 'mount' command from an EC2 instance in the same VPC, the connection times out. What is the MOST likely cause?"
+  },
+  {
+    "id": "s11-l0",
+    "sessionId": 11,
+    "idx": 0,
+    "qEn": "A company runs multiple microservices on Amazon ECS behind a single load balancer. Requests to 'api.example.com/orders' must go to the Orders service, while requests to 'api.example.com/payments' must go to the Payments service. Which load balancer should be used?"
+  },
+  {
+    "id": "s11-l1",
+    "sessionId": 11,
+    "idx": 1,
+    "qEn": "A web application hosted on EC2 instances behind an Application Load Balancer (ALB) logs the client IP address for security auditing. However, the logs only show the private IP addresses of the ALB nodes instead of the actual end-user IPs. How can the developer fix this?"
+  },
+  {
+    "id": "s12-l0",
+    "sessionId": 12,
+    "idx": 0,
+    "qEn": "A financial services application uses a custom TCP protocol and requires ultra-low latency capable of handling millions of requests per second. Additionally, corporate clients require fixed Static IP addresses so they can whitelist the application in their corporate firewalls. Which load balancer should be used?"
+  },
+  {
+    "id": "s12-l1",
+    "sessionId": 12,
+    "idx": 1,
+    "qEn": "A security team wants to deploy a fleet of third-party virtual network appliances (IDS/IPS and deep packet inspection firewalls) on EC2 instances to inspect all traffic entering the VPC before it reaches the application servers. Which load balancer is specifically designed to scale and manage this fleet transparently?"
+  },
+  {
+    "id": "s13-l0",
+    "sessionId": 13,
+    "idx": 0,
+    "qEn": "A company hosts multiple websites (site1.com, site2.com, site3.com) on a single fleet of EC2 instances behind one Application Load Balancer (ALB). Each website requires its own separate SSL/TLS certificate. How can the solutions architect configure this at the lowest cost?"
+  },
+  {
+    "id": "s13-l1",
+    "sessionId": 13,
+    "idx": 1,
+    "qEn": "A company has 2 EC2 instances in AZ-a and 8 EC2 instances in AZ-b behind a Network Load Balancer (NLB). The team notices that the 2 instances in AZ-a are running at 90% CPU utilization while the 8 instances in AZ-b are only at 20% CPU. Why is this happening and how can it be fixed?"
+  },
+  {
+    "id": "s14-l0",
+    "sessionId": 14,
+    "idx": 0,
+    "qEn": "An application runs on an Auto Scaling group of EC2 instances and writes diagnostic logs to the local disk before uploading them to Amazon S3 every 15 minutes. During scale-in events, instances are terminated before the latest logs are uploaded, causing data loss. How can the solutions architect ensure all logs are uploaded to S3 before an instance is terminated?"
+  },
+  {
+    "id": "s14-l1",
+    "sessionId": 14,
+    "idx": 1,
+    "qEn": "A company's e-commerce website experiences predictable weekly traffic patterns with spikes every Friday evening and Saturday morning. However, instances take several minutes to warm up. Which Auto Scaling policy uses machine learning to analyze historical traffic and provision capacity ahead of forecasted spikes?"
+  },
+  {
+    "id": "s15-l0",
+    "sessionId": 15,
+    "idx": 0,
+    "qEn": "A company has 500,000 existing objects in an S3 bucket and just enabled Cross-Region Replication (CRR) to a destination bucket in another Region. However, the engineer notices that only newly uploaded objects are being replicated. How can the engineer replicate the 500,000 existing objects?"
+  },
+  {
+    "id": "s15-l1",
+    "sessionId": 15,
+    "idx": 1,
+    "qEn": "A financial institution uses S3 Cross-Region Replication (CRR) for disaster recovery. Strict compliance rules require a predictable replication time backed by an SLA where 99.99% of objects must be replicated within 15 minutes. Which S3 feature should be enabled?"
+  },
+  {
+    "id": "s16-l0",
+    "sessionId": 16,
+    "idx": 0,
+    "qEn": "A healthcare company stores millions of high-resolution medical images in Amazon S3. These images are rarely accessed (once every few months), but when a patient arrives at the emergency room, doctors must be able to retrieve the images immediately within milliseconds. Which S3 storage class is the MOST cost-effective?"
+  },
+  {
+    "id": "s16-l1",
+    "sessionId": 16,
+    "idx": 1,
+    "qEn": "A media company allows users to upload large video files to Amazon S3 using Multipart Upload. A cost audit reveals that the bucket is incurring significant storage charges for thousands of unfinished, abandoned upload parts from failed connections. How can the architect automatically clean up these parts?"
+  },
+  {
+    "id": "s17-l0",
+    "sessionId": 17,
+    "idx": 0,
+    "qEn": "An e-commerce company stores customer order files in a single S3 bucket. The analytics application needs to read these files, but compliance rules require that all Personally Identifiable Information (PII) be masked before the analytics application receives the data. The company does not want to duplicate or create modified copies of the files in S3. Which solution meets these requirements?"
+  },
+  {
+    "id": "s17-l1",
+    "sessionId": 17,
+    "idx": 1,
+    "qEn": "Users located across Europe, Asia, and South America upload 50 GB video files to a centralized S3 bucket in us-east-1. Users complain about slow upload speeds over the public internet. Which combination of S3 features will maximize upload performance?"
+  },
+  {
+    "id": "s18-l0",
+    "sessionId": 18,
+    "idx": 0,
+    "qEn": "A company stores millions of sensitive financial documents in an S3 bucket encrypted with a custom AWS KMS key (SSE-KMS). Recently, high-volume analytics jobs reading from the bucket started failing with KMS 'ThrottlingException' errors, and AWS KMS costs have spiked. How can the architect resolve the throttling and reduce KMS costs by up to 99%?"
+  },
+  {
+    "id": "s18-l1",
+    "sessionId": 18,
+    "idx": 1,
+    "qEn": "A security policy mandates that all objects in an S3 bucket must be encrypted in transit. How should the solutions architect enforce this requirement?"
+  },
+  {
+    "id": "s19-l0",
+    "sessionId": 19,
+    "idx": 0,
+    "qEn": "A financial firm must store transaction records in Amazon S3 for 7 years to meet strict regulatory standards. During this 7-year period, NO user—not even the AWS account root user or system administrators—can be allowed to modify or delete the files, or shorten the retention period. Which S3 feature meets this requirement?"
+  },
+  {
+    "id": "s19-l1",
+    "sessionId": 19,
+    "idx": 1,
+    "qEn": "A company shares large genomic datasets stored in an Amazon S3 bucket with external partner organizations that have their own AWS accounts. The company wants to pay only for the storage of the data, while requiring the partner organizations to pay for the data transfer and request costs when they download the files. Which feature should be enabled?"
+  },
+  {
+    "id": "s20-l0",
+    "sessionId": 20,
+    "idx": 0,
+    "qEn": "An e-commerce application uses an Amazon RDS for MySQL database. Every afternoon, the business intelligence team runs complex reporting queries against the database, which slows down customer order processing. What should the solutions architect do to improve performance?"
+  },
+  {
+    "id": "s20-l1",
+    "sessionId": 20,
+    "idx": 1,
+    "qEn": "A company needs to perform a major version upgrade on its production Amazon RDS for PostgreSQL database with minimal downtime (under 1 minute) and wants a fully managed staging environment to test the upgrade before switching production traffic. Which feature should be used?"
+  },
+  {
+    "id": "s21-l0",
+    "sessionId": 21,
+    "idx": 0,
+    "qEn": "A serverless application uses hundreds of concurrent AWS Lambda functions that read and write to an Amazon RDS for MySQL database. During traffic spikes, the database experiences high CPU usage and 'Too many connections' errors due to the rapid opening and closing of database connections. Which solution resolves this issue?"
+  },
+  {
+    "id": "s21-l1",
+    "sessionId": 21,
+    "idx": 1,
+    "qEn": "A company runs a 40 TB production database on Amazon Aurora. The QA team needs an identical copy of the production data to run performance tests today, but wants to minimize storage costs and create the test database as quickly as possible without impacting production. Which feature should be used?"
+  },
+  {
+    "id": "s22-l0",
+    "sessionId": 22,
+    "idx": 0,
+    "qEn": "A gaming company is developing a multiplayer mobile game that requires a real-time global leaderboard for millions of players. The solution must provide sub-millisecond latency, high availability with automatic failover across Availability Zones, and native support for sorting player scores. Which service should be used?"
+  },
+  {
+    "id": "s22-l1",
+    "sessionId": 22,
+    "idx": 1,
+    "qEn": "An application uses Amazon ElastiCache in front of an RDS database to cache user profiles. The team wants to ensure that customers NEVER see stale profile data immediately after updating their profile, while keeping read latency as low as possible. Which caching strategy should be implemented?"
+  },
+  {
+    "id": "s23-l0",
+    "sessionId": 23,
+    "idx": 0,
+    "qEn": "A flash-sale e-commerce website uses Amazon DynamoDB. For 23 hours a day, traffic is almost zero, but during a 1-hour flash sale, traffic spikes unpredictably to 50,000 requests per second within seconds, causing 'ProvisionedThroughputExceededException' errors because Auto Scaling cannot react fast enough. Which solution resolves this?"
+  },
+  {
+    "id": "s23-l1",
+    "sessionId": 23,
+    "idx": 1,
+    "qEn": "A social media application stores celebrity posts in Amazon DynamoDB. When a celebrity posts an update, millions of users read that single item simultaneously, causing throttling on that specific partition key. How can the architect reduce read latency to microseconds and eliminate the hot key issue without changing application logic?"
+  },
+  {
+    "id": "s24-l0",
+    "sessionId": 24,
+    "idx": 0,
+    "qEn": "A company stores temporary user session tokens in an Amazon DynamoDB table. Each item has an 'expiration_time' epoch timestamp attribute. The company wants to automatically delete expired sessions after 24 hours and archive the deleted items to Amazon S3 for audit purposes without consuming write capacity units (WCUs) for deletions. Which architecture meets these requirements?"
+  },
+  {
+    "id": "s24-l1",
+    "sessionId": 24,
+    "idx": 1,
+    "qEn": "A data science team wants to run complex SQL analytics using Amazon Athena on data stored in a production Amazon DynamoDB table. However, running Scan operations on the DynamoDB table throttles production traffic. How can the team export the data to S3 without consuming ANY read capacity (RCUs) on the active table?"
+  },
+  {
+    "id": "s25-l0",
+    "sessionId": 25,
+    "idx": 0,
+    "qEn": "A financial company is building a fraud detection system that analyzes complex relationships between bank accounts, shared phone numbers, IP addresses, and devices to uncover hidden fraud rings. Which AWS database service is purpose-built for storing and querying these highly connected datasets?"
+  },
+  {
+    "id": "s25-l1",
+    "sessionId": 25,
+    "idx": 1,
+    "qEn": "A manufacturing company collects temperature and vibration metrics every second from 100,000 IoT sensors in its factories. The company needs a serverless database specifically optimized for storing and analyzing time-series data with built-in time-series analytics functions. Which service should be used?"
+  },
+  {
+    "id": "s26-l0",
+    "sessionId": 26,
+    "idx": 0,
+    "qEn": "A company has connected its on-premises data center to an AWS VPC using AWS Direct Connect. Applications running on EC2 instances inside the VPC need to resolve DNS domain names (such as 'db.corp.internal') that are hosted on an on-premises Microsoft Active Directory DNS server. Which solution enables this DNS resolution?"
+  },
+  {
+    "id": "s26-l1",
+    "sessionId": 26,
+    "idx": 1,
+    "qEn": "A marketing team wants to host a web application at the root domain 'example.com' (Zone Apex) pointing to an Application Load Balancer (ALB). Which Route 53 record type should be created?"
+  },
+  {
+    "id": "s27-l0",
+    "sessionId": 27,
+    "idx": 0,
+    "qEn": "A streaming media company has legal broadcasting rights to show specific video content only to users located in Japan and Germany. Users from all other countries must be routed to a static page informing them that the content is unavailable in their country. Which Route 53 routing policy should be used?"
+  },
+  {
+    "id": "s27-l1",
+    "sessionId": 27,
+    "idx": 1,
+    "qEn": "A company wants to configure Route 53 Failover routing for an internal database server running on an EC2 instance inside a Private Subnet with no internet access. Since Route 53 health checkers cannot reach private IP addresses directly, how can the architect implement a health check for this instance?"
+  },
+  {
+    "id": "s28-l0",
+    "sessionId": 28,
+    "idx": 0,
+    "qEn": "A media website uses Amazon CloudFront to deliver premium video courses consisting of thousands of small HLS video segment files stored in Amazon S3. Only authenticated paid subscribers should be able to access all the video segments of a course. What is the MOST efficient way to restrict access?"
+  },
+  {
+    "id": "s28-l1",
+    "sessionId": 28,
+    "idx": 1,
+    "qEn": "A company runs a global multiplayer online game that uses the UDP protocol hosted on Network Load Balancers across three AWS Regions. Players complain about high latency and jitter, and corporate partners require fixed static IP addresses for whitelisting. Which AWS service should be placed in front of the NLBs?"
+  },
+  {
+    "id": "s29-l0",
+    "sessionId": 29,
+    "idx": 0,
+    "qEn": "A financial services company runs a high-performance computing (HPC) risk simulation on hundreds of Linux EC2 instances. The simulation reads raw input data from an Amazon S3 bucket, requires hundreds of GB/s of throughput with sub-millisecond latency during the 4-hour calculation, and writes the final results back to the S3 bucket. Which storage service is MOST suitable?"
+  },
+  {
+    "id": "s29-l1",
+    "sessionId": 29,
+    "idx": 1,
+    "qEn": "An enterprise is migrating a fleet of Microsoft Windows Server applications to AWS. The applications require a shared network file system that supports the SMB protocol, Windows NTFS permissions, and integrates directly with the company's self-managed Microsoft Active Directory across multiple Availability Zones. Which service should be used?"
+  },
+  {
+    "id": "s30-l0",
+    "sessionId": 30,
+    "idx": 0,
+    "qEn": "A company has 500 TB of archival files on an on-premises NAS server and wants to migrate them to Amazon S3 Glacier Deep Archive. The company's internet connection is only 50 Mbps, which cannot be upgraded. What is the MOST efficient way to migrate this data?"
+  },
+  {
+    "id": "s30-l1",
+    "sessionId": 30,
+    "idx": 1,
+    "qEn": "A hospital currently uses physical magnetic tapes and commercial backup software to archive patient records. The hospital wants to eliminate the cost of managing physical tapes by storing virtual tapes in Amazon S3 Glacier while continuing to use its existing tape backup software workflows without modification. Which solution meets this requirement?"
+  },
+  {
+    "id": "s31-l0",
+    "sessionId": 31,
+    "idx": 0,
+    "qEn": "An image processing application uses an Auto Scaling group of EC2 instances to poll an Amazon SQS queue. Currently, the Auto Scaling group scales based on EC2 CPU utilization, but during peak hours the SQS queue builds up a massive backlog of hundreds of thousands of messages resulting in slow processing times. How should the architect redesign the scaling strategy?"
+  },
+  {
+    "id": "s31-l1",
+    "sessionId": 31,
+    "idx": 1,
+    "qEn": "A Java application needs to send XML payloads through Amazon SQS. Most payloads are 50 KB, but occasionally some payloads reach 15 MB, causing SQS to reject the messages. What is the MOST operationally efficient way to handle these large messages?"
+  },
+  {
+    "id": "s32-l0",
+    "sessionId": 32,
+    "idx": 0,
+    "qEn": "An e-commerce application publishes all order events (Created, Shipped, Canceled) to a single Amazon SNS topic. Three different microservices subscribe to this topic via their own Amazon SQS queues. However, the Refund microservice only needs to process 'Canceled' orders and is wasting compute resources filtering out 'Created' and 'Shipped' messages. How can the architect optimize this?"
+  },
+  {
+    "id": "s32-l1",
+    "sessionId": 32,
+    "idx": 1,
+    "qEn": "A company wants an Amazon S3 bucket to send an event notification whenever a '.jpg' file is uploaded to the 'uploads/' prefix. The event must simultaneously trigger two separate processes: one SQS queue for image resizing and another SQS queue for virus scanning. However, S3 does not allow two event notifications with overlapping prefixes for the same event type. How should the architect solve this?"
+  },
+  {
+    "id": "s33-l0",
+    "sessionId": 33,
+    "idx": 0,
+    "qEn": "A company wants to collect clickstream data from its website and load it into an Amazon S3 data lake in Apache Parquet format for analytics. A delay of 1 to 2 minutes (near real-time) is acceptable, and the company wants a serverless solution with the LEAST operational overhead. Which service should be used?"
+  },
+  {
+    "id": "s33-l1",
+    "sessionId": 33,
+    "idx": 1,
+    "qEn": "An enterprise is migrating a legacy Java application from on-premises to AWS. The application uses the Java Message Service (JMS) API and AMQP protocol to communicate with an on-premises ActiveMQ message broker. The company wants to migrate the message broker to a managed AWS service without rewriting the application code. Which service should be used?"
+  },
+  {
+    "id": "s34-l0",
+    "sessionId": 34,
+    "idx": 0,
+    "qEn": "A company wants to migrate a monolithic web application to a microservices architecture using Docker containers. The engineering team is small and wants to avoid managing, patching, or scaling underlying Amazon EC2 instances. The containers also need to share a common POSIX file system across multiple Availability Zones. Which combination of services meets these requirements?"
+  },
+  {
+    "id": "s34-l1",
+    "sessionId": 34,
+    "idx": 1,
+    "qEn": "Five different microservices run as separate ECS tasks on a shared cluster of EC2 instances. Currently, permissions are granted via the EC2 Instance Profile, allowing all containers to access each other's S3 buckets and DynamoDB tables. How can the architect enforce least-privilege access for each individual microservice container?"
+  },
+  {
+    "id": "s35-l0",
+    "sessionId": 35,
+    "idx": 0,
+    "qEn": "A financial application uses AWS Lambda functions behind Amazon API Gateway. Users report that the first request after a period of inactivity takes 4 seconds to respond due to function initialization (cold start), while subsequent requests take only 50 ms. How can the solutions architect ensure consistent low latency for all requests?"
+  },
+  {
+    "id": "s35-l1",
+    "sessionId": 35,
+    "idx": 1,
+    "qEn": "A developer configured an AWS Lambda function to connect to a private Amazon RDS instance inside a VPC Private Subnet. After this change, the Lambda function can successfully query RDS, but it can no longer reach an external third-party payment gateway API over the internet. How should the architect fix this?"
+  },
+  {
+    "id": "s36-l0",
+    "sessionId": 36,
+    "idx": 0,
+    "qEn": "A company is building a serverless order fulfillment workflow that involves inventory verification, payment processing, fraud checking, and shipping label generation. If the payment step fails due to a transient error, it must automatically retry 3 times with exponential backoff, and high-value orders must pause and wait up to 7 days for manual manager approval via an email link. Which service should orchestrate this workflow?"
+  },
+  {
+    "id": "s36-l1",
+    "sessionId": 36,
+    "idx": 1,
+    "qEn": "A mobile game allows players to sign in using their existing social media accounts (Google, Apple, Facebook) or a custom username/password. Once signed in, the mobile app needs temporary, limited-privilege AWS credentials to save the player's game progress directly to an Amazon DynamoDB table. Which combination of services meets these requirements?"
+  },
+  {
+    "id": "s37-l0",
+    "sessionId": 37,
+    "idx": 0,
+    "qEn": "A network engineer needs to create a new VPC subnet that must accommodate at least 28 Amazon EC2 instances. To conserve IPv4 address space in the company's network, the engineer must select the smallest possible CIDR block size for this subnet. Which CIDR block size should be chosen?"
+  },
+  {
+    "id": "s37-l1",
+    "sessionId": 37,
+    "idx": 1,
+    "qEn": "A company's production VPC was originally created with a /24 CIDR block and has now run out of available IP addresses for new microservices. How can the solutions architect add more IP addresses to this VPC with minimal disruption?"
+  },
+  {
+    "id": "s38-l0",
+    "sessionId": 38,
+    "idx": 0,
+    "qEn": "A company's security policy prohibits opening inbound SSH (port 22) or RDP (port 3389) ports on any EC2 instances and forbids the use of SSH key pairs or Bastion hosts. However, system administrators still need interactive shell access to troubleshoot EC2 instances in private subnets, and all commands executed during sessions must be logged to Amazon S3 for auditing. Which solution meets these requirements?"
+  },
+  {
+    "id": "s38-l1",
+    "sessionId": 38,
+    "idx": 1,
+    "qEn": "An engineer launched an EC2 instance with a public IP address in a new subnet and allowed inbound HTTP traffic in the security group. An Internet Gateway is attached to the VPC, but users on the internet still cannot reach the web server. What is the MOST likely missing configuration?"
+  },
+  {
+    "id": "s39-l0",
+    "sessionId": 39,
+    "idx": 0,
+    "qEn": "A solutions architect deployed an application on EC2 instances inside a Private Subnet (`10.0.2.0/24`). The instances need to download software patches from the internet, so the architect created a NAT Gateway inside the same Private Subnet (`10.0.2.0/24`) and updated the route table. However, the instances still cannot reach the internet. Why?"
+  },
+  {
+    "id": "s39-l1",
+    "sessionId": 39,
+    "idx": 1,
+    "qEn": "A company currently uses a single t3.micro EC2 NAT Instance in AZ-a to provide outbound internet access for private subnets across three Availability Zones. During peak hours, outbound traffic is throttled due to network bandwidth limits on the NAT Instance, and it represents a single point of failure. How should the architect redesign this for high availability and high bandwidth with minimal operational overhead?"
+  },
+  {
+    "id": "s40-l0",
+    "sessionId": 40,
+    "idx": 0,
+    "qEn": "A security engineer notices in VPC Flow Logs that a specific external IP address (`198.51.100.44`) is attempting a brute-force attack against EC2 instances in a public subnet. The subnet's Network ACL currently has Rule 100 allowing inbound HTTP/HTTPS traffic from `0.0.0.0/0`. How should the engineer block this malicious IP address at the subnet level?"
+  },
+  {
+    "id": "s40-l1",
+    "sessionId": 40,
+    "idx": 1,
+    "qEn": "After modifying several route tables, security groups, and network ACLs across peered VPCs, an application server on EC2 can no longer connect to a database server. Which AWS tool can perform automated static configuration analysis to pinpoint the exact network component blocking the path without sending live traffic?"
+  },
+  {
+    "id": "s41-l0",
+    "sessionId": 41,
+    "idx": 0,
+    "qEn": "A company runs a data processing application on EC2 instances in private subnets. The instances download and upload 100 TB of data daily to Amazon S3 and Amazon DynamoDB through a NAT Gateway, resulting in very high NAT Gateway data processing charges on the monthly AWS bill. How can the solutions architect reduce these data transfer costs to zero?"
+  },
+  {
+    "id": "s41-l1",
+    "sessionId": 41,
+    "idx": 1,
+    "qEn": "A SaaS provider hosts a financial verification service inside its VPC (`10.0.0.0/16`) and needs to expose this single service privately to dozens of customer VPCs across different AWS accounts. Several customer VPCs also use the exact same `10.0.0.0/16` CIDR block, and security policies prohibit exposing the entire provider network via VPC Peering. Which architecture meets these requirements?"
+  },
+  {
+    "id": "s42-l0",
+    "sessionId": 42,
+    "idx": 0,
+    "qEn": "A healthcare company uses an AWS Direct Connect connection between its on-premises data center and AWS to transfer large medical files requiring consistent 10 Gbps throughput. A new compliance regulation requires that all data in transit over the Direct Connect connection must be encrypted using IPsec. Additionally, the company needs a cost-effective backup connection in case the Direct Connect fiber fails. What should the architect implement?"
+  },
+  {
+    "id": "s42-l1",
+    "sessionId": 42,
+    "idx": 1,
+    "qEn": "A global enterprise has 25 VPCs distributed across 4 different AWS Regions and wants to connect its on-premises data center to all 25 VPCs using a single AWS Direct Connect connection with the simplest network topology. Which combination of services should be used?"
+  },
+  {
+    "id": "s43-l0",
+    "sessionId": 43,
+    "idx": 0,
+    "qEn": "A company has migrated its VPC to a dual-stack configuration supporting both IPv4 and IPv6. The EC2 instances in the private subnets use IPv6 addresses and need outbound internet access to download OS updates, but security rules strictly prohibit any inbound IPv6 connections initiated from the internet. Which VPC component should the architect configure?"
+  },
+  {
+    "id": "s43-l1",
+    "sessionId": 43,
+    "idx": 1,
+    "qEn": "A financial institution requires deep packet inspection (IPS) and strict outbound domain filtering for all EC2 instances in its VPC so that instances can only initiate outbound HTTPS connections to approved partner domains (such as '*.trustedpartner.com') while blocking all other domains. Which AWS managed service meets this requirement?"
+  },
+  {
+    "id": "s44-l0",
+    "sessionId": 44,
+    "idx": 0,
+    "qEn": "A company stores 50 TB of application logs in CSV format in an Amazon S3 bucket. Data analysts use Amazon Athena to run ad-hoc SQL queries on these logs, but the queries are slow and monthly Athena costs are very high because each query scans the entire CSV dataset. How can the solutions architect significantly improve query performance and reduce Athena costs?"
+  },
+  {
+    "id": "s44-l1",
+    "sessionId": 44,
+    "idx": 1,
+    "qEn": "A company is building a central data lake on Amazon S3 accessed by multiple departments using Amazon Athena and Amazon QuickSight. Compliance rules require centralized governance with fine-grained column-level and row-level access controls so that HR analysts can see salary columns while Marketing analysts cannot. Which service provides this with the LEAST effort?"
+  },
+  {
+    "id": "s45-l0",
+    "sessionId": 45,
+    "idx": 0,
+    "qEn": "A healthcare company wants to digitize millions of scanned paper medical intake forms and insurance claim PDFs. The solution must automatically extract printed text, handwriting, checkboxes, and structured table data without requiring machine learning expertise. Which AWS service should be used?"
+  },
+  {
+    "id": "s45-l1",
+    "sessionId": 45,
+    "idx": 1,
+    "qEn": "A company operates a customer call center using Amazon Connect. All call audio recordings are saved to Amazon S3. The company wants to convert the audio recordings into text, automatically mask any customer credit card numbers or Social Security numbers in the text, and then analyze the text to determine whether customer sentiment is positive or negative. Which combination of services meets these requirements?"
+  },
+  {
+    "id": "s46-l0",
+    "sessionId": 46,
+    "idx": 0,
+    "qEn": "A system administrator wants to create an Amazon CloudWatch alarm that sends an notification whenever an EC2 instance's memory (RAM) utilization exceeds 85% or its root disk free space drops below 10%. However, the administrator cannot find these metrics in the CloudWatch console. What must be done to collect these metrics?"
+  },
+  {
+    "id": "s46-l1",
+    "sessionId": 46,
+    "idx": 1,
+    "qEn": "A company's security team discovered that an unauthorized IAM user deleted a production Amazon RDS database yesterday afternoon. Which AWS service should the team check to identify the exact IAM user, IP address, and timestamp of the API call that deleted the database?"
+  },
+  {
+    "id": "s47-l0",
+    "sessionId": 47,
+    "idx": 0,
+    "qEn": "A company uses AWS Organizations to manage 15 AWS accounts across multiple departments. Due to European data sovereignty laws, the company must ensure that no user—including the root user of any member account—can launch AWS resources in any Region outside of eu-central-1 (Frankfurt). How can the solutions architect enforce this rule centrally?"
+  },
+  {
+    "id": "s47-l1",
+    "sessionId": 47,
+    "idx": 1,
+    "qEn": "A large enterprise wants to centralize its networking by creating a single 'Network Account' that owns a VPC and its subnets, and then sharing specific subnets with multiple 'Application Accounts' within the same AWS Organization so developers can launch EC2 and RDS instances into those shared subnets. Which service enables this without VPC Peering?"
+  },
+  {
+    "id": "s48-l0",
+    "sessionId": 48,
+    "idx": 0,
+    "qEn": "A company hosts a web application on an Amazon Aurora PostgreSQL database. Security compliance mandates that the database master password must be encrypted at rest and automatically rotated every 30 days without requiring any application downtime or manual intervention. Which AWS service meets this requirement with the LEAST operational effort?"
+  },
+  {
+    "id": "s48-l1",
+    "sessionId": 48,
+    "idx": 1,
+    "qEn": "A solutions architect deployed a static website on an Amazon S3 bucket in the ap-northeast-1 (Tokyo) Region and placed an Amazon CloudFront distribution in front of it. The architect requested a public SSL/TLS certificate in AWS Certificate Manager (ACM) in the ap-northeast-1 Region, but CloudFront does not allow selecting the certificate. How should the architect fix this?"
+  },
+  {
+    "id": "s49-l0",
+    "sessionId": 49,
+    "idx": 0,
+    "qEn": "A company runs a public web application directly on a single Amazon EC2 instance with an Elastic IP address. Recently, the application has been targeted by SQL injection attacks and Layer 7 HTTP flood attacks originating from constantly changing IP addresses. How can the solutions architect protect the application with the LEAST operational effort?"
+  },
+  {
+    "id": "s49-l1",
+    "sessionId": 49,
+    "idx": 1,
+    "qEn": "A security team wants a service that continuously scans Amazon EC2 instances, container images stored in Amazon ECR, and AWS Lambda functions for known software vulnerabilities (CVEs) and unintended network exposure, generating a risk score for each finding. Which AWS service should be used?"
+  },
+  {
+    "id": "s50-l0",
+    "sessionId": 50,
+    "idx": 0,
+    "qEn": "A company wants to implement a disaster recovery (DR) strategy in a secondary AWS Region. To balance cost and recovery speed, the company wants a scaled-down but fully functional version of its entire production stack (including web servers, application servers, and databases) running at all times in the DR Region. In the event of a disaster, the DR environment will automatically scale out to handle full production traffic within minutes. Which DR strategy is this?"
+  },
+  {
+    "id": "s50-l1",
+    "sessionId": 50,
+    "idx": 1,
+    "qEn": "An enterprise is migrating a 10 TB on-premises Oracle database to Amazon Aurora PostgreSQL. The database must remain online and accessible to users during the migration to ensure near-zero downtime. Which combination of AWS tools should the solutions architect use?"
+  },
+  {
+    "id": "s51-l0",
+    "sessionId": 51,
+    "idx": 0,
+    "qEn": "A security team in a large enterprise needs to deploy a standardized set of IAM roles and Amazon S3 audit buckets across 40 AWS member accounts in 5 different AWS Regions within their AWS Organization. Whenever a new account is added to the Organization, these resources must be provisioned automatically. Which solution meets this requirement with the LEAST operational effort?"
+  },
+  {
+    "id": "s51-l1",
+    "sessionId": 51,
+    "idx": 1,
+    "qEn": "A CFO wants to reduce the company's monthly AWS bill. The engineering team suspects that many EC2 instances, EBS volumes, and AWS Lambda functions were over-provisioned with far more CPU, IOPS, and memory than they actually use. Which AWS service uses machine learning to analyze historical utilization metrics and recommend optimal right-sizing configurations?"
+  },
+  {
+    "id": "s52-l0",
+    "sessionId": 52,
+    "idx": 0,
+    "qEn": "A company runs a high-traffic web application across three Availability Zones using Linux EC2 instances, AWS Lambda functions, and Amazon ECS Fargate containers. All three compute platforms need concurrent read and write access to the same shared POSIX file storage. Which storage service meets this requirement?"
+  },
+  {
+    "id": "s52-l1",
+    "sessionId": 52,
+    "idx": 1,
+    "qEn": "A global e-commerce application uses an Amazon Aurora MySQL database in us-east-1. The company is expanding to Europe (eu-west-1) and Japan (ap-northeast-1) and requires sub-second data replication latency to the secondary Regions for local read queries, plus the ability to promote a secondary Region to full read/write capability in under 1 minute during a Region-wide disaster. Which solution meets these requirements?"
+  },
+  {
+    "id": "s53-l0",
+    "sessionId": 53,
+    "idx": 0,
+    "qEn": "A company runs a web application on EC2 instances in private subnets behind an Application Load Balancer (ALB). Corporate customers require fixed static IP addresses to whitelist in their firewalls, AND the application requires Layer 7 path-based routing (`/api/v1` vs `/api/v2`). Which architecture meets BOTH requirements?"
+  },
+  {
+    "id": "s53-l1",
+    "sessionId": 53,
+    "idx": 1,
+    "qEn": "An application running on EC2 instances inside an isolated private subnet (with no Internet Gateway and no NAT Gateway) needs to securely read secrets from AWS Secrets Manager and send messages to Amazon SQS. Which VPC feature enables this private connectivity?"
+  },
+  {
+    "id": "s54-l0",
+    "sessionId": 54,
+    "idx": 0,
+    "qEn": "A financial company needs to run a daily container-based data processing job that takes 45 minutes to complete and requires 32 GB of RAM. The team wants a serverless solution so they do not have to manage any EC2 instances. Which service should the solutions architect recommend?"
+  },
+  {
+    "id": "s54-l1",
+    "sessionId": 54,
+    "idx": 1,
+    "qEn": "An application processes orders using an Amazon SQS FIFO queue. To increase throughput, the architect deployed 10 EC2 consumer instances, but notices that only 1 EC2 instance is processing messages at any given time while the other 9 sit idle. Why is this happening and how can it be fixed?"
+  },
+  {
+    "id": "s55-l0",
+    "sessionId": 55,
+    "idx": 0,
+    "qEn": "A healthcare company stores millions of files in dozens of Amazon S3 buckets across multiple AWS accounts. A new compliance officer wants to automatically discover and classify any files across all buckets that might accidentally contain unencrypted patient names, addresses, or credit card numbers (PII), and receive alerts in AWS Security Hub. Which service should be enabled?"
+  },
+  {
+    "id": "s55-l1",
+    "sessionId": 55,
+    "idx": 1,
+    "qEn": "A company wants to automatically detect if an EC2 instance in its AWS account is compromised and communicating with known cryptocurrency mining pools or malicious IP addresses, and then automatically isolate the instance by replacing its security group. Which combination of services achieves this with the LEAST operational overhead?"
+  },
+  {
+    "id": "s56-l0",
+    "sessionId": 56,
+    "idx": 0,
+    "qEn": "A company is designing a new 3-tier web application on AWS. Which of the following architectural designs contains a fundamental technical flaw that will prevent it from working?"
+  },
+  {
+    "id": "s56-l1",
+    "sessionId": 56,
+    "idx": 1,
+    "qEn": "An architect is reviewing four requirements for a new cloud-native system. Which requirement CANNOT be met by AWS Lambda alone and requires an alternative compute service like AWS Batch or Amazon ECS on AWS Fargate?"
+  }
+]
