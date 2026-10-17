@@ -1050,3 +1050,239 @@ body {
   padding: 0.2rem 0.75rem 0.6rem;
   margin-top: 0.6rem;
 }
+
+/* ===== 2026 CONTENT REFRESH BADGES (P1) ===== */
+.fact-update {
+  display: inline;
+  background: rgba(16, 185, 129, 0.14);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 5px;
+  padding: 0.05rem 0.38rem;
+  font-weight: 600;
+}
+
+.fact-update::before {
+  content: "🆕 Cập nhật: ";
+  font-size: 0.76em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  opacity: 0.92;
+}
+
+.exam-legacy {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px dashed rgba(148, 163, 184, 0.35);
+  border-radius: 4px;
+  padding: 0.04rem 0.36rem;
+  margin-left: 0.25rem;
+  font-style: italic;
+}
+
+/* ===== P2: QUIZ ENGINE & COMPARISON TABLES ===== */
+.quiz-domain-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7dd3fc;
+  background: rgba(14, 165, 233, 0.12);
+  border: 1px solid rgba(14, 165, 233, 0.35);
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+
+.quiz-option.selected {
+  border-color: var(--accent-aws);
+  background: rgba(255, 153, 0, 0.14);
+}
+
+.quiz-why-wrong {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px dashed rgba(239, 68, 68, 0.4);
+  font-size: 0.82rem;
+  color: #fecaca;
+  font-weight: 400;
+}
+
+/* ===== P3: TIMED MOCK EXAM ===== */
+.exam-sticky-bar {
+  position: sticky;
+  top: 0;
+  z-index: 25;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.exam-timer {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--accent-green);
+  padding: 0.2rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.exam-timer.warning {
+  color: #fcd34d;
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+
+.exam-timer.danger {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.6);
+  animation: exam-pulse 1s infinite alternate;
+}
+
+@keyframes exam-pulse {
+  from { opacity: 1; }
+  to { opacity: 0.55; }
+}
+
+.exam-option {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.exam-option:hover {
+  border-color: var(--accent-aws);
+  background: rgba(255, 153, 0, 0.08);
+}
+
+.exam-option.selected {
+  border-color: var(--accent-aws);
+  background: rgba(255, 153, 0, 0.18);
+  font-weight: 600;
+}
+
+.exam-option-check {
+  color: var(--accent-aws);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.exam-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+  gap: 0.35rem;
+}
+
+.exam-nav-cell {
+  position: relative;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.exam-nav-cell.answered {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--accent-green);
+  color: #6ee7b7;
+}
+
+.exam-nav-cell.partial {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: var(--accent-aws);
+  color: #fcd34d;
+}
+
+.exam-nav-cell.current {
+  box-shadow: 0 0 0 2px var(--accent-aws);
+  color: #fff;
+}
+
+.exam-nav-cell.flagged {
+  border-color: #f59e0b;
+}
+
+.exam-flag-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.65rem;
+}
+
+.exam-domain-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.exam-domain-bar-track {
+  height: 8px;
+  background: var(--bg-primary);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.exam-domain-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+/* ===== P5: PHASE CHECKPOINT EXAMS ===== */
+.checkpoint-item {
+  margin: 0 1rem 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  border: 1px dashed var(--accent-aws);
+  background: rgba(255, 153, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.checkpoint-item.passed {
+  border-style: solid;
+  border-color: rgba(16, 185, 129, 0.55);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.checkpoint-item.ready {
+  border-style: solid;
+  border-color: var(--accent-aws);
+  box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.14);
+}
+
+.checkpoint-item.failed {
+  border-style: solid;
+  border-color: rgba(239, 68, 68, 0.55);
+  background: rgba(239, 68, 68, 0.07);
+}
+
+

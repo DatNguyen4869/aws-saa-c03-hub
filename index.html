@@ -24,6 +24,7 @@
       <nav class="nav-tabs">
         <button class="nav-tab active" data-tab="today">🎯 Học Hôm Nay (Bắt đầu ngay)</button>
         <button class="nav-tab" data-tab="curriculum">🗺️ Toàn Bộ 80 Buổi</button>
+        <button class="nav-tab" data-tab="exam">🧪 Thi Thử</button>
         <button class="nav-tab" data-tab="srs">🗂️ Luyện Thẻ Anki (SRS)</button>
         <button class="nav-tab" data-tab="compare">📊 Bảng So Sánh Dịch Vụ</button>
         <button class="nav-tab" data-tab="resources">🎁 Kho Đề & Tài Liệu Free</button>
@@ -91,6 +92,11 @@
         />
       </div>
       <div id="curriculum-phases-container"></div>
+    </section>
+
+    <!-- TAB: TIMED MOCK EXAM & CHECKPOINTS -->
+    <section id="tab-exam" class="tab-pane" style="display: none;">
+      <div id="exam-container"></div>
     </section>
 
     <!-- TAB 3: SPACED REPETITION FLASHCARDS (ANKI ENGINE) -->
@@ -226,9 +232,24 @@
   <script src="deep-content-2.js"></script>
   <script src="deep-content-3.js"></script>
   <script src="deep-content-4.js"></script>
+  <script src="content-patcher.js"></script>
+  <script src="content-patch-2026.js"></script>
+  <script src="quiz-engine.js"></script>
+  <script src="quiz-meta.js"></script>
+  <script src="quiz-bank-1.js"></script>
+  <script src="quiz-bank-2.js"></script>
+  <script src="quiz-bank-3.js"></script>
+  <script src="exam-bank-1.js"></script>
+  <script src="exam-bank-2.js"></script>
+  <script src="exam-bank-3.js"></script>
+  <script src="exam-bank-4.js"></script>
+  <script src="comparison-tables-2.js"></script>
+  <script src="exam-engine.js"></script>
+  <script src="checkpoints.js"></script>
   <script src="labs-1.js"></script>
   <script src="labs-2.js"></script>
   <script src="labs-3.js"></script>
   <script src="app.js"></script>
+  <script src="exam.js"></script>
 </body>
 </html>

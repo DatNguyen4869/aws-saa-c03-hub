@@ -6,6 +6,15 @@
   let hasInitialCloudPullDone = false;
   let pendingPushAfterPull = false;
 
+  const CP_SNOOZE_KEY = "aws_saa_c03_cp_snooze_v1";
+
+  function getNow() {
+    if (window.AwsHubClock && typeof window.AwsHubClock.now === "function") {
+      return window.AwsHubClock.now();
+    }
+    return Date.now();
+  }
+
   const state = {
     currentSessionId: 1,
     completedIds: [],
@@ -13,8 +22,10 @@
     srsData: {},       // cardKey -> { interval, ease, due, reps, updatedAt }
     customCards: [],   // Array of { id, sessionId, q, a }
     notes: {},         // sessionId -> string
-    quizAnswers: {},   // sessionId -> { quizIdx: chosenOptionIdx }  (giữ đáp án đã chọn khi đổi tab / sync Cloud)
+    quizAnswers: {},   // sessionId -> { quizId: chosenOptionIdx | number[], _v: 2, _t: timestamp }
     labProgress: {},   // sessionId -> { stepIdx: true }              (tick các bước thực hành đã làm)
+    examHistory: [],   // Array of ExamResult (Spec P3 & P5)
+    quizReports: [],   // Array of { quizId, sessionId, reportedAt } (Spec P2)
     updatedAt: 0,
     activeTab: "today",
     srsFilter: "due",  // "due" | "completed" | "current" | "custom" | "all"
@@ -26,8 +37,11 @@
 
   // Trạng thái giao diện tạm thời (không cần lưu Cloud) – giữ lại khi trang bị render lại
   const ui = {
-    viOpen: {},   // "sessionId_quizIdx" -> true
-    flipped: {}   // "sessionId_cardKey" -> true
+    viOpen: {},        // "sessionId_quizIdx" -> true
+    flipped: {},       // "sessionId_cardKey" -> true
+    multiDraft: {},    // quizId -> number[] (lựa chọn tạm cho câu Choose TWO trong bài học)
+    compareCategory: "all",
+    compareSearch: ""
   };
 
   function getPersistedPayload() {
@@ -40,6 +54,7 @@
       notes: state.notes,
       quizAnswers: state.quizAnswers,
       labProgress: state.labProgress,
+      examHistory: state.examHistory,
       updatedAt: state.updatedAt
     };
   }
@@ -88,7 +103,15 @@
         state.notes = parsed.notes || {};
         state.quizAnswers = parsed.quizAnswers || {};
         state.labProgress = parsed.labProgress || {};
+        state.examHistory = Array.isArray(parsed.examHistory) ? parsed.examHistory : [];
+        state.quizReports = Array.isArray(parsed.quizReports) ? parsed.quizReports : [];
         state.updatedAt = parsed.updatedAt || 0;
+      }
+      if (window.QuizEngine && typeof window.QuizEngine.migrateQuizAnswers === "function") {
+        state.quizAnswers = window.QuizEngine.migrateQuizAnswers(
+          state.quizAnswers,
+          window.STUDY_DATA.sessions
+        );
       }
     } catch (e) {
       console.error("Failed to load state", e);
@@ -262,8 +285,23 @@
       state.srsData = mergeSrsData(state.srsData, cloud.srsData);
       state.customCards = mergeCustomCards(state.customCards, cloud.customCards);
       state.notes = { ...(cloud.notes || {}), ...state.notes };
-      state.quizAnswers = mergeNestedMaps(state.quizAnswers, cloud.quizAnswers);
+      const migratedLocalQA =
+        window.QuizEngine && typeof window.QuizEngine.migrateQuizAnswers === "function"
+          ? window.QuizEngine.migrateQuizAnswers(state.quizAnswers, window.STUDY_DATA.sessions)
+          : state.quizAnswers;
+      const migratedCloudQA =
+        window.QuizEngine && typeof window.QuizEngine.migrateQuizAnswers === "function"
+          ? window.QuizEngine.migrateQuizAnswers(cloud.quizAnswers, window.STUDY_DATA.sessions)
+          : cloud.quizAnswers;
+      state.quizAnswers = mergeNestedMaps(migratedLocalQA, migratedCloudQA);
       state.labProgress = mergeNestedMaps(state.labProgress, cloud.labProgress);
+      if (window.ExamEngine && typeof window.ExamEngine.mergeExamHistory === "function") {
+        state.examHistory = window.ExamEngine.mergeExamHistory(
+          state.examHistory,
+          cloud.examHistory,
+          30
+        );
+      }
 
       // Determine best currentSessionId:
       // If cloud is newer, prefer cloud.currentSessionId; also if currentSessionId is already completed, advance to next uncompleted
@@ -307,8 +345,9 @@
         pendingPushAfterPull ||
         localTime > cloudTime ||
         cloudCompletedStr !== mergedCompletedStr ||
-        stableStr(cloud.quizAnswers) !== stableStr(state.quizAnswers) ||
-        stableStr(cloud.labProgress) !== stableStr(state.labProgress)
+        stableStr(migratedCloudQA) !== stableStr(state.quizAnswers) ||
+        stableStr(cloud.labProgress) !== stableStr(state.labProgress) ||
+        stableStr(cloud.examHistory || []) !== stableStr(state.examHistory || [])
       ) {
         pendingPushAfterPull = false;
         await pushToCloud();
@@ -549,6 +588,86 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     `;
   }
 
+  function getCpSnoozeMap() {
+    try {
+      const raw = localStorage.getItem(CP_SNOOZE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function snoozeCheckpoint(cpId) {
+    try {
+      const map = getCpSnoozeMap();
+      map[cpId] = getNow() + 24 * 3600 * 1000;
+      localStorage.setItem(CP_SNOOZE_KEY, JSON.stringify(map));
+    } catch (_) {}
+  }
+
+  function getCheckpointStatus(cpId) {
+    const checkpoints = window.CHECKPOINTS || [];
+    const cp = checkpoints.find((c) => c.id === cpId);
+    if (!cp) {
+      return {
+        unlocked: false,
+        phaseCompleted: false,
+        missingSessions: [],
+        attempts: 0,
+        bestPct: null,
+        lastAt: null
+      };
+    }
+
+    const completedSet = new Set((state.completedIds || []).map(Number));
+    const missingSessions = [];
+    for (let sid = 1; sid <= cp.afterSessionId; sid++) {
+      if (!completedSet.has(sid)) {
+        missingSessions.push(sid);
+      }
+    }
+
+    const phaseCompleted = missingSessions.length === 0;
+    const unlocked = completedSet.has(cp.afterSessionId) || phaseCompleted;
+    const cpResults = (state.examHistory || []).filter(
+      (r) => r && r.mode === "checkpoint" && r.cpId === cp.id
+    );
+    const attempts = cpResults.length;
+    const bestPct =
+      attempts > 0 ? Math.max(...cpResults.map((r) => Number(r.pct || 0))) : null;
+    const lastAt =
+      attempts > 0 ? Math.max(...cpResults.map((r) => Number(r.submittedAt || 0))) : null;
+
+    return {
+      unlocked,
+      phaseCompleted,
+      missingSessions,
+      attempts,
+      bestPct,
+      lastAt
+    };
+  }
+
+  function getPendingCheckpointForBanner() {
+    const checkpoints = window.CHECKPOINTS || [];
+    const snoozeMap = getCpSnoozeMap();
+    const nowTs = getNow();
+    const completedSet = new Set((state.completedIds || []).map(Number));
+
+    // Chỉ nhắc các checkpoint đã mở khóa (buổi afterSessionId đã hoàn thành) mà người học chưa làm
+    const candidates = checkpoints.filter((cp) => {
+      const st = getCheckpointStatus(cp.id);
+      if (st.attempts > 0) return false; // Đã làm ít nhất 1 lần thì không nhắc nữa
+      if ((snoozeMap[cp.id] || 0) > nowTs) return false; // Đang ẩn 24h
+      return completedSet.has(cp.afterSessionId);
+    });
+
+    if (candidates.length === 0) return null;
+    // Nhắc checkpoint gần nhất chưa làm
+    candidates.sort((a, b) => b.afterSessionId - a.afterSessionId);
+    return candidates[0];
+  }
+
   function renderTodayLesson() {
     const session = getSession(state.currentSessionId);
     const phaseObj = window.STUDY_DATA.phases.find((p) => p.id === session.phase);
@@ -558,8 +677,18 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     const promptText = buildAiPromptForSession(session);
     const sessionCustomCards = state.customCards.filter((c) => Number(c.sessionId) === session.id);
     const quizAnswers = state.quizAnswers[session.id] || {};
-    const hasQuiz = session.quizzes && session.quizzes.length;
+    const lessonQuizzes = (session.quizzes || []).filter((q) => !q.pool || q.pool === "lesson");
+    const hasQuiz = lessonQuizzes.length > 0;
     const hasLab = sessionNeedsLab(session);
+
+    const relatedTables = (window.STUDY_DATA.comparisonTables || []).filter(
+      (tb) => Array.isArray(tb.relatedSessions) && tb.relatedSessions.includes(session.id)
+    );
+    const secExamRef =
+      window.ExamEngine && typeof window.ExamEngine.examRefForSession === "function"
+        ? window.ExamEngine.examRefForSession(session.id)
+        : null;
+    const pendingCp = getPendingCheckpointForBanner();
 
     // Thứ tự học hợp lý: Lý thuyết → Thực hành → Hỏi AI cho chắc → Tự kiểm tra → Ghi nhớ
     const steps = [{ id: "sec-learn", label: "Học lý thuyết" }];
@@ -569,10 +698,31 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     steps.push({ id: "sec-cards", label: "Flashcards & Hoàn thành" });
     const stepNo = (id) => steps.findIndex((s) => s.id === id) + 1;
 
+    const getSavedAnswerForQuiz = (qz, idx) => {
+      const qId = qz.id || `s${session.id}-l${idx}`;
+      if (quizAnswers[qId] !== undefined) return quizAnswers[qId];
+      if (quizAnswers[idx] !== undefined) return quizAnswers[idx];
+      return undefined;
+    };
+
+    const isQuizRight = (qz, ans) => {
+      if (window.QuizEngine && typeof window.QuizEngine.isCorrect === "function") {
+        return window.QuizEngine.isCorrect(qz, ans);
+      }
+      return Number(ans) === qz.correctIdx;
+    };
+
     const quizScore = () => {
-      const answered = Object.keys(quizAnswers).filter((k) => k !== "_t");
-      const correct = answered.filter((k) => session.quizzes[k] && Number(quizAnswers[k]) === session.quizzes[k].correctIdx).length;
-      return { answered: answered.length, correct };
+      let answered = 0;
+      let correct = 0;
+      lessonQuizzes.forEach((qz, idx) => {
+        const ans = getSavedAnswerForQuiz(qz, idx);
+        if (ans !== undefined && ans !== null) {
+          answered++;
+          if (isQuizRight(qz, ans)) correct++;
+        }
+      });
+      return { answered, correct };
     };
 
     const completeBtnHtml = (id) => `
@@ -580,7 +730,61 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
         ${isCompleted ? "✅ Đã hoàn thành buổi này (Bấm để bỏ đánh dấu)" : "🎉 Hoàn thành Buổi #" + session.id + " & Sang buổi kế tiếp"}
       </button>`;
 
+    const checkpointBannerHtml = pendingCp
+      ? `
+        <div class="checkpoint-banner" data-cp-id="${pendingCp.id}">
+          <div class="checkpoint-banner-text">
+            <strong>🧭 Checkpoint đang chờ: ${escapeHtml(pendingCp.title)}</strong>
+            <span>(${pendingCp.count} câu / ${pendingCp.minutes} phút • Tổng hợp kiến thức từ đầu đến Buổi #${pendingCp.afterSessionId})</span>
+          </div>
+          <div class="checkpoint-banner-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-start-cp="${pendingCp.id}">🚀 Làm ngay</button>
+            <button type="button" class="btn btn-outline btn-sm" data-snooze-cp="${pendingCp.id}">Để sau</button>
+          </div>
+        </div>
+      `
+      : "";
+
+    const sectionExamCalloutHtml = secExamRef
+      ? `
+        <div class="lesson-section-block section-exam-callout" style="border-left:4px solid var(--accent-aws); margin-bottom:1rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+            <div>
+              <h3 style="margin-bottom:0.25rem; color:var(--accent-aws);">🧪 Thực Chiến Đề Thi Số ${secExamRef.examNo} – Phần ${secExamRef.part + 1} (Câu ${secExamRef.from}–${secExamRef.to})</h3>
+              <p style="font-size:0.88rem; color:var(--text-secondary); margin:0;">
+                Làm trực tiếp ${secExamRef.count} câu hỏi chuẩn SAA-C03 với đồng hồ đếm ngược ${secExamRef.count * 2} phút ngay trong tab Thi thử.
+              </p>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-start-section-exam" data-section-exam="${session.id}">
+              🧪 Làm phần đề này ngay trên web (${secExamRef.count} câu)
+            </button>
+          </div>
+        </div>
+      `
+      : "";
+
+    const relatedTablesHtml =
+      relatedTables.length > 0
+        ? `
+          <div class="lesson-section-block related-tables">
+            <h3>📊 Bảng so sánh liên quan</h3>
+            <div class="related-tables-list">
+              ${relatedTables
+                .map(
+                  (tb) => `
+                  <button type="button" class="btn btn-outline btn-sm related-table-link" data-open-table="${escapeHtml(tb.id)}">
+                    📊 ${escapeHtml(tb.title)}
+                  </button>
+                `
+                )
+                .join("")}
+            </div>
+          </div>
+        `
+        : "";
+
     container.innerHTML = `
+      ${checkpointBannerHtml}
       <div class="lesson-nav-bar">
         <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
           <button class="btn btn-outline btn-sm" id="btn-prev-session" ${session.id <= 1 ? "disabled" : ""}>← Buổi trước</button>
@@ -607,6 +811,8 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
       </div>
 
       <h2 class="lesson-title">Buổi #${session.id}: ${session.title}</h2>
+
+      ${sectionExamCalloutHtml}
 
       <!-- Lộ trình trong buổi học -->
       <div class="lesson-steps">
@@ -671,6 +877,8 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
         </ul>
       </div>
 
+      ${relatedTablesHtml}
+
       ${hasLab ? `
         <!-- ===== BƯỚC 2: THỰC HÀNH LAB ===== -->
         <div class="step-divider">${stepNo("sec-lab")}. 🛠️ Thực hành</div>
@@ -694,36 +902,83 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
             <h3 style="margin-bottom:0;">✍️ Thực Chiến Câu Hỏi Thi Thật (100% Tiếng Anh Chuẩn Pearson VUE SAA-C03)</h3>
             <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
-              <span class="badge badge-aws" id="quiz-score-badge">Đã làm ${quizScore().answered}/${session.quizzes.length} • Đúng ${quizScore().correct}</span>
+              <span class="badge badge-aws" id="quiz-score-badge">Đã làm ${quizScore().answered}/${lessonQuizzes.length} • Đúng ${quizScore().correct}</span>
               <button type="button" class="btn btn-outline btn-sm" id="btn-reset-quiz" style="padding:0.2rem 0.55rem; font-size:0.75rem;">🔁 Làm lại</button>
             </div>
           </div>
-          ${session.quizzes.map((qz, qIdx) => {
-            const chosen = quizAnswers[qIdx];
+          ${lessonQuizzes.map((qz, qIdx) => {
+            const qId = qz.id || `s${session.id}-l${qIdx}`;
+            const isMulti = Array.isArray(qz.correctIdxs);
+            const chosen = getSavedAnswerForQuiz(qz, qIdx);
             const answered = chosen !== undefined && chosen !== null;
+            const draft = Array.isArray(ui.multiDraft[qId]) ? ui.multiDraft[qId] : [];
             const viOpen = !!ui.viOpen[`${session.id}_${qIdx}`];
+            const cSet = new Set(
+              window.QuizEngine && typeof window.QuizEngine.correctSet === "function"
+                ? window.QuizEngine.correctSet(qz)
+                : isMulti ? qz.correctIdxs : [qz.correctIdx]
+            );
+            const chosenSet = new Set(
+              Array.isArray(chosen) ? chosen.map(Number) : answered ? [Number(chosen)] : []
+            );
+            const letters = ["A", "B", "C", "D", "E"];
+            const whyWrongHtml = Array.isArray(qz.whyWrong)
+              ? qz.whyWrong
+                  .map((reason, oIdx) =>
+                    reason
+                      ? `<div class="quiz-why-wrong" data-why-opt="${oIdx}">💡 <strong>Vì sao ${letters[oIdx] || oIdx + 1} sai:</strong> ${escapeHtml(reason)}</div>`
+                      : ""
+                  )
+                  .filter(Boolean)
+                  .join("")
+              : "";
+
             return `
-            <div class="quiz-card" data-quiz-idx="${qIdx}" data-correct-idx="${qz.correctIdx}">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; margin-bottom:0.45rem;">
-                <div class="quiz-question-en" style="margin-bottom:0; flex:1;">🇬🇧 <strong>Question ${qIdx + 1}:</strong> ${qz.qEn}</div>
-                <button type="button" class="btn btn-outline btn-sm" data-toggle-vi="${qIdx}" style="padding:0.2rem 0.55rem; font-size:0.75rem; white-space:nowrap;">${viOpen ? "🙈 Ẩn dịch câu hỏi" : "🇻🇳 Dịch câu hỏi"}</button>
+            <div class="quiz-card" data-quiz-id="${escapeHtml(qId)}" data-quiz-idx="${qIdx}" data-correct-idx="${qz.correctIdx ?? ""}" data-multi="${isMulti ? "true" : "false"}">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.35rem;">
+                <div style="display:flex; gap:0.4rem; align-items:center; flex-wrap:wrap;">
+                  <span class="quiz-domain-badge">Domain ${qz.domain || 1} • Task ${escapeHtml(qz.task || "1.1")}</span>
+                  ${isMulti ? `<span class="badge badge-blue">Choose TWO (Chọn 2 đáp án)</span>` : ""}
+                </div>
+                <div style="display:flex; gap:0.35rem; align-items:center;">
+                  <button type="button" class="btn btn-outline btn-sm" data-toggle-vi="${qIdx}" style="padding:0.2rem 0.55rem; font-size:0.75rem; white-space:nowrap;">${viOpen ? "🙈 Ẩn dịch câu hỏi" : "🇻🇳 Dịch câu hỏi"}</button>
+                  <button type="button" class="btn btn-outline btn-sm quiz-report-btn" data-report-quiz="${escapeHtml(qId)}" style="padding:0.2rem 0.5rem; font-size:0.72rem;" title="Báo lỗi câu hỏi">🚩 Báo lỗi</button>
+                </div>
+              </div>
+              <div style="margin-bottom:0.45rem;">
+                <div class="quiz-question-en" style="margin-bottom:0;">🇬🇧 <strong>Question ${qIdx + 1}:</strong> ${qz.qEn}</div>
               </div>
               <div class="quiz-question-vi" id="quiz-vi-${qIdx}" style="display:${viOpen ? "block" : "none"}; background:rgba(15,23,42,0.6); padding:0.5rem 0.75rem; border-radius:6px; margin-bottom:0.65rem; border-left:3px solid var(--accent-blue);">
                 🇻🇳 <strong>Tạm dịch đề bài:</strong> ${qz.qVi}
               </div>
               <div class="quiz-options">
                 ${qz.options.map((opt, oIdx) => {
-                  let cls = "";
+                  const cls = [];
                   if (answered) {
-                    if (oIdx === qz.correctIdx) cls = "correct";
-                    else if (oIdx === Number(chosen)) cls = "wrong";
+                    if (cSet.has(oIdx)) cls.push("correct");
+                    else if (chosenSet.has(oIdx)) cls.push("wrong");
+                  } else if (isMulti && draft.includes(oIdx)) {
+                    cls.push("selected");
                   }
-                  return `<button class="quiz-option ${cls}" data-opt-idx="${oIdx}">${opt}</button>`;
+                  return `<button type="button" class="quiz-option ${cls.join(" ")}" data-opt-idx="${oIdx}">${opt}</button>`;
                 }).join("")}
               </div>
+              ${
+                isMulti && !answered
+                  ? `
+                  <div style="margin-top:0.55rem; display:flex; align-items:center; gap:0.6rem;">
+                    <button type="button" class="btn btn-primary btn-sm quiz-submit-multi" data-submit-multi="${escapeHtml(qId)}" ${draft.length !== qz.correctIdxs.length ? "disabled" : ""}>
+                      ✅ Nộp đáp án (${draft.length}/${qz.correctIdxs.length})
+                    </button>
+                    <span style="font-size:0.78rem; color:var(--text-secondary);">Chọn đủ ${qz.correctIdxs.length} phương án rồi bấm Nộp</span>
+                  </div>
+                `
+                  : ""
+              }
               <div class="quiz-explanation ${answered ? "visible" : ""}" id="quiz-exp-${qIdx}">
                 <div style="margin-bottom:0.35rem; color:var(--text-secondary); font-size:0.84rem;">🇻🇳 <em>Dịch đề: ${qz.qVi}</em></div>
-                <strong>✅ Giải thích chi tiết:</strong> ${qz.explanation}
+                <div><strong>✅ Giải thích chi tiết:</strong> ${qz.explanation}</div>
+                ${whyWrongHtml ? `<div class="quiz-why-wrong-list" style="margin-top:0.5rem;">${whyWrongHtml}</div>` : ""}
               </div>
             </div>
           `;
@@ -766,6 +1021,48 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
       </div>
     `;
 
+    // Checkpoint banner actions
+    container.querySelectorAll("[data-start-cp]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cpId = btn.getAttribute("data-start-cp");
+        if (window.ExamUI && typeof window.ExamUI.startCheckpoint === "function") {
+          window.ExamUI.startCheckpoint(cpId);
+        }
+      });
+    });
+
+    container.querySelectorAll("[data-snooze-cp]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const cpId = btn.getAttribute("data-snooze-cp");
+        snoozeCheckpoint(cpId);
+        renderTodayLesson();
+        showToast("⏳ Đã tạm ẩn lời nhắc Checkpoint trong 24 giờ.");
+      });
+    });
+
+    // Section Exam button (Sessions 57..80)
+    const secExamBtn = document.getElementById("btn-start-section-exam");
+    if (secExamBtn) {
+      secExamBtn.addEventListener("click", () => {
+        if (window.ExamUI && typeof window.ExamUI.startSection === "function") {
+          window.ExamUI.startSection(session.id);
+        }
+      });
+    }
+
+    // Related comparison tables links
+    container.querySelectorAll("[data-open-table]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tbId = btn.getAttribute("data-open-table");
+        ui.compareCategory = "all";
+        ui.compareSearch = "";
+        switchTab("compare");
+        renderComparisonTab();
+        const target = document.getElementById(`compare-table-${tbId}`);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
     // Jump to step
     container.querySelectorAll("[data-jump]").forEach((pill) => {
       pill.addEventListener("click", () => {
@@ -789,48 +1086,123 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
       });
     });
 
-    // Interactive Quiz – đáp án được lưu vào state.quizAnswers (local + Cloud) nên không còn bị reset
+    // Report quiz issue button
+    container.querySelectorAll("[data-report-quiz]").forEach((rBtn) => {
+      rBtn.addEventListener("click", () => {
+        const qId = rBtn.getAttribute("data-report-quiz");
+        state.quizReports = state.quizReports || [];
+        state.quizReports.push({
+          quizId: qId,
+          sessionId: session.id,
+          reportedAt: getNow()
+        });
+        saveLocalOnly();
+        showToast(`🚩 Đã ghi nhận báo cáo cho câu hỏi ${qId}. Cảm ơn bạn!`);
+      });
+    });
+
+    // Interactive Quiz – đáp án được lưu vào state.quizAnswers (local + Cloud)
     const refreshQuizScore = () => {
       const badge = document.getElementById("quiz-score-badge");
       if (!badge) return;
       const sc = quizScore();
-      badge.textContent = `Đã làm ${sc.answered}/${session.quizzes.length} • Đúng ${sc.correct}`;
+      badge.textContent = `Đã làm ${sc.answered}/${lessonQuizzes.length} • Đúng ${sc.correct}`;
     };
 
     container.querySelectorAll(".quiz-card").forEach((qCard) => {
-      const correctIdx = Number(qCard.getAttribute("data-correct-idx"));
-      const qIdx = qCard.getAttribute("data-quiz-idx");
+      const qIdx = Number(qCard.getAttribute("data-quiz-idx"));
+      const qId = qCard.getAttribute("data-quiz-id");
+      const isMulti = qCard.getAttribute("data-multi") === "true";
+      const qz = lessonQuizzes[qIdx];
+      if (!qz) return;
+
       const expEl = document.getElementById(`quiz-exp-${qIdx}`);
       const optBtns = qCard.querySelectorAll(".quiz-option");
+      const submitMultiBtn = qCard.querySelector(".quiz-submit-multi");
 
-      optBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const chosenIdx = Number(btn.getAttribute("data-opt-idx"));
-          optBtns.forEach((b, i) => {
-            b.classList.remove("correct", "wrong");
-            if (i === correctIdx) b.classList.add("correct");
+      if (isMulti) {
+        const requiredCount = Array.isArray(qz.correctIdxs) ? qz.correctIdxs.length : 2;
+        optBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            if (getSavedAnswerForQuiz(qz, qIdx) !== undefined) return; // Already submitted
+            const chosenIdx = Number(btn.getAttribute("data-opt-idx"));
+            const draft = Array.isArray(ui.multiDraft[qId]) ? [...ui.multiDraft[qId]] : [];
+            const pos = draft.indexOf(chosenIdx);
+            if (pos >= 0) {
+              draft.splice(pos, 1);
+            } else {
+              if (draft.length >= requiredCount) draft.shift();
+              draft.push(chosenIdx);
+            }
+            ui.multiDraft[qId] = draft;
+            optBtns.forEach((b, i) => {
+              b.classList.toggle("selected", draft.includes(i));
+            });
+            if (submitMultiBtn) {
+              submitMultiBtn.disabled = draft.length !== requiredCount;
+              submitMultiBtn.textContent = `✅ Nộp đáp án (${draft.length}/${requiredCount})`;
+            }
           });
-          if (chosenIdx !== correctIdx) {
-            btn.classList.add("wrong");
-            showToast("❌ Chưa chính xác! Hãy đọc giải thích bên dưới nhé.");
-          } else {
-            showToast("🎯 Chính xác 100%! Bạn đã nắm vững ý này.");
-          }
-          if (expEl) expEl.classList.add("visible");
-
-          quizAnswers[qIdx] = chosenIdx;
-          quizAnswers._t = Date.now();
-          state.quizAnswers[session.id] = quizAnswers;
-          saveState();
-          refreshQuizScore();
         });
-      });
+
+        if (submitMultiBtn) {
+          submitMultiBtn.addEventListener("click", () => {
+            const draft = Array.isArray(ui.multiDraft[qId]) ? [...ui.multiDraft[qId]] : [];
+            if (draft.length !== requiredCount) return;
+            const sortedAns = draft.sort((a, b) => a - b);
+            quizAnswers[qId] = sortedAns;
+            quizAnswers._t = getNow();
+            quizAnswers._v = 2;
+            state.quizAnswers[session.id] = quizAnswers;
+            delete ui.multiDraft[qId];
+            saveState();
+            const isRight = isQuizRight(qz, sortedAns);
+            showToast(
+              isRight
+                ? "🎯 Chính xác 100%! Bạn đã chọn đúng cả 2 phương án."
+                : "❌ Chưa chính xác! Hãy xem giải thích chi tiết bên dưới."
+            );
+            renderTodayLesson();
+          });
+        }
+      } else {
+        const correctIdx = Number(qCard.getAttribute("data-correct-idx"));
+        optBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const chosenIdx = Number(btn.getAttribute("data-opt-idx"));
+            optBtns.forEach((b, i) => {
+              b.classList.remove("correct", "wrong", "selected");
+              if (i === correctIdx) b.classList.add("correct");
+            });
+            if (chosenIdx !== correctIdx) {
+              btn.classList.add("wrong");
+              showToast("❌ Chưa chính xác! Hãy đọc giải thích bên dưới nhé.");
+            } else {
+              showToast("🎯 Chính xác 100%! Bạn đã nắm vững ý này.");
+            }
+            if (expEl) expEl.classList.add("visible");
+
+            quizAnswers[qId] = chosenIdx;
+            if (qIdx < 3) {
+              quizAnswers[qIdx] = chosenIdx;
+            }
+            quizAnswers._t = getNow();
+            quizAnswers._v = 2;
+            state.quizAnswers[session.id] = quizAnswers;
+            saveState();
+            refreshQuizScore();
+          });
+        });
+      }
     });
 
     const resetQuizBtn = document.getElementById("btn-reset-quiz");
     if (resetQuizBtn) {
       resetQuizBtn.addEventListener("click", () => {
-        state.quizAnswers[session.id] = { _t: Date.now() };
+        state.quizAnswers[session.id] = { _t: getNow(), _v: 2 };
+        lessonQuizzes.forEach((qz) => {
+          if (qz.id) delete ui.multiDraft[qz.id];
+        });
         saveState();
         const scrollY = window.scrollY;
         renderTodayLesson();
@@ -846,7 +1218,7 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
         const prog = { ...(state.labProgress[session.id] || {}) };
         if (cb.checked) prog[idx] = true;
         else delete prog[idx];
-        prog._t = Date.now();
+        prog._t = getNow();
         state.labProgress[session.id] = prog;
         cb.closest(".lab-step").classList.toggle("done", cb.checked);
         const total = container.querySelectorAll("[data-lab-step]").length;
@@ -880,7 +1252,7 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     const resetLabBtn = document.getElementById("btn-reset-lab");
     if (resetLabBtn) {
       resetLabBtn.addEventListener("click", () => {
-        state.labProgress[session.id] = { _t: Date.now() };
+        state.labProgress[session.id] = { _t: getNow() };
         saveState();
         const scrollY = window.scrollY;
         renderTodayLesson();
@@ -918,7 +1290,7 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
         const id = session.id;
         if (state.completedIds.includes(id)) {
           state.completedIds = state.completedIds.filter((x) => x !== id);
-          state.uncompletedAt[id] = Date.now();
+          state.uncompletedAt[id] = getNow();
           showToast(`Đã bỏ đánh dấu hoàn thành Buổi #${id}`);
         } else {
           state.completedIds.push(id);
@@ -928,7 +1300,12 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
           if (nextUncompleted) {
             state.currentSessionId = nextUncompleted.id;
           }
-          showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã lưu tiến độ lên Cloud & đưa thẻ vào Anki!`);
+          const matchedCp = (window.CHECKPOINTS || []).find((cp) => cp.afterSessionId === id);
+          if (matchedCp) {
+            showToast(`🎉 Hoàn thành Buổi #${id}! Đã mở khóa ${matchedCp.title} — hãy thử sức ngay!`);
+          } else {
+            showToast(`🎉 Tuyệt vời! Bạn đã hoàn thành Buổi #${id}. Đã lưu tiến độ lên Cloud & đưa thẻ vào Anki!`);
+          }
         }
         saveState(true);
         buildSrsQueue();
@@ -979,6 +1356,7 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
   function renderCurriculumList(searchTerm = "") {
     const container = document.getElementById("curriculum-phases-container");
     const q = searchTerm.trim().toLowerCase();
+    const checkpoints = window.CHECKPOINTS || [];
 
     container.innerHTML = window.STUDY_DATA.phases.map((phase) => {
       const sessions = window.STUDY_DATA.sessions.filter((s) => {
@@ -1008,6 +1386,31 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
             ${sessions.map((s) => {
               const isDone = state.completedIds.includes(s.id);
               const isCurr = s.id === state.currentSessionId;
+              const cpAfter = checkpoints.find((cp) => cp.afterSessionId === s.id);
+              let cpRowHtml = "";
+              if (cpAfter) {
+                const cpStat = getCheckpointStatus(cpAfter.id);
+                const cpBestText =
+                  cpStat.bestPct !== null && cpStat.bestPct !== undefined
+                    ? `Điểm tốt nhất: ${Math.round(cpStat.bestPct * 100)}% (${cpStat.attempts} lần)`
+                    : "Chưa làm";
+                cpRowHtml = `
+                  <div class="checkpoint-item ${cpStat.attempts > 0 ? "completed" : ""}" data-checkpoint-id="${cpAfter.id}" data-after-session="${cpAfter.afterSessionId}">
+                    <div>
+                      <div style="display:flex; align-items:center; gap:0.4rem; margin-bottom:0.2rem;">
+                        <span class="badge badge-aws">🧭 Checkpoint ${cpAfter.phaseId}</span>
+                        <span style="font-size:0.75rem; color:var(--text-secondary);">${cpAfter.count} câu • ${cpAfter.minutes} phút • Ngưỡng tham khảo ${Math.round(cpAfter.passPct * 100)}%</span>
+                      </div>
+                      <div style="font-weight:700; font-size:0.92rem; color:var(--accent-aws);">${escapeHtml(cpAfter.title)}</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                      <span class="badge ${cpStat.attempts > 0 ? "badge-green" : "badge-blue"}">${cpBestText}</span>
+                      <button type="button" class="btn btn-primary btn-sm" data-launch-cp="${cpAfter.id}">Làm ngay</button>
+                    </div>
+                  </div>
+                `;
+              }
+
               return `
                 <div class="session-item ${isDone ? "completed" : ""} ${isCurr ? "current" : ""}" data-goto-session="${s.id}">
                   <div>
@@ -1022,6 +1425,7 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
                     ${isDone ? "✅" : isCurr ? "👉" : "⭕"}
                   </div>
                 </div>
+                ${cpRowHtml}
               `;
             }).join("")}
           </div>
@@ -1036,6 +1440,16 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
         switchTab("today");
         renderAll();
         window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    });
+
+    container.querySelectorAll("[data-launch-cp]").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const cpId = btn.getAttribute("data-launch-cp");
+        if (window.ExamUI && typeof window.ExamUI.startCheckpoint === "function") {
+          window.ExamUI.startCheckpoint(cpId);
+        }
       });
     });
   }
@@ -1558,33 +1972,129 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
   // ================= RENDER COMPARISON TABLES TAB =================
   function renderComparisonTab() {
     const container = document.getElementById("comparison-tables-container");
-    container.innerHTML = window.STUDY_DATA.comparisonTables.map((tb) => `
-      <div class="lesson-card" style="margin-bottom:1.5rem;">
-        <h3 style="color:var(--accent-aws); font-size:1.15rem; margin-bottom:0.5rem;">${tb.title}</h3>
-        <div class="comp-table-wrap">
-          <table class="comp-table">
-            <thead>
-              <tr>
-                ${tb.headers.map((h) => `<th>${h}</th>`).join("")}
-              </tr>
-            </thead>
-            <tbody>
-              ${tb.rows.map((r) => `
-                <tr>
-                  ${r.map((cell) => `<td>${cell}</td>`).join("")}
-                </tr>
-              `).join("")}
-            </tbody>
-          </table>
+    if (!container) return;
+
+    const categories = [
+      { id: "all", label: "Tất cả" },
+      { id: "Storage", label: "Storage" },
+      { id: "Database", label: "Database" },
+      { id: "Networking", label: "Networking" },
+      { id: "Integration", label: "Integration" },
+      { id: "Security", label: "Security" },
+      { id: "Compute", label: "Compute" },
+      { id: "Architecture", label: "Architecture" },
+      { id: "Migration", label: "Migration" },
+      { id: "Monitoring", label: "Monitoring" }
+    ];
+
+    const q = (state.compareSearch || "").trim().toLowerCase();
+    const cat = state.compareCategory || "all";
+
+    const filtered = (window.STUDY_DATA.comparisonTables || []).filter((tb) => {
+      if (cat !== "all" && tb.category !== cat && !(tb.category || "").startsWith(cat)) return false;
+      if (!q) return true;
+      const haystack = [
+        tb.title,
+        tb.category || "",
+        tb.examTip || "",
+        ...(tb.headers || []),
+        ...(tb.rows || []).flat()
+      ].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+
+    container.innerHTML = `
+      <div class="compare-toolbar" style="display:flex; gap:0.5rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem;">
+        <input id="compare-search-input" type="search" class="search-input" style="max-width:300px;"
+          placeholder="🔎 Tìm dịch vụ, thông số trong bảng..." value="${escapeHtml(state.compareSearch || "")}">
+        <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+          ${categories.map((c) => `
+            <button class="btn btn-sm ${cat === c.id ? "btn-primary" : "btn-outline"} compare-filter" data-category="${c.id}">
+              ${c.label}
+            </button>
+          `).join("")}
         </div>
       </div>
-    `).join("");
+
+      ${filtered.length === 0 ? `
+        <div class="lesson-card" style="text-align:center; color:var(--text-secondary);">
+          Không tìm thấy bảng so sánh phù hợp với từ khóa "${escapeHtml(state.compareSearch)}".
+        </div>
+      ` : filtered.map((tb) => `
+        <div class="lesson-card compare-card" id="compare-table-${tb.id || ""}" data-table-id="${tb.id || ""}" style="margin-bottom:1.5rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+            <h3 style="color:var(--accent-aws); font-size:1.15rem; margin:0;">${tb.title}</h3>
+            <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+              ${tb.category ? `<span class="badge badge-blue">${tb.category}</span>` : ""}
+              ${(tb.relatedSessions || []).slice(0, 5).map((sid) => `
+                <button class="btn btn-outline btn-sm" data-goto-session="${sid}" style="padding:0.1rem 0.45rem; font-size:0.72rem;">
+                  Buổi #${sid}
+                </button>
+              `).join("")}
+            </div>
+          </div>
+          ${tb.examTip ? `
+            <div class="lab-note compare-exam-tip" style="margin-bottom:0.65rem;">
+              <strong>🎯 Mẹo phòng thi SAA-C03:</strong> ${tb.examTip}
+            </div>
+          ` : ""}
+          <div class="comp-table-wrap">
+            <table class="comp-table">
+              <thead>
+                <tr>${tb.headers.map((h) => `<th>${h}</th>`).join("")}</tr>
+              </thead>
+              <tbody>
+                ${tb.rows.map((r) => `
+                  <tr>${r.map((cell) => `<td>${cell}</td>`).join("")}</tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `).join("")}
+    `;
+
+    const searchInput = document.getElementById("compare-search-input");
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        const pos = e.target.selectionStart;
+        state.compareSearch = e.target.value;
+        renderComparisonTab();
+        const next = document.getElementById("compare-search-input");
+        if (next) {
+          next.focus();
+          try { next.setSelectionRange(pos, pos); } catch (_) {}
+        }
+      });
+    }
+
+    container.querySelectorAll(".compare-filter").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.compareCategory = btn.getAttribute("data-category");
+        renderComparisonTab();
+      });
+    });
+
+    container.querySelectorAll("[data-goto-session]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.currentSessionId = Number(btn.getAttribute("data-goto-session"));
+        saveState();
+        renderAll();
+        switchTab("today");
+      });
+    });
   }
 
   // ================= RENDER FREE RESOURCES TAB =================
   function renderResourcesTab() {
     const container = document.getElementById("free-resources-container");
-    container.innerHTML = window.STUDY_DATA.freeResources.map((res) => `
+    const warningBanner = `
+      <div class="lab-note" style="grid-column: 1 / -1; margin-bottom: 0.5rem;">
+        <strong>⚠️ Lưu ý về tính liêm chính kỳ thi (AWS Certification Exam Security):</strong>
+        Chỉ luyện tập với các nguồn đề mô phỏng hợp lệ (AWS Skill Builder, Tutorials Dojo, Cloud Exam Pro, DevCloudly và bộ câu hỏi tự biên soạn ngay trong ứng dụng này). Không sử dụng bộ đề rò rỉ trái phép — hệ thống thống kê của AWS có thể hủy kết quả chứng chỉ (revoke certification) và cấm thi nếu phát hiện hành vi vi phạm NDA.
+      </div>
+    `;
+    container.innerHTML = warningBanner + window.STUDY_DATA.freeResources.map((res) => `
       <div class="resource-card">
         <div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
@@ -1613,6 +2123,8 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     if (tabId === "srs") {
       buildSrsQueue();
       renderSrsTab();
+    } else if (tabId === "exam") {
+      window.ExamUI?.onShow();
     }
   }
 
@@ -1757,6 +2269,85 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
     });
   });
 
+  // ================= PUBLIC API FOR MODULES (P2 / P3 / P5) =================
+  window.AwsHub = {
+    getQuizPool(filter) {
+      return window.QuizEngine.getQuizPool(
+        window.STUDY_DATA.sessions,
+        window.EXAM_BANK || [],
+        filter
+      );
+    },
+    getQuizById(qId) {
+      if (!qId) return null;
+      if (window.STUDY_DATA.quizById?.[qId]) return window.STUDY_DATA.quizById[qId];
+      const fromExam = (window.EXAM_BANK || []).find((q) => q && q.id === qId);
+      if (fromExam) return fromExam;
+      for (const s of window.STUDY_DATA.sessions || []) {
+        const found = (s.quizzes || []).find((q) => q && q.id === qId);
+        if (found) return found;
+      }
+      return null;
+    },
+    getCompletedSessionIds() {
+      return [...state.completedIds];
+    },
+    getExamHistory() {
+      return [...(state.examHistory || [])];
+    },
+    addExamResult(result) {
+      state.examHistory = window.ExamEngine.mergeExamHistory(state.examHistory || [], [result]);
+      saveState(true);
+      renderProgressBanner();
+      renderCurriculumList(document.getElementById("curriculum-search")?.value || "");
+      renderTodayLesson();
+    },
+    addCustomCards(cards) {
+      let added = 0;
+      cards.forEach((c) => {
+        const exists = state.customCards.some((x) => x.q === c.q && x.sessionId === c.sessionId);
+        if (!exists) {
+          state.customCards.push({
+            id: "cust_exam_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+            sessionId: c.sessionId || 1,
+            q: c.q,
+            a: c.a
+          });
+          added++;
+        }
+      });
+      if (added > 0) {
+        saveState(true);
+        buildSrsQueue();
+        renderProgressBanner();
+      }
+      return added;
+    },
+    goToSession(sessionId) {
+      state.currentSessionId = Number(sessionId);
+      saveState();
+      renderAll();
+      switchTab("today");
+    },
+    openExamTab(opts) {
+      switchTab("exam");
+      if (opts?.preset) {
+        window.ExamUI?.startPreset(opts.preset, opts.filter);
+      } else if (opts?.sectionId || opts?.sessionId) {
+        window.ExamUI?.startSection(opts.sessionId || opts.sectionId);
+      } else if (opts?.checkpointId) {
+        window.ExamUI?.startCheckpoint(opts.checkpointId);
+      }
+    },
+    getCheckpointStatus(cp) {
+      return getCheckpointStatus(cp);
+    },
+    showToast,
+    now() {
+      return typeof window.AwsHubClock?.now === "function" ? window.AwsHubClock.now() : Date.now();
+    }
+  };
+
   // ================= TEST HOOK =================
   // Chỉ bật khi chạy unit test (tests/helpers/loadApp.js đặt cờ này trước khi nạp app.js)
   if (window.__AWS_HUB_TEST__) {
@@ -1779,7 +2370,14 @@ Hãy giúp tôi ${isSkeleton ? "thiết kế bài lab cụ thể, đúng trọng
       buildLabPromptForSession,
       generateSyncCode,
       applySyncCode,
-      pullFromCloud
+      pullFromCloud,
+      getPersistedPayload,
+      renderComparisonTab,
+      renderTodayLesson,
+      renderCurriculumList,
+      switchTab,
+      getCheckpointStatus
     };
   }
 })();
+

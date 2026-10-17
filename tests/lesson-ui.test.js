@@ -251,3 +251,88 @@ describe("Tiện ích", () => {
     assert.ok(!/<strong>|<code>/.test(p));
   });
 });
+
+describe("Quiz v2 trong bài học – Choose TWO, whyWrong, migration & tách pool (P2 §8.5)", () => {
+  it("hiện badge domain/task, whyWrong khi trả lời, và hỗ trợ câu Choose TWO (disable nút Nộp khi mới chọn 1)", async () => {
+    const env = await loadApp({ cloud: { currentSessionId: 1, completedIds: [], updatedAt: 1 } });
+    try {
+      const cards = env.$$(".quiz-card");
+      assert.ok(cards.length >= 5, "Buổi #1 phải có ≥ 5 câu quiz");
+      assert.ok(cards[0].querySelector(".quiz-domain-badge"), "Thiếu .quiz-domain-badge");
+
+      // Trả lời 1 câu single-choice để kiểm tra whyWrong
+      const singleCard = cards.find((c) => c.getAttribute("data-multi") === "false");
+      assert.ok(singleCard);
+      singleCard.querySelectorAll(".quiz-option")[0].click();
+      const whyWrongEls = singleCard.querySelectorAll(".quiz-why-wrong");
+      assert.ok(whyWrongEls.length >= 3, "Phải hiển thị whyWrong cho các phương án sai");
+
+      // Kiểm tra câu Choose TWO (s1-q03)
+      const multiCard = cards.find((c) => c.getAttribute("data-multi") === "true");
+      assert.ok(multiCard, "Buổi #1 phải có câu Choose TWO");
+      const submitBtn = multiCard.querySelector(".quiz-submit-multi");
+      const opts = multiCard.querySelectorAll(".quiz-option");
+      assert.strictEqual(opts.length, 5);
+      assert.strictEqual(submitBtn.disabled, true, "Chưa chọn đủ 2 đáp án thì nút Nộp phải disable");
+
+      opts[0].click();
+      assert.strictEqual(submitBtn.disabled, true, "Mới chọn 1 đáp án thì nút Nộp vẫn disable");
+      opts[2].click();
+      assert.strictEqual(submitBtn.disabled, false, "Chọn đủ 2 đáp án thì nút Nộp được bật");
+      submitBtn.click();
+
+      const updatedMulti = env.$(`.quiz-card[data-quiz-id="${multiCard.getAttribute("data-quiz-id")}"]`);
+      assert.strictEqual(updatedMulti.querySelectorAll(".quiz-option.correct").length, 2);
+    } finally {
+      env.close();
+    }
+  });
+
+  it("migrate đáp án v1 (key theo index) từ localStorage và từ Cloud sang key theo ID", async () => {
+    const v1State = {
+      currentSessionId: 1,
+      completedIds: [],
+      quizAnswers: { 1: { 0: 1, _t: 1000 } },
+      updatedAt: 1000
+    };
+    const env = await loadApp({ local: v1State, cloud: v1State });
+    try {
+      assert.strictEqual(env.app.state.quizAnswers[1]["s1-l0"], 1);
+      assert.strictEqual(env.app.state.quizAnswers[1]._v, 2);
+
+      // Cloud đẩy bản v1 mới hơn ở buổi #2
+      env.net.cloud = {
+        ...v1State,
+        quizAnswers: {
+          1: { 0: 1, _t: 1000 },
+          2: { 0: 2, _t: 5000 }
+        },
+        updatedAt: 5000
+      };
+      await env.switchBrowserTabAndBack();
+      assert.strictEqual(env.app.state.quizAnswers[2]["s2-l0"], 2);
+      assert.strictEqual(env.app.state.quizAnswers[2]._v, 2);
+    } finally {
+      env.close();
+    }
+  });
+
+  it("không có câu pool 'exam' nào hiển thị trong mọi buổi 1–80", async () => {
+    const env = await loadApp();
+    try {
+      for (let sid = 1; sid <= 80; sid++) {
+        env.app.state.currentSessionId = sid;
+        env.app.renderTodayLesson();
+        const quizIds = env.$$("#today-lesson-container .quiz-card").map((el) =>
+          el.getAttribute("data-quiz-id")
+        );
+        for (const id of quizIds) {
+          assert.ok(!/^x-p[1-6]-\d{3}$/.test(id), `Buổi #${sid} làm lộ câu exam ${id}`);
+        }
+      }
+    } finally {
+      env.close();
+    }
+  });
+});
+

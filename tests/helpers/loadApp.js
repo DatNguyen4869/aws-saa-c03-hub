@@ -17,12 +17,23 @@ function readScriptList() {
 /** Chỉ nạp dữ liệu (không có DOM / app.js) – dùng cho test dữ liệu khóa học. */
 function loadData() {
   const sandbox = { window: {} };
-  const files = readScriptList().filter((f) => f !== "app.js");
+  const files = readScriptList().filter((f) => f !== "app.js" && f !== "exam.js");
   for (const f of files) {
     const code = fs.readFileSync(path.join(ROOT, f), "utf8");
     new Function("window", code)(sandbox.window);
   }
-  return { STUDY_DATA: sandbox.window.STUDY_DATA, LAB_DATA: sandbox.window.LAB_DATA || {}, files };
+  return {
+    STUDY_DATA: sandbox.window.STUDY_DATA,
+    LAB_DATA: sandbox.window.LAB_DATA || {},
+    CONTENT_PATCHES: sandbox.window.CONTENT_PATCHES || {},
+    QUIZ_BANK: sandbox.window.QUIZ_BANK || {},
+    EXAM_BANK: sandbox.window.EXAM_BANK || [],
+    CHECKPOINTS: sandbox.window.CHECKPOINTS || [],
+    QuizEngine: sandbox.window.QuizEngine,
+    ExamEngine: sandbox.window.ExamEngine,
+    window: sandbox.window,
+    files
+  };
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -33,6 +44,8 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
  * @param {object|null} opts.cloud      Dữ liệu đang có trên Cloud (null = Cloud trống)
  * @param {object|null} opts.local      Dữ liệu sẵn có trong localStorage
  * @param {boolean}     opts.offline    Giả lập mất mạng (fetch throw)
+ * @param {Function|number} opts.now    Đồng hồ giả lập (window.AwsHubClock.now)
+ * @param {object}      opts.rawStorage Các key-value bổ sung nạp vào localStorage
  */
 async function loadApp(opts = {}) {
   const html = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
@@ -58,7 +71,17 @@ async function loadApp(opts = {}) {
   w.HTMLElement.prototype.scrollIntoView = function () {};
   w.URL.createObjectURL = () => "blob:test";
 
+  if (opts.now !== undefined) {
+    w.AwsHubClock = {
+      now: typeof opts.now === "function" ? opts.now : () => Number(opts.now)
+    };
+  }
   if (opts.local) w.localStorage.setItem(STORAGE_KEY, JSON.stringify(opts.local));
+  if (opts.rawStorage && typeof opts.rawStorage === "object") {
+    for (const [k, v] of Object.entries(opts.rawStorage)) {
+      w.localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v));
+    }
+  }
   w.__AWS_HUB_TEST__ = true;
 
   const loadedEvt = new Promise((resolve) => w.document.addEventListener("DOMContentLoaded", resolve, { once: true }));
